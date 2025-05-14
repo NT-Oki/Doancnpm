@@ -9,4 +9,8 @@ import java.io.Serializable;
 public class UserRequestDTO implements Serializable {
     private String email;
     private String password;
+    private String name;
+    private boolean gender;
+    private boolean status;
+    private String phoneNumber;
 }
