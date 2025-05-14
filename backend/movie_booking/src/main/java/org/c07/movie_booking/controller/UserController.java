@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
     private final IUserService userService;
-    @PostMapping("/register")
+    @PostMapping(value = "/register")
     public ResponseData<?>  createUser(@RequestBody UserRequestDTO userRequestDTO) {
         try {
             long id = userService.createUser(userRequestDTO);
@@ -27,7 +27,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping(value="/login")
     public ResponseData<?> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         UserResponseDTO userResponseDTO = userService.login(loginRequestDTO);
         if (userResponseDTO == null) {
