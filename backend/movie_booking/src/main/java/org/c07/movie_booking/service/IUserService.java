@@ -1,6 +1,8 @@
 package org.c07.movie_booking.service;
 
+import org.c07.movie_booking.dto.request.LoginRequestDTO;
 import org.c07.movie_booking.dto.request.UserRequestDTO;
+import org.c07.movie_booking.dto.response.UserResponseDTO;
 
 public interface IUserService {
 
@@ -9,5 +11,7 @@ public interface IUserService {
     void updateUser(int id ,UserRequestDTO userRequestDTO);
 
     void deleteUser(int id);
+
+    UserResponseDTO login(LoginRequestDTO loginRequestDTO);
 
 }
