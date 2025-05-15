@@ -1,5 +1,5 @@
 import type { RouteObject } from 'react-router';
-
+import '../../index.css'
 import { lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { varAlpha } from 'minimal-shared/utils';
@@ -10,6 +10,9 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import { AuthLayout } from '../admin/layouts/auth';
 import { DashboardLayout } from '../admin/layouts/dashboard';
 import Home from '../Home';
+// import {RegistrationPage} from "../client/register/RegistrationPage.tsx";
+import {RegistrationPage} from "../client/register/RegistrationPage.tsx";
+import {LoginPage} from "../client/login/LoginPage.tsx";
 
 // ----------------------------------------------------------------------
 
@@ -73,6 +76,14 @@ export const routesSection: RouteObject[] = [
       </AuthLayout>
     ),
   },
+    {
+        path: 'register',
+        element: <RegistrationPage/>
+    },
+    {
+      path: 'login',
+      element: <LoginPage/>
+    },
   {
     path: '404',
     element: <Page404 />,
