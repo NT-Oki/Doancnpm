@@ -3,6 +3,8 @@ package org.c07.movie_booking.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,7 +29,4 @@ public class Movie {
     @ManyToOne
     @JoinColumn(name = "status_movie_id")
     private StatusFilm statusFilmId;
-    @ManyToOne
-    @JoinColumn(name = "kind_of_movie_id")
-    private KindOfFilm kindOfFilm;
 }
