@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,8 +30,7 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "showtime_id")
     private Showtime showTime;
-    @ManyToOne
-    @JoinColumn(name = "seat_id")
-    private Seat seat;
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)//orphanRemoval = true giúp tự động xóa ghế nếu bị xóa khỏi danh sách.
+    private List<BookingSeat> bookingSeats;
 
 }
