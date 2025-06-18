@@ -13,8 +13,34 @@ import java.util.List;
 public class MovieController {
     @Autowired
     private IMovieService iMovieService;
-    @GetMapping("/list-movie")
-    public List<MovieDTO> getFindAll(){
+
+
+
+    
+    @GetMapping("/movies")
+    public List<MovieDTO> getAllMovies() {
         return iMovieService.getFindAll();
+    }
+
+    
+   @Override
+    public List<MovieDTO> getFindAll() {
+        List<Movie> movieEntity = movieRepository.findAll();
+        List<MovieDTO> movieDTOList = new ArrayList<>();
+        for (Movie movie : movieEntity) {
+            MovieDTO dto = new MovieDTO();
+            dto.setId(movie.getId());
+            dto.setNameMovie(movie.getNameMovie());
+            dto.setReleaseDate(movie.getReleaseDate());
+            dto.setDurationMovie(movie.getDurationMovie());
+            dto.setActor(movie.getActor());
+            dto.setDirector(movie.getDirector());
+            dto.setStudio(movie.getStudio());
+            dto.setContent(movie.getContent());
+            dto.setTrailer(movie.getTrailer());
+            dto.setAvatar(movie.getAvatar());
+            movieDTOList.add(dto);
+        }
+        return movieDTOList;
     }
 }
