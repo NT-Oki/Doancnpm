@@ -1,7 +1,7 @@
 package org.c07.movie_booking.controller.admin;
 
 import jakarta.validation.Valid;
-import org.c07.movie_booking.dto.MovieDTO;
+import org.c07.movie_booking.dto.admin.MovieDTO;
 import org.c07.movie_booking.model.Movie;
 import org.c07.movie_booking.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package org.c07.movie_booking.dto.request;
+package org.c07.movie_booking.dto;
 
 import lombok.Getter;
 import lombok.Setter;

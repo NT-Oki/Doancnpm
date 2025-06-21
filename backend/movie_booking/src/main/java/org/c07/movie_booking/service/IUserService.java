@@ -1,6 +1,6 @@
 package org.c07.movie_booking.service;
 
-import org.c07.movie_booking.dto.AdminRegisterDto;
+import org.c07.movie_booking.dto.admin.AdminRegisterDto;
 import org.c07.movie_booking.model.User;
 
 import java.util.List;

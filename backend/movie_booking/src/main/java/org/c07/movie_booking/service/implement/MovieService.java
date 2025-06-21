@@ -1,6 +1,6 @@
 package org.c07.movie_booking.service.implement;
 
-import org.c07.movie_booking.dto.MovieDTO;
+import org.c07.movie_booking.dto.admin.MovieDTO;
 import org.c07.movie_booking.model.Movie;
 import org.c07.movie_booking.model.StatusFilm;
 import org.c07.movie_booking.repository.IMovieRepository;
