@@ -1,7 +1,6 @@
 package org.c07.movie_booking.controller;
 
 import jakarta.validation.Valid;
-import org.c07.movie_booking.dto.RegisterDto;
 import org.c07.movie_booking.model.User;
 import org.c07.movie_booking.service.IUserService;
 import org.springframework.http.HttpStatus;

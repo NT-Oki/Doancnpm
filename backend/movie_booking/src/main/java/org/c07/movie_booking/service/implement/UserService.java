@@ -1,7 +1,6 @@
 package org.c07.movie_booking.service.implement;
 
 import org.c07.movie_booking.dto.AdminRegisterDto;
-import org.c07.movie_booking.dto.RegisterDto;
 import org.c07.movie_booking.model.Role;
 import org.c07.movie_booking.model.User;
 import org.c07.movie_booking.repository.IRoleRepository;

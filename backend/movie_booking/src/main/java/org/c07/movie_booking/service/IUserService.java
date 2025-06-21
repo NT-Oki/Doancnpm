@@ -1,11 +1,9 @@
 package org.c07.movie_booking.service;
 
 import org.c07.movie_booking.dto.AdminRegisterDto;
-import org.c07.movie_booking.dto.RegisterDto;
 import org.c07.movie_booking.model.User;
 
 import java.util.List;
-import java.util.Locale;
 
 public interface IUserService {
     public User convertToUser(RegisterDto dto, String roleName);
