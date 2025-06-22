@@ -33,4 +33,12 @@ public class Booking {
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)//orphanRemoval = true giúp tự động xóa ghế nếu bị xóa khỏi danh sách.
     private List<BookingSeat> bookingSeats;
 
+    @ManyToOne
+    @JoinColumn(name = "seat_id")
+    private Seat seat;
+
+    public Booking(Seat seat, Showtime showtime) {
+        this.seat = seat;
+        this.showTime = showtime;
+    }
 }

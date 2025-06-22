@@ -1,6 +1,6 @@
 package org.c07.movie_booking.controller;
 
-import org.c07.movie_booking.dto.BookingRequestDTO;
+import org.c07.movie_booking.dto.request.BookingRequestDTO;
 import org.c07.movie_booking.model.*;
 import org.c07.movie_booking.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class BookingController {
 
         boolean alreadyBooked = bookingRepository.findAll()
             .stream()
-            .anyMatch(b -> b.getShowTime().getId() == showtime.getId() && b.getSeat().getId() == seat.getId());
+            .anyMatch(b -> b.getShowTime().getId() == showtime.getId() && b.getSeat().getId().equals(seat.getId()));
         if (alreadyBooked) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Seat already booked");
         }
