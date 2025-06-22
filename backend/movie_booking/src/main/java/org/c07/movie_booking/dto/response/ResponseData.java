@@ -1,6 +1,7 @@
 package org.c07.movie_booking.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ public class ResponseData<T> implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
+    @Builder
     public ResponseData(int status, String message, T data) {
         this.status = status;
         this.message = message;
