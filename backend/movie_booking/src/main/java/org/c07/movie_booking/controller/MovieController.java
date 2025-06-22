@@ -23,6 +23,8 @@ import java.util.List;
 public class MovieController {
     @Autowired
     private IMovieService iMovieService;
+    @Autowired
+    private IMovieRepository movieRepository;
 
     private IMovieRepository movieRepository;
 
