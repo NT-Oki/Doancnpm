@@ -2,17 +2,22 @@ package org.c07.movie_booking.controller;
 
 
 import org.c07.movie_booking.dto.MovieDTO;
+import org.c07.movie_booking.model.Movie;
+import org.c07.movie_booking.repository.IMovieRepository;
 import org.c07.movie_booking.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class MovieController {
     @Autowired
     private IMovieService iMovieService;
+    @Autowired
+    private IMovieRepository movieRepository;
 
 
 
@@ -23,7 +28,7 @@ public class MovieController {
     }
 
     
-   @Override
+
     public List<MovieDTO> getFindAll() {
         List<Movie> movieEntity = movieRepository.findAll();
         List<MovieDTO> movieDTOList = new ArrayList<>();
