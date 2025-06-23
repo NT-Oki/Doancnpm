@@ -27,11 +27,7 @@ export const navData = [
     title: 'Product',
     path: '/products',
     icon: icon('ic-cart'),
-    info: (
-      <Label color="error" variant="inverted">
-        +3
-      </Label>
-    ),
+  
   },
     {
     title: 'Showtime',
@@ -41,6 +37,18 @@ export const navData = [
   {
     title: 'Room',
     path: '/admin/room',
+  },
+    {
+    title: 'Booking',
+    path: '/admin/booking',
+  },
+    {
+    title: 'Voucher',
+    path: '/admin/voucher',
+  },
+    {
+    title: 'Emotion',
+    path: '/admin/emotion',
   },
   
 ];
