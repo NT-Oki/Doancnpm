@@ -15,9 +15,11 @@ public class Seat {
     private Long id;
     private String seatNumber;
     private String description;
+
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "room_id")
     private Room room;
     private int price;
 
+    private boolean available;
 }

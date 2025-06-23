@@ -1,53 +1,79 @@
 package org.c07.movie_booking.service.implement;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.c07.movie_booking.dto.admin.AdminRegisterDto;
+import org.c07.movie_booking.dto.request.LoginRequestDTO;
+import org.c07.movie_booking.dto.request.UserRequestDTO;
+import org.c07.movie_booking.dto.response.UserResponseDTO;
 import org.c07.movie_booking.model.Role;
 import org.c07.movie_booking.model.User;
 import org.c07.movie_booking.repository.IRoleRepository;
 import org.c07.movie_booking.repository.IUserRepository;
 import org.c07.movie_booking.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements IUserService {
-    @Autowired
-    private IRoleRepository roleRepository;
 
     @Autowired
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
+
+    @Autowired
+    private IRoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User convertToUser(RegisterDto dto, String roleName) {
-        Role role = roleRepository.findByName(roleName);
-        if (role == null) {
-            role = new Role();
-            role.setName(roleName);
-            roleRepository.save(role);
-        }
-        return User.builder()
-                .email(dto.getEmail())
-                .password(passwordEncoder.encode(dto.getPassword()))
-                .name(dto.getName())
-                .cardId(dto.getCardId())
-                .phoneNumber(dto.getPhoneNumber())
-                .gender(dto.isGender())
-                .address(dto.getAddress())
-                .avatar(dto.getAvatar())
-                .status(true) // Mặc định active
-                .code(RandomStringUtils.randomAlphanumeric(5))
-                .role(role) // Gán role mặc định
+    public long createUser(UserRequestDTO userRequestDTO) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User user = User.builder()
+                .name(userRequestDTO.getName())
+                .password(encoder.encode(userRequestDTO.getPassword()))
+                .email(userRequestDTO.getEmail())
+                .gender(userRequestDTO.isGender())
+                .phoneNumber(userRequestDTO.getPhoneNumber())
+                .status(true)
                 .build();
+        userRepository.save(user);
+        return user.getId();
     }
 
-    // cho phương thức add của admin
+    @Override
+    public void updateUser(int id, UserRequestDTO userRequestDTO) {
+
+    }
+
+    @Override
+    public void deleteUser(int id) {
+
+    }
+
+    @Override
+    public UserResponseDTO login(LoginRequestDTO loginRequestDTO) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User user = userRepository.findByEmailAndPassword(loginRequestDTO.getEmail(), encoder.encode(loginRequestDTO.getPassword()));
+        if (user != null) {
+            return UserResponseDTO.builder()
+                    .email(user.getEmail())
+                    .name(user.getName())
+                    .phoneNumber(user.getPhoneNumber())
+                    .status(user.isStatus())
+                    .email(user.getEmail())
+                    .gender(user.isGender())
+                    .build();
+        }
+        return null;
+    }
+
+//    dành cho admin
     @Override
     public User convertToUser(AdminRegisterDto dto) {
         Role role = roleRepository.findByName(dto.getRole());
@@ -73,12 +99,6 @@ public class UserService implements IUserService {
         return userRepository.findByEmail(email);
     }
 
-    @Override
-    public void save(User user) {
-        userRepository.save(user);
-    }
-
-    // save cho phương thức add của admin
     @Override
     public User save(AdminRegisterDto dto) {
         User existingUser = null;

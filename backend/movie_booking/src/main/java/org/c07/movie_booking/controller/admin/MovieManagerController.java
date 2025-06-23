@@ -1,7 +1,7 @@
 package org.c07.movie_booking.controller.admin;
 
 import jakarta.validation.Valid;
-import org.c07.movie_booking.dto.admin.MovieDTO;
+import org.c07.movie_booking.dto.admin.AdminMovieDTO;
 import org.c07.movie_booking.model.Movie;
 import org.c07.movie_booking.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin/movies")
@@ -26,7 +29,7 @@ public class MovieManagerController {
 
     // Thêm / Cập nhật phim
     @PostMapping("/add")
-    public ResponseEntity<?> add(@Valid @RequestBody MovieDTO dto, BindingResult result) {
+    public ResponseEntity<?> add(@Valid @RequestBody AdminMovieDTO dto, BindingResult result) {
         Map<String, String> errors = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -38,6 +41,7 @@ public class MovieManagerController {
         if (!errors.isEmpty()) {
             return ResponseEntity.badRequest().body(errors);
         }
+        System.out.println(dto);
 
         Movie savedMovie = movieService.save(dto);
         return ResponseEntity.ok(Map.of("message", "Thêm hoặc cập nhật phim thành công", "movie", savedMovie));

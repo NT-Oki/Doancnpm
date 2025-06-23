@@ -1,6 +1,7 @@
 package org.c07.movie_booking.service.implement;
 
-import org.c07.movie_booking.dto.admin.MovieDTO;
+import org.c07.movie_booking.dto.admin.AdminMovieDTO;
+import org.c07.movie_booking.dto.MovieDTO;
 import org.c07.movie_booking.model.Movie;
 import org.c07.movie_booking.model.StatusFilm;
 import org.c07.movie_booking.repository.IMovieRepository;
@@ -8,8 +9,11 @@ import org.c07.movie_booking.repository.IStatusFilmRepository;
 import org.c07.movie_booking.service.IMovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.c07.movie_booking.mapper.MovieMapper;
+import org.c07.movie_booking.dto.request.MovieCreateRequest;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService implements IMovieService {
@@ -19,6 +23,22 @@ public class MovieService implements IMovieService {
     @Autowired
     private IStatusFilmRepository statusFilmRepository;
 
+    private MovieMapper movieMapper;
+
+    @Override
+    public MovieDTO crateMovie(MovieCreateRequest request) {
+        Movie movie = movieMapper.toMovie(request);
+        return movieMapper.toMovieDTO(movieRepository.save(movie));
+    }
+
+    @Override
+    public List<MovieDTO> getAllMovies() {
+        return movieRepository.findAll().stream()
+                .map(movieMapper::toMovieDTO)
+                .collect(Collectors.toList());
+    }
+
+// dành cho admin
     @Override
     public List<Movie> findAll() {
         return movieRepository.findAll();
@@ -40,7 +60,7 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Movie save(MovieDTO dto) {
+    public Movie save(AdminMovieDTO dto) {
         Movie movie = convertToEntity(dto);
         return movieRepository.save(movie);
     }
@@ -51,8 +71,9 @@ public class MovieService implements IMovieService {
     }
 
     @Override
-    public Movie convertToEntity(MovieDTO dto) {
+    public Movie convertToEntity(AdminMovieDTO dto) {
         StatusFilm statusFilm = null;
+
         if (dto.getStatusFilmId() != null) {
             statusFilm = statusFilmRepository.findById(dto.getStatusFilmId()).orElse(null);
         }

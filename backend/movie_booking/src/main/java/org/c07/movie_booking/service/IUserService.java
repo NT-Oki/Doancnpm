@@ -1,24 +1,33 @@
 package org.c07.movie_booking.service;
 
 import org.c07.movie_booking.dto.admin.AdminRegisterDto;
+import org.c07.movie_booking.dto.request.LoginRequestDTO;
+import org.c07.movie_booking.dto.request.UserRequestDTO;
+import org.c07.movie_booking.dto.response.UserResponseDTO;
 import org.c07.movie_booking.model.User;
 
 import java.util.List;
 
 public interface IUserService {
-    public User convertToUser(RegisterDto dto, String roleName);
 
-    public User convertToUser(AdminRegisterDto dto);
+    long createUser(UserRequestDTO userRequestDTO);
 
-    public User findByEmail(String email);
+    void updateUser(int id ,UserRequestDTO userRequestDTO);
 
-    public void save(User user);
+    void deleteUser(int id);
 
-    public User save(AdminRegisterDto dto);
+    UserResponseDTO login(LoginRequestDTO loginRequestDTO);
 
-    public List<User> findAllMembers();
+    User convertToUser(AdminRegisterDto dto);
 
-    public User findById(Long id);
+    User findByEmail(String email);
 
-    public void delete(User user);
+    User save(AdminRegisterDto dto);
+
+    List<User> findAllMembers();
+
+    User findById(Long id);
+
+    void delete(User user);
+
 }

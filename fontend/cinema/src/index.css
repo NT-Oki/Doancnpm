@@ -1,3 +1,5 @@
+@import "tailwindcss";
+@tailwind utilities;
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -65,4 +67,42 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+body {
+  @apply bg-gray-900;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-red-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-red-600;
+}
+
+/* Film strip animation */
+@keyframes filmStrip {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-20px);
+  }
+}
+
+.film-strip > div:nth-child(odd) {
+  animation: filmStrip 2s infinite alternate;
+}
+
+.film-strip > div:nth-child(even) {
+  animation: filmStrip 2s infinite alternate-reverse;
 }
