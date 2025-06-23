@@ -17,7 +17,7 @@ public class BookingController {
     @Autowired
     private ISeatRepository seatRepository;
     @Autowired
-    private IShowtimeRepository showtimeRepository;
+    private IShowTimeRepository showtimeRepository;
     @Autowired
     private IUserRepository userRepository;
 
