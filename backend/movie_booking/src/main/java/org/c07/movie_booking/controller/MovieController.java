@@ -26,8 +26,6 @@ public class MovieController {
     @Autowired
     private IMovieRepository movieRepository;
 
-    private IMovieRepository movieRepository;
-
     @PostMapping
     ResponseData<MovieDTO> createMovie(@RequestBody @Valid MovieCreateRequest request) {
         return ResponseData.<MovieDTO>builder()
