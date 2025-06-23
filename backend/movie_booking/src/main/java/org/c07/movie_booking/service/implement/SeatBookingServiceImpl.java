@@ -7,7 +7,7 @@ import org.c07.movie_booking.model.Seat;
 import org.c07.movie_booking.model.Showtime;
 import org.c07.movie_booking.repository.IBookingRepository;
 import org.c07.movie_booking.repository.ISeatRepository;
-import org.c07.movie_booking.repository.IShowtimeRepository;
+import org.c07.movie_booking.repository.IShowTimeRepository;
 import org.c07.movie_booking.service.ISeatBooking;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public class SeatBookingServiceImpl implements ISeatBooking {
 
     ISeatRepository seatRepository;
-    IShowtimeRepository showtimeRepository;
+    IShowTimeRepository showtimeRepository;
     IBookingRepository bookingRepository;
 
     @Override
