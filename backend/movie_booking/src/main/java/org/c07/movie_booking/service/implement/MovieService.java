@@ -73,6 +73,7 @@ public class MovieService implements IMovieService {
     @Override
     public Movie convertToEntity(AdminMovieDTO dto) {
         StatusFilm statusFilm = null;
+
         if (dto.getStatusFilmId() != null) {
             statusFilm = statusFilmRepository.findById(dto.getStatusFilmId()).orElse(null);
         }
