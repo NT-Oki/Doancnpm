@@ -29,7 +29,10 @@ const API_URLS = {
       save: `${ADMIN_ROOMS_URL}/add`,
     },
     showtime:{
-      list_showtime:`${ADMIN_SHOWTIMES_URL}/`
+       list_showtime: `${ADMIN_SHOWTIMES_URL}/`,
+      add: `${ADMIN_SHOWTIMES_URL}/`,
+      delete:(id:number)=> `${ADMIN_SHOWTIMES_URL}/status/${id}`,
+      update:(id:number)=> `${ADMIN_SHOWTIMES_URL}/${id}`
     },
     movie:{
       list_movie:`${ADMIN_MOVIES_URL}/list`,
