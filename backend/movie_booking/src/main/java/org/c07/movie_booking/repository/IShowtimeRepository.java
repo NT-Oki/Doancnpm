@@ -1,10 +1,10 @@
 package org.c07.movie_booking.repository;
 
-import org.c07.movie_booking.model.Movie;
 import org.c07.movie_booking.model.Showtime;
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
+import org.springframework.stereotype.Repository;
 
-public interface IShowtimeRepository extends JpaRepository<Showtime, Long> {
-    List<Showtime> findByMovie(Movie movie);
+@Repository
+public interface IShowTimeRepository extends JpaRepository<Showtime,Long> {
+
 }
