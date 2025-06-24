@@ -20,8 +20,13 @@ export const navData = [
   },
   {
     title: 'User',
-    path: '/user',
+    path: '/admin/user',
     icon: icon('ic-user'),
+  },
+  {
+    title: 'Movie',
+    path: '/admin/movie',
+    icon: icon('ic-cart'),
   },
   {
     title: 'Product',

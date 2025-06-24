@@ -48,5 +48,33 @@ const API_URLS = {
   },
 };
 
+export const apiRequest = async (url: string, options: RequestInit = {}) => {
+  const headers = {
+    ...options.headers,
+    'Content-Type': 'application/json',
+  };
+
+  try {
+    const response = await fetch(url, { ...options, headers });
+    if (!response.ok) {
+      let errorMessage = 'Lỗi không xác định';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || Object.values(errorData).join(', ') || errorMessage;
+      } catch (e) {
+        errorMessage = response.statusText || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json();
+    }
+    return {};
+  } catch (error) {
+    console.error('Lỗi gọi API:', error);
+    throw error;
+  }
+};
 
 export default API_URLS;
