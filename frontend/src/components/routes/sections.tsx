@@ -19,6 +19,8 @@ import MovieList from '../MovieList';
 import MovieDetail from '../MovieDetail';
 import AdminRoute from './AdminRoute';
 import BookingAdminW from '../admin/pages/BookingAdmin';
+import ChangePassword from '../ChangePassword';
+import ProfileEdit from '../ProfileEdit';
 // import ShowtimeSchedule from '../ShowtimeSchedule';
 // import SeatSelector from '../SeatSelector';
 // import Home from '../Home';
@@ -59,6 +61,14 @@ const renderFallback = () => (
 );
 
 export const routesSection: RouteObject[] = [
+      {
+    path: '/profile/edit',
+    element: <ProfileEdit />,
+  },
+  {
+    path: '/change-password',
+    element: <ChangePassword />,
+  },
     {
         path: '/',
         element: (

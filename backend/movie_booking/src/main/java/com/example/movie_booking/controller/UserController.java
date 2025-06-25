@@ -10,6 +10,9 @@ import com.example.movie_booking.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.validation.Valid;
+import main.java.com.example.movie_booking.dto.ChangePasswordDto;
+import main.java.com.example.movie_booking.dto.UpdateProfileDto;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -36,6 +39,9 @@ public class UserController {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader, Locale locale) {
 
@@ -60,5 +66,28 @@ public class UserController {
                     messageSource.getMessage("auth.logout.error", new Object[]{e.getMessage()}, locale)));
         }
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDto dto, @RequestHeader("Authorization") String authHeader, Locale locale) {
+        String email = jwtTokenUtil.getEmailFromToken(authHeader.substring(7).trim());
+        try {
+            userService.changePassword(email, dto, locale);
+            return ResponseEntity.ok(Map.of("message", "Đổi mật khẩu thành công"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody UpdateProfileDto dto, @RequestHeader("Authorization") String authHeader, Locale locale) {
+        String email = jwtTokenUtil.getEmailFromToken(authHeader.substring(7).trim());
+        try {
+            User updated = userService.updateProfile(email, dto, locale);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
 
 }

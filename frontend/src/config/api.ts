@@ -14,8 +14,13 @@ const ADMIN_MOVIES_URL = `${ADMIN_URL}/movies`;
 const ADMIN_USER_URL = `${BASE_URL}/admin/users`;
 const ADMIN_BOOKING_URL = `${ADMIN_URL}/bookings`;
 const PAYMENT_URL = `${BOOKING_URL}/payment`;
+const USER_URL = `${BASE_URL}/profile`;
 
 const API_URLS = {
+   USER: {
+    changePassword: `${BASE_URL}/change-password`, // POST
+    updateProfile: `${USER_URL}`,                  // PUT
+  },
   BOOKING: {
     CHOOSE_SHOWTIME: `${BOOKING_URL}/show-time`,
     GET_SEAT: `${BOOKING_URL}/seats`,
@@ -80,12 +85,12 @@ export const apiRequest = async (
     navigate?: (path: string) => void
 ) => {
   const token = localStorage.getItem('token');
-  const headers = {
-    ...options.headers,
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-
+   const headers = {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(options.headers || {}),
+    };
+    
   try {
     const response = await fetch(url, { ...options, headers });
     if (!response.ok) {

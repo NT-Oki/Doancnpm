@@ -1,5 +1,3 @@
-// import 'src/global.css';
-
 import React, { useEffect } from 'react';
 import Fab from '@mui/material/Fab';
 import { ToastContainer } from 'react-toastify';
@@ -8,6 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from './components/admin/theme/theme-provider';
 import { Iconify } from './components/admin/components/iconify';
 import { AuthProvider } from './contexts/AuthContext';
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 // ----------------------------------------------------------------------
 
@@ -52,17 +52,19 @@ export default function App({ children }: AppProps) {
     </Fab>
   );
 
-    return (
-        <ThemeProvider>
-            <ErrorBoundary>
-                <AuthProvider>
-                    <ToastContainer />
-                    {children}
-                    {githubButton()}
-                </AuthProvider>
-            </ErrorBoundary>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <Header />
+          <ToastContainer />
+          <main style={{ minHeight: '80vh' }}>{children}</main>
+          <Footer />
+          {githubButton()}
+        </AuthProvider>
+      </ErrorBoundary>
+    </ThemeProvider>
+  );
 }
 
 // ----------------------------------------------------------------------

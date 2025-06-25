@@ -6,6 +6,10 @@ import com.example.movie_booking.model.PendingUser;
 import com.example.movie_booking.model.Role;
 import com.example.movie_booking.model.User;
 import com.example.movie_booking.repository.PendingUserRepository;
+
+import main.java.com.example.movie_booking.dto.ChangePasswordDto;
+import main.java.com.example.movie_booking.dto.UpdateProfileDto;
+
 import com.example.movie_booking.repository.IRoleRepository;
 import com.example.movie_booking.repository.IUserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -240,5 +244,29 @@ public class UserService {
 
     public void delete(User user) {
         userRepository.delete(user);
+    }
+
+    public void changePassword(String email, ChangePasswordDto dto, Locale locale) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) throw new IllegalArgumentException("User not found");
+        if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Mật khẩu cũ không đúng");
+        }
+        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+            throw new IllegalArgumentException("Mật khẩu xác nhận không khớp");
+        }
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(user);
+    }
+
+    public User updateProfile(String email, UpdateProfileDto dto, Locale locale) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) throw new IllegalArgumentException("User not found");
+        user.setName(dto.getName());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setGender(dto.getGender());
+        user.setAddress(dto.getAddress());
+        user.setAvatar(dto.getAvatar());
+        return userRepository.save(user);
     }
 }
