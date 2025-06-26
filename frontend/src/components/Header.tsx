@@ -7,12 +7,16 @@ import { useTranslation } from 'react-i18next';
 import logo from '../assets/images/logo.png';
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
+import ChangePassword from './ChangePassword';
+import ProfileEdit from './ProfileEdit';
 
 export default function Header() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openChangePassword, setOpenChangePassword] = useState(false);
+  const [openProfileEdit, setOpenProfileEdit] = useState(false);
   const { user, logout } = useAuth();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,12 +124,26 @@ export default function Header() {
                 <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
                   {user.email}
                 </Typography>
+                {(user.phoneNumber || user.address) && (
+                  <Box sx={{ mt: 0.5 }}>
+                    {user.phoneNumber && (
+                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                        SĐT: {user.phoneNumber}
+                      </Typography>
+                    )}
+                    {user.address && (
+                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                        Địa chỉ: {user.address}
+                      </Typography>
+                    )}
+                  </Box>
+                )}
               </Box>,
               <Divider key="divider1" sx={{ borderStyle: 'dashed' }} />,
               <MenuItem
                 key="profile-edit"
                 onClick={() => {
-                  navigate('/profile/edit');
+                  setOpenProfileEdit(true);
                   handleMenuClose();
                 }}
               >
@@ -134,7 +152,7 @@ export default function Header() {
               <MenuItem
                 key="change-password"
                 onClick={() => {
-                  navigate('/change-password');
+                  setOpenChangePassword(true);
                   handleMenuClose();
                 }}
               >
@@ -163,6 +181,17 @@ export default function Header() {
             </Box>
           )}
         </Menu>
+
+        {/* Dialogs */}
+        <ProfileEdit 
+          open={openProfileEdit} 
+          onClose={() => setOpenProfileEdit(false)} 
+        />
+        
+        <ChangePassword 
+          open={openChangePassword} 
+          onClose={() => setOpenChangePassword(false)} 
+        />
       </Toolbar>
     </AppBar>
   );

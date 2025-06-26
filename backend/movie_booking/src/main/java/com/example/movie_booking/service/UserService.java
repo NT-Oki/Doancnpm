@@ -271,6 +271,10 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public boolean verifyPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
     public User updateProfile(String email, UpdateProfileDto dto, Locale locale) {
         User user = userRepository.findByEmail(email);
         if (user == null) {
