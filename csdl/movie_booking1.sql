@@ -1,729 +1,851 @@
-/*
- Navicat Premium Dump SQL
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server version:               10.4.32-MariaDB - mariadb.org binary distribution
+-- Server OS:                    Win64
+-- HeidiSQL Version:             12.10.0.7000
+-- --------------------------------------------------------
 
- Source Server         : tieuluan
- Source Server Type    : MySQL
- Source Server Version : 100432 (10.4.32-MariaDB)
- Source Host           : localhost:3306
- Source Schema         : movie_booking
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
- Target Server Type    : MySQL
- Target Server Version : 100432 (10.4.32-MariaDB)
- File Encoding         : 65001
 
- Date: 28/05/2025 14:53:25
-*/
+-- Dumping database structure for movie_booking
+CREATE DATABASE IF NOT EXISTS `movie_booking` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `movie_booking`;
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+-- Dumping structure for table movie_booking.booking
+CREATE TABLE IF NOT EXISTS `booking` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `code_booking` varchar(255) DEFAULT NULL,
+  `date_booking` date DEFAULT NULL,
+  `payment_id` varchar(255) DEFAULT NULL,
+  `total_amount` int(11) DEFAULT NULL,
+  `booking_status_id` bigint(20) DEFAULT NULL,
+  `showtime_id` bigint(20) DEFAULT NULL,
+  `user_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKm3d0q9s1hos02eamx9wrsupaq` (`booking_status_id`),
+  KEY `FKqpvw4sqntugqnqtrwkimyqe4w` (`showtime_id`),
+  KEY `FKkgseyy7t56x7lkjgu3wah5s3t` (`user_id`),
+  CONSTRAINT `FKkgseyy7t56x7lkjgu3wah5s3t` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FKm3d0q9s1hos02eamx9wrsupaq` FOREIGN KEY (`booking_status_id`) REFERENCES `booking_status` (`id`),
+  CONSTRAINT `FKqpvw4sqntugqnqtrwkimyqe4w` FOREIGN KEY (`showtime_id`) REFERENCES `showtime` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for booking
--- ----------------------------
-DROP TABLE IF EXISTS `booking`;
-CREATE TABLE `booking`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `code_booking` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `date_booking` date NULL DEFAULT NULL,
-  `booking_status_id` bigint NULL DEFAULT NULL,
-  `showtime_id` bigint NULL DEFAULT NULL,
-  `user_id` bigint NULL DEFAULT NULL,
-  `total_amount` int NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `FKm3d0q9s1hos02eamx9wrsupaq`(`booking_status_id` ASC) USING BTREE,
-  INDEX `FKqpvw4sqntugqnqtrwkimyqe4w`(`showtime_id` ASC) USING BTREE,
-  INDEX `FKkgseyy7t56x7lkjgu3wah5s3t`(`user_id` ASC) USING BTREE,
-  CONSTRAINT `FKkgseyy7t56x7lkjgu3wah5s3t` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FKm3d0q9s1hos02eamx9wrsupaq` FOREIGN KEY (`booking_status_id`) REFERENCES `booking_status` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FKqpvw4sqntugqnqtrwkimyqe4w` FOREIGN KEY (`showtime_id`) REFERENCES `showtime` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.booking: ~15 rows (approximately)
+INSERT INTO `booking` (`id`, `code_booking`, `date_booking`, `payment_id`, `total_amount`, `booking_status_id`, `showtime_id`, `user_id`) VALUES
+	(3, NULL, '2025-06-21', NULL, NULL, 1, 1, 2),
+	(6, '6HKBKMHY', '2025-06-21', '20250621093210', 140000, 2, 1, 2),
+	(7, NULL, '2025-06-21', NULL, NULL, 1, 1, 2),
+	(8, '7WJEI6ZW', '2025-06-21', '20250621094736', 210000, 2, 2, 2),
+	(9, '954YAXDG', '2025-06-21', '20250621094857', 140000, 2, 3, 2),
+	(10, NULL, '2025-06-21', NULL, NULL, 1, 1, 2),
+	(11, '5XP33F6Q', '2025-06-21', '20250621103927', 210000, 2, 1, 2),
+	(13, NULL, '2025-06-21', NULL, NULL, 1, 1, 2),
+	(14, NULL, '2025-06-21', NULL, NULL, 1, 1, 2),
+	(15, NULL, '2025-06-21', NULL, NULL, 1, 1, 2),
+	(16, NULL, '2025-06-21', NULL, NULL, 1, 1, 2),
+	(17, NULL, '2025-06-21', NULL, NULL, 1, 1, 2),
+	(18, '97BPJXC5', '2025-06-21', '20250621104646', 140000, 2, 1, 2),
+	(20, NULL, '2025-06-24', NULL, NULL, 1, 1, 2),
+	(21, 'XGQZ75B7', '2025-06-24', '20250624223306', 140000, 2, 1, 2);
 
--- ----------------------------
--- Records of booking
--- ----------------------------
+-- Dumping structure for table movie_booking.booking_seat
+CREATE TABLE IF NOT EXISTS `booking_seat` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `price` int(11) NOT NULL,
+  `booking_id` bigint(20) DEFAULT NULL,
+  `seat_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK3gcy7w2me25kc4qp8nobmg4q6` (`booking_id`),
+  KEY `FK3y806wtfhomwvu02t1u7u2136` (`seat_id`),
+  CONSTRAINT `FK3gcy7w2me25kc4qp8nobmg4q6` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`id`),
+  CONSTRAINT `FK3y806wtfhomwvu02t1u7u2136` FOREIGN KEY (`seat_id`) REFERENCES `seat` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for booking_seat
--- ----------------------------
-DROP TABLE IF EXISTS `booking_seat`;
-CREATE TABLE `booking_seat`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `price` int NOT NULL,
-  `booking_id` bigint NULL DEFAULT NULL,
-  `seat_id` bigint NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `FK3gcy7w2me25kc4qp8nobmg4q6`(`booking_id` ASC) USING BTREE,
-  INDEX `FK3y806wtfhomwvu02t1u7u2136`(`seat_id` ASC) USING BTREE,
-  CONSTRAINT `FK3gcy7w2me25kc4qp8nobmg4q6` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK3y806wtfhomwvu02t1u7u2136` FOREIGN KEY (`seat_id`) REFERENCES `seat` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.booking_seat: ~14 rows (approximately)
+INSERT INTO `booking_seat` (`id`, `price`, `booking_id`, `seat_id`) VALUES
+	(9, 70000, 6, 39),
+	(10, 70000, 6, 38),
+	(11, 70000, 8, 36),
+	(12, 70000, 8, 20),
+	(13, 70000, 8, 28),
+	(14, 70000, 9, 10),
+	(15, 70000, 9, 9),
+	(16, 70000, 11, 27),
+	(17, 70000, 11, 29),
+	(18, 70000, 11, 43),
+	(21, 70000, 18, 56),
+	(22, 70000, 18, 71),
+	(25, 70000, 21, 26),
+	(26, 70000, 21, 11);
 
--- ----------------------------
--- Records of booking_seat
--- ----------------------------
+-- Dumping structure for table movie_booking.booking_status
+CREATE TABLE IF NOT EXISTS `booking_status` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for booking_status
--- ----------------------------
-DROP TABLE IF EXISTS `booking_status`;
-CREATE TABLE `booking_status`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.booking_status: ~6 rows (approximately)
+INSERT INTO `booking_status` (`id`, `name`) VALUES
+	(1, 'Pending'),
+	(2, 'Confirmed'),
+	(3, 'Cancelled'),
+	(4, 'Expired'),
+	(5, 'Checked-In'),
+	(6, 'Refunded');
 
--- ----------------------------
--- Records of booking_status
--- ----------------------------
-INSERT INTO `booking_status` VALUES (1, 'Pending');
-INSERT INTO `booking_status` VALUES (2, 'Confirmed');
-INSERT INTO `booking_status` VALUES (3, 'Cancelled');
-INSERT INTO `booking_status` VALUES (4, 'Expired');
-INSERT INTO `booking_status` VALUES (5, 'Checked-In');
-INSERT INTO `booking_status` VALUES (6, 'Refunded');
+-- Dumping structure for table movie_booking.kind_of_film
+CREATE TABLE IF NOT EXISTS `kind_of_film` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for kind_of_film
--- ----------------------------
-DROP TABLE IF EXISTS `kind_of_film`;
-CREATE TABLE `kind_of_film`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.kind_of_film: ~15 rows (approximately)
+INSERT INTO `kind_of_film` (`id`, `name`) VALUES
+	(1, 'Hành động'),
+	(2, 'Hài hước'),
+	(3, 'Tình cảm - Lãng mạn'),
+	(4, 'Kinh dị'),
+	(5, 'Tâm lý'),
+	(6, 'Phiêu lưu'),
+	(7, 'Viễn tưởng'),
+	(8, 'Hoạt hình'),
+	(9, 'Gia đình'),
+	(10, 'Chiến tranh'),
+	(11, 'Học đường'),
+	(12, 'Tài liệu'),
+	(13, 'Tâm linh'),
+	(14, 'Hình sự - Trinh thám'),
+	(15, 'Hồi hộp');
 
--- ----------------------------
--- Records of kind_of_film
--- ----------------------------
-INSERT INTO `kind_of_film` VALUES (1, 'Hành động');
-INSERT INTO `kind_of_film` VALUES (2, 'Hài hước');
-INSERT INTO `kind_of_film` VALUES (3, 'Tình cảm - Lãng mạn');
-INSERT INTO `kind_of_film` VALUES (4, 'Kinh dị');
-INSERT INTO `kind_of_film` VALUES (5, 'Tâm lý');
-INSERT INTO `kind_of_film` VALUES (6, 'Phiêu lưu');
-INSERT INTO `kind_of_film` VALUES (7, 'Viễn tưởng');
-INSERT INTO `kind_of_film` VALUES (8, 'Hoạt hình');
-INSERT INTO `kind_of_film` VALUES (9, 'Gia đình');
-INSERT INTO `kind_of_film` VALUES (10, 'Chiến tranh');
-INSERT INTO `kind_of_film` VALUES (11, 'Học đường');
-INSERT INTO `kind_of_film` VALUES (12, 'Tài liệu');
-INSERT INTO `kind_of_film` VALUES (13, 'Tâm linh');
-INSERT INTO `kind_of_film` VALUES (14, 'Hình sự - Trinh thám');
-INSERT INTO `kind_of_film` VALUES (15, 'Hồi hộp');
+-- Dumping structure for table movie_booking.kind_of_movie
+CREATE TABLE IF NOT EXISTS `kind_of_movie` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `kind_of_film_id` bigint(20) NOT NULL,
+  `movie_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKaupy2vsmnyfhnypkb6clsrwdg` (`kind_of_film_id`),
+  KEY `FKr2j4033iqbyd4vkg7kdr12x4` (`movie_id`),
+  CONSTRAINT `FKaupy2vsmnyfhnypkb6clsrwdg` FOREIGN KEY (`kind_of_film_id`) REFERENCES `kind_of_film` (`id`),
+  CONSTRAINT `FKr2j4033iqbyd4vkg7kdr12x4` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for kind_of_movie
--- ----------------------------
-DROP TABLE IF EXISTS `kind_of_movie`;
-CREATE TABLE `kind_of_movie`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `kind_of_film_id` bigint NOT NULL,
-  `movie_id` bigint NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `FKaupy2vsmnyfhnypkb6clsrwdg`(`kind_of_film_id` ASC) USING BTREE,
-  INDEX `FKr2j4033iqbyd4vkg7kdr12x4`(`movie_id` ASC) USING BTREE,
-  CONSTRAINT `FKaupy2vsmnyfhnypkb6clsrwdg` FOREIGN KEY (`kind_of_film_id`) REFERENCES `kind_of_film` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FKr2j4033iqbyd4vkg7kdr12x4` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.kind_of_movie: ~21 rows (approximately)
+INSERT INTO `kind_of_movie` (`id`, `kind_of_film_id`, `movie_id`) VALUES
+	(1, 4, 1),
+	(2, 4, 2),
+	(3, 4, 3),
+	(4, 3, 4),
+	(5, 2, 4),
+	(6, 2, 5),
+	(7, 3, 5),
+	(8, 2, 6),
+	(9, 3, 6),
+	(10, 4, 7),
+	(11, 13, 7),
+	(12, 5, 8),
+	(13, 9, 8),
+	(14, 5, 9),
+	(15, 9, 9),
+	(16, 4, 10),
+	(17, 8, 11),
+	(18, 6, 11),
+	(19, 1, 12),
+	(20, 15, 12),
+	(22, 6, 12);
 
--- ----------------------------
--- Records of kind_of_movie
--- ----------------------------
-INSERT INTO `kind_of_movie` VALUES (1, 4, 1);
-INSERT INTO `kind_of_movie` VALUES (2, 4, 2);
-INSERT INTO `kind_of_movie` VALUES (3, 4, 3);
-INSERT INTO `kind_of_movie` VALUES (4, 3, 4);
-INSERT INTO `kind_of_movie` VALUES (5, 2, 4);
-INSERT INTO `kind_of_movie` VALUES (6, 2, 5);
-INSERT INTO `kind_of_movie` VALUES (7, 3, 5);
-INSERT INTO `kind_of_movie` VALUES (8, 2, 6);
-INSERT INTO `kind_of_movie` VALUES (9, 3, 6);
-INSERT INTO `kind_of_movie` VALUES (10, 4, 7);
-INSERT INTO `kind_of_movie` VALUES (11, 13, 7);
-INSERT INTO `kind_of_movie` VALUES (12, 5, 8);
-INSERT INTO `kind_of_movie` VALUES (13, 9, 8);
-INSERT INTO `kind_of_movie` VALUES (14, 5, 9);
-INSERT INTO `kind_of_movie` VALUES (15, 9, 9);
-INSERT INTO `kind_of_movie` VALUES (16, 4, 10);
-INSERT INTO `kind_of_movie` VALUES (17, 8, 11);
-INSERT INTO `kind_of_movie` VALUES (18, 6, 11);
-INSERT INTO `kind_of_movie` VALUES (19, 1, 12);
-INSERT INTO `kind_of_movie` VALUES (20, 15, 12);
-INSERT INTO `kind_of_movie` VALUES (22, 6, 12);
+-- Dumping structure for table movie_booking.movie
+CREATE TABLE IF NOT EXISTS `movie` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `actor` varchar(255) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `director` varchar(255) DEFAULT NULL,
+  `duration_movie` varchar(255) DEFAULT NULL,
+  `name_movie` varchar(255) DEFAULT NULL,
+  `release_date` varchar(255) DEFAULT NULL,
+  `studio` varchar(255) DEFAULT NULL,
+  `trailer` varchar(255) DEFAULT NULL,
+  `status_movie_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK4ygi2iee6iokm84k6dayard3d` (`status_movie_id`),
+  CONSTRAINT `FK4ygi2iee6iokm84k6dayard3d` FOREIGN KEY (`status_movie_id`) REFERENCES `status_film` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for movie
--- ----------------------------
-DROP TABLE IF EXISTS `movie`;
-CREATE TABLE `movie`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `actor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `director` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `duration_movie` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `name_movie` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `release_date` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `studio` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `trailer` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `status_movie_id` bigint NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `FK4ygi2iee6iokm84k6dayard3d`(`status_movie_id` ASC) USING BTREE,
-  CONSTRAINT `FK4ygi2iee6iokm84k6dayard3d` FOREIGN KEY (`status_movie_id`) REFERENCES `status_film` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.movie: ~12 rows (approximately)
+INSERT INTO `movie` (`id`, `actor`, `avatar`, `content`, `director`, `duration_movie`, `name_movie`, `release_date`, `studio`, `trailer`, `status_movie_id`) VALUES
+	(1, 'Huỳnh Tú Uyên, Trần Vân Anh, Trần Phong, Nam Nam, Vương Thanh Tùng, Hồ Quang Mẫn, Nguyễn Trung Huy, Hoa Thảo, Raman Quốc Cường', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/4/0/406x600-silent.jpg', 'Lấy cảm hứng từ trò chơi quen thuộc Năm Mười, câu chuyện xoay quanh một nhóm bạn cùng nhau đi nghỉ dưỡng tại Đà Lạt. Chuyến đi tưởng như chữa lành bỗng nhiên trở thành tai hoạ khi họ cùng chơi trò Năm Mười và một bí mật kinh hoàng năm xưa được hé lộ.', 'Tấn Hoàng Thông', '80', 'Năm Mười', '30/05/2025', 'Investra', 'http://youtube.com/watch?v=UQIBqQjXYbo&t=91s', 2),
+	(2, 'Karen Nguyễn, Kay Trần, Thanh Duy, Nguyên Thảo, Lâm Hoàng Oanh, Mạc Trung Kiên, Nguyễn Hữu Tiến,...', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/d/_/d_i_y_h_-_payoff_poster_-_kc_06062025.jpg', 'Tú liên tục rơi vào vòng xoáy kỳ lạ khi những người cô quen biết dường như đã trở thành một người khác. Tình cờ một thế giới bí ẩn nằm sâu dưới đáy hồ mở ra, nơi bản sao tà ác của con người được hình thành và nuôi dưỡng bởi chấp niệm chưa được hóa giải củ', 'Trần Hữu Tấn', '98', 'Dưới Đáy Hồ', '06/06/2025', 'Production Q và HK Film', 'https://youtu.be/aDpPc-sMThQ', 2),
+	(3, 'Quốc Trường, Mạc Đăng Khoa, Phương Thanh', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/u/t/utlan_firtlook_simple_layers_cmyk_1_.jpg', 'Sau sự ra đi của cha, Lan (Phương Thanh) về một vùng quê và ở đợ cho nhà ông Danh (Mạc Văn Khoa) - một người đàn ông góa vợ, không con cái. Ngay sau khi bước chân vào căn nhà, Lan phải đối mặt với hàng loạt hiện tượng kỳ dị và những cái chết bí ẩn liên tụ', 'Trần Trọng Dần', '123', 'Út Lan: Oán Linh Giữ Của', '20/06/2025', 'Nhà sản xuất phim kinh dị Việt Nam', 'https://www.youtube.com/watch?v=W3q2kI2q7Yc', 2),
+	(4, 'Trấn Thành, Lê Giang, Lê Dương Bảo Lâm, Uyển Ân,...', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/3/5/350x495btbt.jpg', 'Bộ tứ báo thủ bao gồm Chét-Xi-Cà, Dì Bốn, Cậu Mười Một, Con Kiều chính thức xuất hiện cùng với phi vụ báo thế kỉ. Nghe nói kế hoạch tiếp theo là ở Đà Lạt, liệu bốn báo thủ sẽ quậy Tết tung nóc cỡ nào?', 'Trấn Thành', '132', 'Bộ Tứ Báo Thủ', '29/01/2025', 'rấn Thành Films, Trấn Thành Town và Galaxy Studio', 'https://youtu.be/njfAWzmF6oY', 3),
+	(5, 'Kaity Nguyễn, Trần Ngọc Vàng, Thanh Sơn', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/3/image/c5f0a1eff4c394a251036189ccddaacd/m/a/main_social_1_.jpg', 'Yêu Nhầm Bạn Thân kể câu chuyện tình yêu lãng mạn giữa khung cảnh tuyệt đẹp của Việt Nam, từ bờ cát trắng miền Trung đến núi rừng Tây Bắc. Bình An (Kaity Nguyễn), cô gái sống hết mình vì tình yêu, đang hạnh phúc bên bạn trai Vũ Trần (Thanh Sơn), một đạo d', 'Nguyễn Quang Dũng - Diệp Thế Vinh', '106', 'Yêu Nhầm Bạn Thân', '29/01/2025', 'HK Film, Galaxy Studio, KAT House và Trấn Thành Town', 'https://youtu.be/81v_4Fi-DGQ', 3),
+	(6, 'Thu Trang, Đoàn Thiên Ân, Lê Xuân Tiền, Ma Ran Đô,...', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/n/_/n_h_n_b_c_t_-_payoff_poster_social_-_kc_m_ng_1_t_t_2025.jpg', 'Câu chuyện xoay quanh Vân - cô gái bán bánh mì vô tình gặp phải hai chàng trai trong một tai nạn nhỏ. Làm thế nào khi tiếng sét ái tình đánh một lúc cả ba người? Liệu giữa một chàng trai chững chạc, nam tính và một chàng trai đôi chút ngông nghênh, cool n', 'Thu Trang', '100', 'Nụ Hôn Bạc Tỷ', '29/01/2025', 'Công ty TNHH MTV Ngôi Sao Cineplex BHD Việt Nam', 'https://youtu.be/wr6MeifZCUs', 3),
+	(7, 'Quang Tuấn, Khả Như, NSƯT Phú Đôn, Vân Dung, NSND Thanh Nam, Hoàng Mèo, Thanh Tân, Trung Ruồi, Kiều Chi,…', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/q/u/qu_nh_p_tr_ng_-_payoff_poster_-_kc_07032025_1_.jpg', 'Phim lấy cảm hứng từ câu chuyện có thật và “truyền thuyết kinh dị nhất về người chết sống lại” - Ở một ngôi làng vùng cao, cặp vợ chồng Quang và Như sống bằng nghề mai táng. Cuộc sống yên bình của họ bị xáo trộn khi phát hiện một cỗ quan tài vô chủ trên m', 'Pom Nguyễn', '121', 'Quỷ Nhập Tràng', '07/03/2025', 'Công ty TNHH AMF', 'https://youtu.be/fQKxDM-hxoU', 3),
+	(8, 'Huỳnh Lập, Phương Mỹ Chi, NSƯT Hạnh Thuý, NSƯT Huỳnh Đông, Puka, Đào Anh Tuấn, Trung Dân, Kiều Linh, Lê Nam, Chí Tâm, Thanh Thức, Trác Thuý Miêu, Mai Thế Hiệp, NS Mạnh Dung, NSƯT Thanh Dậu, NS Thanh Hiền, Nguyễn Anh Tú,…', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/p/a/payoff_poster_ngt_master_sneak-2_1_.jpg', 'Nhà Gia Tiên xoay quanh câu chuyện đa góc nhìn về các thế hệ khác nhau trong một gia đình, có hai nhân vật chính là Gia Minh (Huỳnh Lập) và Mỹ Tiên (Phương Mỹ Chi). Trở về căn nhà gia tiên để quay các video “triệu view” trên mạng xã hội, Mỹ Tiên - một nhà', 'Huỳnh Lập', '117', 'Nhà Gia Tiên\n', '21/02/2025', '17 Production', 'https://youtu.be/wfPTz0A23ns', 2),
+	(9, 'NSƯT Kim Phương, Long Đẹp Trai, NSƯT Tuyết Thu, Quách Ngọc Tuyên, Đoàn Thế Vinh, Hồng Thu, Yuno Bigboi, Anh Tú Wilson, Bảo Ngọc, Tín Nguyễn, Hồ Đông Quan, Cherry Hải My, Rio Hạo Nhiên,…', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/3/image/c5f0a1eff4c394a251036189ccddaacd/l/m/lm8_-_470x700.jpg', 'Một bộ phim về sự khác biệt quan điểm giữa ba thế hệ ông bà cha mẹ con cháu. Ai cũng đúng ở góc nhìn của mình nhưng đứng trước hoài bão của tuổi trẻ, cuối cùng thì ai sẽ là người phải nghe theo người còn lại? Và nếu ước mơ của những đứa trẻ bị cho là viển', 'Lý Hải', '135', 'Lật Mặt 8: Vòng Tay Trắng', '30/04/2025', 'Lý Hải Production', 'https://youtu.be/hUlBTt3NyGI', 1),
+	(10, 'Quốc Huy, Đinh Ngọc Diệp, Quốc Anh, Minh Anh, Anh Phạm,', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/t/t/ttk_poster_official_fa_1638x2048px_1_.jpg', 'Thám Tử Kiên là một nhân vật được yêu thích trong tác phẩm điện của ăn khách của NGƯỜI VỢ CUỐI CÙNG của Victor Vũ, Thám Tử Kiên: Kỳ Không Đầu sẽ là một phim Victor Vũ trở về với thể loại sở trường Kinh Dị - Trinh Thám sau những tác phẩm tình cảm lãng mạn ', 'Victor Vũ', '131', 'Thám Tử Kiên: Kỳ Án Không Đầu', '28/04/2025', 'Galaxy Studio và November Films', 'https://youtu.be/QiXNbEKF3U0', 1),
+	(11, 'Wasabi Mizuta, Megumi Ôhara, Yumi Kakazu, Subaru Kimura, Tomokazu Seki,...', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/c/o/copy_of_250220_dr25_main_b1_localized_embbed_1_.jpg', 'Thông qua món bảo bối mới của Doraemon, cả nhóm bạn bước thế giới trong một bức tranh nổi tiếng và bắt gặp cô bạn bí ẩn tên Claire. Với lời mời của Claire, cả nhóm cùng đến thăm vương quốc Artoria, nơi ẩn giấu một viên ngọc quý mang tên Artoria Blue đang ', 'Yukiyo Teramoto', '105', 'Phim Điện Ảnh Doraemon: Nobita và Cuộc Phiêu Lưu Vào Thế Giới Trong Tranh', '23/05/2025', 'Shin-Ei Animation, TV Asahi và ADK', 'https://youtu.be/Bz0zCdNBj1Q', 1),
+	(12, 'Tom Cruise', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/m/i/mi8_poster_470x700_1.jpg', 'Cuộc đời là tất thảy những lựa chọn. Tom Cruise thủ vai Ethan Hunt trở lại trong Nhiệm Vụ: Bất Khả Thi – Nghiệp Báo Cuối Cùng.', 'Christopher McQuarrie', '168', 'Nhiệm vụ: Bất khả thi - Nghiệp báo cuối cùng', '30/05/2025', 'Paramount Pictures', 'https://youtu.be/no2HdwAX8jI', 1);
 
--- ----------------------------
--- Records of movie
--- ----------------------------
-INSERT INTO `movie` VALUES (1, 'Huỳnh Tú Uyên, Trần Vân Anh, Trần Phong, Nam Nam, Vương Thanh Tùng, Hồ Quang Mẫn, Nguyễn Trung Huy, Hoa Thảo, Raman Quốc Cường', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/4/0/406x600-silent.jpg', 'Lấy cảm hứng từ trò chơi quen thuộc Năm Mười, câu chuyện xoay quanh một nhóm bạn cùng nhau đi nghỉ dưỡng tại Đà Lạt. Chuyến đi tưởng như chữa lành bỗng nhiên trở thành tai hoạ khi họ cùng chơi trò Năm Mười và một bí mật kinh hoàng năm xưa được hé lộ.', 'Tấn Hoàng Thông', '80', 'Năm Mười', '30/05/2025', 'Investra', 'http://youtube.com/watch?v=UQIBqQjXYbo&t=91s', 2);
-INSERT INTO `movie` VALUES (2, 'Karen Nguyễn, Kay Trần, Thanh Duy, Nguyên Thảo, Lâm Hoàng Oanh, Mạc Trung Kiên, Nguyễn Hữu Tiến,...', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/d/_/d_i_y_h_-_payoff_poster_-_kc_06062025.jpg', 'Tú liên tục rơi vào vòng xoáy kỳ lạ khi những người cô quen biết dường như đã trở thành một người khác. Tình cờ một thế giới bí ẩn nằm sâu dưới đáy hồ mở ra, nơi bản sao tà ác của con người được hình thành và nuôi dưỡng bởi chấp niệm chưa được hóa giải củ', 'Trần Hữu Tấn', '98', 'Dưới Đáy Hồ', '06/06/2025', 'Production Q và HK Film', 'https://youtu.be/aDpPc-sMThQ', 2);
-INSERT INTO `movie` VALUES (3, 'Quốc Trường, Mạc Đăng Khoa, Phương Thanh', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/u/t/utlan_firtlook_simple_layers_cmyk_1_.jpg', 'Sau sự ra đi của cha, Lan (Phương Thanh) về một vùng quê và ở đợ cho nhà ông Danh (Mạc Văn Khoa) - một người đàn ông góa vợ, không con cái. Ngay sau khi bước chân vào căn nhà, Lan phải đối mặt với hàng loạt hiện tượng kỳ dị và những cái chết bí ẩn liên tụ', 'Trần Trọng Dần', '123', 'Út Lan: Oán Linh Giữ Của', '20/06/2025', 'Nhà sản xuất phim kinh dị Việt Nam', 'https://www.youtube.com/watch?v=W3q2kI2q7Yc', 2);
-INSERT INTO `movie` VALUES (4, 'Trấn Thành, Lê Giang, Lê Dương Bảo Lâm, Uyển Ân,...', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/3/5/350x495btbt.jpg', 'Bộ tứ báo thủ bao gồm Chét-Xi-Cà, Dì Bốn, Cậu Mười Một, Con Kiều chính thức xuất hiện cùng với phi vụ báo thế kỉ. Nghe nói kế hoạch tiếp theo là ở Đà Lạt, liệu bốn báo thủ sẽ quậy Tết tung nóc cỡ nào?', 'Trấn Thành', '132', 'Bộ Tứ Báo Thủ', '29/01/2025', 'rấn Thành Films, Trấn Thành Town và Galaxy Studio', 'https://youtu.be/njfAWzmF6oY', 3);
-INSERT INTO `movie` VALUES (5, 'Kaity Nguyễn, Trần Ngọc Vàng, Thanh Sơn', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/3/image/c5f0a1eff4c394a251036189ccddaacd/m/a/main_social_1_.jpg', 'Yêu Nhầm Bạn Thân kể câu chuyện tình yêu lãng mạn giữa khung cảnh tuyệt đẹp của Việt Nam, từ bờ cát trắng miền Trung đến núi rừng Tây Bắc. Bình An (Kaity Nguyễn), cô gái sống hết mình vì tình yêu, đang hạnh phúc bên bạn trai Vũ Trần (Thanh Sơn), một đạo d', 'Nguyễn Quang Dũng - Diệp Thế Vinh', '106', 'Yêu Nhầm Bạn Thân', '29/01/2025', 'HK Film, Galaxy Studio, KAT House và Trấn Thành Town', 'https://youtu.be/81v_4Fi-DGQ', 3);
-INSERT INTO `movie` VALUES (6, 'Thu Trang, Đoàn Thiên Ân, Lê Xuân Tiền, Ma Ran Đô,...', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/n/_/n_h_n_b_c_t_-_payoff_poster_social_-_kc_m_ng_1_t_t_2025.jpg', 'Câu chuyện xoay quanh Vân - cô gái bán bánh mì vô tình gặp phải hai chàng trai trong một tai nạn nhỏ. Làm thế nào khi tiếng sét ái tình đánh một lúc cả ba người? Liệu giữa một chàng trai chững chạc, nam tính và một chàng trai đôi chút ngông nghênh, cool n', 'Thu Trang', '100', 'Nụ Hôn Bạc Tỷ', '29/01/2025', 'Công ty TNHH MTV Ngôi Sao Cineplex BHD Việt Nam', 'https://youtu.be/wr6MeifZCUs', 3);
-INSERT INTO `movie` VALUES (7, 'Quang Tuấn, Khả Như, NSƯT Phú Đôn, Vân Dung, NSND Thanh Nam, Hoàng Mèo, Thanh Tân, Trung Ruồi, Kiều Chi,…', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/q/u/qu_nh_p_tr_ng_-_payoff_poster_-_kc_07032025_1_.jpg', 'Phim lấy cảm hứng từ câu chuyện có thật và “truyền thuyết kinh dị nhất về người chết sống lại” - Ở một ngôi làng vùng cao, cặp vợ chồng Quang và Như sống bằng nghề mai táng. Cuộc sống yên bình của họ bị xáo trộn khi phát hiện một cỗ quan tài vô chủ trên m', 'Pom Nguyễn', '121', 'Quỷ Nhập Tràng', '07/03/2025', 'Công ty TNHH AMF', 'https://youtu.be/fQKxDM-hxoU', 3);
-INSERT INTO `movie` VALUES (8, 'Huỳnh Lập, Phương Mỹ Chi, NSƯT Hạnh Thuý, NSƯT Huỳnh Đông, Puka, Đào Anh Tuấn, Trung Dân, Kiều Linh, Lê Nam, Chí Tâm, Thanh Thức, Trác Thuý Miêu, Mai Thế Hiệp, NS Mạnh Dung, NSƯT Thanh Dậu, NS Thanh Hiền, Nguyễn Anh Tú,…', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/p/a/payoff_poster_ngt_master_sneak-2_1_.jpg', 'Nhà Gia Tiên xoay quanh câu chuyện đa góc nhìn về các thế hệ khác nhau trong một gia đình, có hai nhân vật chính là Gia Minh (Huỳnh Lập) và Mỹ Tiên (Phương Mỹ Chi). Trở về căn nhà gia tiên để quay các video “triệu view” trên mạng xã hội, Mỹ Tiên - một nhà', 'Huỳnh Lập', '117', 'Nhà Gia Tiên\n', '21/02/2025', '17 Production', 'https://youtu.be/wfPTz0A23ns', 3);
-INSERT INTO `movie` VALUES (9, 'NSƯT Kim Phương, Long Đẹp Trai, NSƯT Tuyết Thu, Quách Ngọc Tuyên, Đoàn Thế Vinh, Hồng Thu, Yuno Bigboi, Anh Tú Wilson, Bảo Ngọc, Tín Nguyễn, Hồ Đông Quan, Cherry Hải My, Rio Hạo Nhiên,…', 'NSƯT Kim Phương, Long Đẹp Trai, NSƯT Tuyết Thu, Quách Ngọc Tuyên, Đoàn Thế Vinh, Hồng Thu, Yuno Bigboi, Anh Tú Wilson, Bảo Ngọc, Tín Nguyễn, Hồ Đông Quan, Cherry Hải My, Rio Hạo Nhiên,…', 'Một bộ phim về sự khác biệt quan điểm giữa ba thế hệ ông bà cha mẹ con cháu. Ai cũng đúng ở góc nhìn của mình nhưng đứng trước hoài bão của tuổi trẻ, cuối cùng thì ai sẽ là người phải nghe theo người còn lại? Và nếu ước mơ của những đứa trẻ bị cho là viển', 'Lý Hải', '135', 'Lật Mặt 8: Vòng Tay Trắng', '30/04/2025', 'Lý Hải Production', 'https://youtu.be/hUlBTt3NyGI', 1);
-INSERT INTO `movie` VALUES (10, 'Quốc Huy, Đinh Ngọc Diệp, Quốc Anh, Minh Anh, Anh Phạm,', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/t/t/ttk_poster_official_fa_1638x2048px_1_.jpg', 'Thám Tử Kiên là một nhân vật được yêu thích trong tác phẩm điện của ăn khách của NGƯỜI VỢ CUỐI CÙNG của Victor Vũ, Thám Tử Kiên: Kỳ Không Đầu sẽ là một phim Victor Vũ trở về với thể loại sở trường Kinh Dị - Trinh Thám sau những tác phẩm tình cảm lãng mạn ', 'Victor Vũ', '131', 'Thám Tử Kiên: Kỳ Án Không Đầu', '28/04/2025', 'Galaxy Studio và November Films', 'https://youtu.be/QiXNbEKF3U0', 1);
-INSERT INTO `movie` VALUES (11, 'Wasabi Mizuta, Megumi Ôhara, Yumi Kakazu, Subaru Kimura, Tomokazu Seki,...', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/c/o/copy_of_250220_dr25_main_b1_localized_embbed_1_.jpg', 'Thông qua món bảo bối mới của Doraemon, cả nhóm bạn bước thế giới trong một bức tranh nổi tiếng và bắt gặp cô bạn bí ẩn tên Claire. Với lời mời của Claire, cả nhóm cùng đến thăm vương quốc Artoria, nơi ẩn giấu một viên ngọc quý mang tên Artoria Blue đang ', 'Yukiyo Teramoto', '105', 'Phim Điện Ảnh Doraemon: Nobita và Cuộc Phiêu Lưu Vào Thế Giới Trong Tranh', '23/05/2025', 'Shin-Ei Animation, TV Asahi và ADK', 'https://youtu.be/Bz0zCdNBj1Q', 1);
-INSERT INTO `movie` VALUES (12, 'Tom Cruise', 'https://iguov8nhvyobj.vcdn.cloud/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/m/i/mi8_poster_470x700_1.jpg', 'Cuộc đời là tất thảy những lựa chọn. Tom Cruise thủ vai Ethan Hunt trở lại trong Nhiệm Vụ: Bất Khả Thi – Nghiệp Báo Cuối Cùng.', 'Christopher McQuarrie', '168', 'Nhiệm vụ: Bất khả thi - Nghiệp báo cuối cùng', '30/05/2025', 'Paramount Pictures', 'https://youtu.be/no2HdwAX8jI', 1);
+-- Dumping structure for table movie_booking.pending_user
+CREATE TABLE IF NOT EXISTS `pending_user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `address` varchar(255) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `card_id` varchar(255) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `expires_at` datetime(6) NOT NULL,
+  `gender` bit(1) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(255) DEFAULT NULL,
+  `verification_code` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UKmytt1m8uftte2v2p2kv5cgl1l` (`email`),
+  UNIQUE KEY `UKcsw8ejily03onmxkpyb4s0kco` (`verification_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for role
--- ----------------------------
-DROP TABLE IF EXISTS `role`;
-CREATE TABLE `role`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.pending_user: ~0 rows (approximately)
 
--- ----------------------------
--- Records of role
--- ----------------------------
-INSERT INTO `role` VALUES (1, 'ROLE_USER');
-INSERT INTO `role` VALUES (2, 'ROLE_ADMIN');
+-- Dumping structure for table movie_booking.role
+CREATE TABLE IF NOT EXISTS `role` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for room
--- ----------------------------
-DROP TABLE IF EXISTS `room`;
-CREATE TABLE `room`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `quantity_seat` int NOT NULL,
-  `room_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `price` double NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.role: ~2 rows (approximately)
+INSERT INTO `role` (`id`, `name`) VALUES
+	(1, 'ROLE_USER'),
+	(2, 'ROLE_ADMIN');
 
--- ----------------------------
--- Records of room
--- ----------------------------
-INSERT INTO `room` VALUES (1, 'Phòng chiếu tiêu chuẩn với màn hình lớn và hệ thống âm thanh Dolby', 101, 'Standard Room 1', '1', 45000);
-INSERT INTO `room` VALUES (2, 'Phòng chiếu tiêu chuẩn với màn hình lớn và hệ thống âm thanh Dolby', 101, 'Standard Room 2', '2', 45000);
-INSERT INTO `room` VALUES (3, 'Phòng chiếu tiêu chuẩn với màn hình lớn và hệ thống âm thanh Dolby', 101, 'Standard Room 3', '2', 45000);
-INSERT INTO `room` VALUES (4, 'Phòng chiếu tiêu chuẩn với màn hình lớn và hệ thống âm thanh Dolby', 120, 'Standard Room 4', '1', 45000);
+-- Dumping structure for table movie_booking.room
+CREATE TABLE IF NOT EXISTS `room` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  `price_couple_seat` int(11) NOT NULL,
+  `price_normal_seat` int(11) NOT NULL,
+  `quantity_couple_seat` int(11) NOT NULL,
+  `quantity_normal_seat` int(11) NOT NULL,
+  `room_name` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `total_seats` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for seat
--- ----------------------------
-DROP TABLE IF EXISTS `seat`;
-CREATE TABLE `seat`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `seat_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `room_id` bigint NULL DEFAULT NULL,
-  `price` int NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `FKd7f42843rt05tt66t6vcb7s9u`(`room_id` ASC) USING BTREE,
-  CONSTRAINT `FKd7f42843rt05tt66t6vcb7s9u` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 421 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.room: ~2 rows (approximately)
+INSERT INTO `room` (`id`, `description`, `price_couple_seat`, `price_normal_seat`, `quantity_couple_seat`, `quantity_normal_seat`, `room_name`, `status`, `total_seats`) VALUES
+	(1, 'Phòng thoải mái', 85000, 70000, 8, 90, 'Phòng 1', 1, 98),
+	(2, 'Phòng đẹp, 3D', 75000, 65000, 8, 99, 'Phòng 2', 1, 107);
 
--- ----------------------------
--- Records of seat
--- ----------------------------
-INSERT INTO `seat` VALUES (1, 'ghế thường', 'A1', 1, 70000);
-INSERT INTO `seat` VALUES (2, 'ghế thường', 'A2', 1, 70000);
-INSERT INTO `seat` VALUES (3, 'ghế thường', 'A3', 1, 70000);
-INSERT INTO `seat` VALUES (4, 'ghế thường', 'A4', 1, 70000);
-INSERT INTO `seat` VALUES (5, 'ghế thường', 'A5', 1, 70000);
-INSERT INTO `seat` VALUES (6, 'ghế thường', 'A6', 1, 70000);
-INSERT INTO `seat` VALUES (7, 'ghế thường', 'A7', 1, 70000);
-INSERT INTO `seat` VALUES (8, 'ghế thường', 'A8', 1, 70000);
-INSERT INTO `seat` VALUES (9, 'ghế thường', 'A9', 1, 70000);
-INSERT INTO `seat` VALUES (10, 'ghế thường', 'A10', 1, 70000);
-INSERT INTO `seat` VALUES (11, 'ghế thường', 'A11', 1, 70000);
-INSERT INTO `seat` VALUES (12, 'ghế thường', 'A12', 1, 70000);
-INSERT INTO `seat` VALUES (13, 'ghế thường', 'B1', 1, 70000);
-INSERT INTO `seat` VALUES (14, 'ghế thường', 'B2', 1, 70000);
-INSERT INTO `seat` VALUES (15, 'ghế thường', 'B3', 1, 70000);
-INSERT INTO `seat` VALUES (16, 'ghế thường', 'B4', 1, 70000);
-INSERT INTO `seat` VALUES (17, 'ghế thường', 'B5', 1, 70000);
-INSERT INTO `seat` VALUES (18, 'ghế thường', 'B6', 1, 70000);
-INSERT INTO `seat` VALUES (19, 'ghế thường', 'B7', 1, 70000);
-INSERT INTO `seat` VALUES (20, 'ghế thường', 'B8', 1, 70000);
-INSERT INTO `seat` VALUES (21, 'ghế thường', 'B9', 1, 70000);
-INSERT INTO `seat` VALUES (22, 'ghế thường', 'B10', 1, 70000);
-INSERT INTO `seat` VALUES (23, 'ghế thường', 'B11', 1, 70000);
-INSERT INTO `seat` VALUES (24, 'ghế thường', 'B12', 1, 70000);
-INSERT INTO `seat` VALUES (25, 'ghế thường', 'C1', 1, 70000);
-INSERT INTO `seat` VALUES (26, 'ghế thường', 'C2', 1, 70000);
-INSERT INTO `seat` VALUES (27, 'ghế thường', 'C3', 1, 70000);
-INSERT INTO `seat` VALUES (28, 'ghế thường', 'C4', 1, 70000);
-INSERT INTO `seat` VALUES (29, 'ghế thường', 'C5', 1, 70000);
-INSERT INTO `seat` VALUES (30, 'ghế thường', 'C6', 1, 70000);
-INSERT INTO `seat` VALUES (31, 'ghế thường', 'C7', 1, 70000);
-INSERT INTO `seat` VALUES (32, 'ghế thường', 'C8', 1, 70000);
-INSERT INTO `seat` VALUES (33, 'ghế thường', 'C9', 1, 70000);
-INSERT INTO `seat` VALUES (34, 'ghế thường', 'C10', 1, 70000);
-INSERT INTO `seat` VALUES (35, 'ghế thường', 'C11', 1, 70000);
-INSERT INTO `seat` VALUES (36, 'ghế thường', 'C12', 1, 70000);
-INSERT INTO `seat` VALUES (37, 'ghế thường', 'D1', 1, 70000);
-INSERT INTO `seat` VALUES (38, 'ghế thường', 'D2', 1, 70000);
-INSERT INTO `seat` VALUES (39, 'ghế thường', 'D3', 1, 70000);
-INSERT INTO `seat` VALUES (40, 'ghế thường', 'D4', 1, 70000);
-INSERT INTO `seat` VALUES (41, 'ghế thường', 'D5', 1, 70000);
-INSERT INTO `seat` VALUES (42, 'ghế thường', 'D6', 1, 70000);
-INSERT INTO `seat` VALUES (43, 'ghế thường', 'D7', 1, 70000);
-INSERT INTO `seat` VALUES (44, 'ghế thường', 'D8', 1, 70000);
-INSERT INTO `seat` VALUES (45, 'ghế thường', 'D9', 1, 70000);
-INSERT INTO `seat` VALUES (46, 'ghế thường', 'D10', 1, 70000);
-INSERT INTO `seat` VALUES (47, 'ghế thường', 'D11', 1, 70000);
-INSERT INTO `seat` VALUES (48, 'ghế thường', 'D12', 1, 70000);
-INSERT INTO `seat` VALUES (49, 'ghế thường', 'E1', 1, 70000);
-INSERT INTO `seat` VALUES (50, 'ghế thường', 'E2', 1, 70000);
-INSERT INTO `seat` VALUES (51, 'ghế thường', 'E3', 1, 70000);
-INSERT INTO `seat` VALUES (52, 'ghế thường', 'E4', 1, 70000);
-INSERT INTO `seat` VALUES (53, 'ghế thường', 'E5', 1, 70000);
-INSERT INTO `seat` VALUES (54, 'ghế thường', 'E6', 1, 70000);
-INSERT INTO `seat` VALUES (55, 'ghế thường', 'E7', 1, 70000);
-INSERT INTO `seat` VALUES (56, 'ghế thường', 'E8', 1, 70000);
-INSERT INTO `seat` VALUES (57, 'ghế thường', 'E9', 1, 70000);
-INSERT INTO `seat` VALUES (58, 'ghế thường', 'E10', 1, 70000);
-INSERT INTO `seat` VALUES (59, 'ghế thường', 'E11', 1, 70000);
-INSERT INTO `seat` VALUES (60, 'ghế thường', 'E12', 1, 70000);
-INSERT INTO `seat` VALUES (61, 'ghế thường', 'F1', 1, 70000);
-INSERT INTO `seat` VALUES (62, 'ghế thường', 'F2', 1, 70000);
-INSERT INTO `seat` VALUES (63, 'ghế thường', 'F3', 1, 70000);
-INSERT INTO `seat` VALUES (64, 'ghế thường', 'F4', 1, 70000);
-INSERT INTO `seat` VALUES (65, 'ghế thường', 'F5', 1, 70000);
-INSERT INTO `seat` VALUES (66, 'ghế thường', 'F6', 1, 70000);
-INSERT INTO `seat` VALUES (67, 'ghế thường', 'F7', 1, 70000);
-INSERT INTO `seat` VALUES (68, 'ghế thường', 'F8', 1, 70000);
-INSERT INTO `seat` VALUES (69, 'ghế thường', 'F9', 1, 70000);
-INSERT INTO `seat` VALUES (70, 'ghế thường', 'F10', 1, 70000);
-INSERT INTO `seat` VALUES (71, 'ghế thường', 'F11', 1, 70000);
-INSERT INTO `seat` VALUES (72, 'ghế thường', 'F12', 1, 70000);
-INSERT INTO `seat` VALUES (73, 'ghế thường', 'G1', 1, 70000);
-INSERT INTO `seat` VALUES (74, 'ghế thường', 'G2', 1, 70000);
-INSERT INTO `seat` VALUES (75, 'ghế thường', 'G3', 1, 70000);
-INSERT INTO `seat` VALUES (76, 'ghế thường', 'G4', 1, 70000);
-INSERT INTO `seat` VALUES (77, 'ghế thường', 'G5', 1, 70000);
-INSERT INTO `seat` VALUES (78, 'ghế thường', 'G6', 1, 70000);
-INSERT INTO `seat` VALUES (79, 'ghế thường', 'G7', 1, 70000);
-INSERT INTO `seat` VALUES (80, 'ghế thường', 'G8', 1, 70000);
-INSERT INTO `seat` VALUES (81, 'ghế thường', 'G9', 1, 70000);
-INSERT INTO `seat` VALUES (82, 'ghế thường', 'G10', 1, 70000);
-INSERT INTO `seat` VALUES (83, 'ghế thường', 'G11', 1, 70000);
-INSERT INTO `seat` VALUES (84, 'ghế thường', 'G12', 1, 70000);
-INSERT INTO `seat` VALUES (85, 'ghế thường', 'H1', 1, 70000);
-INSERT INTO `seat` VALUES (86, 'ghế thường', 'H2', 1, 70000);
-INSERT INTO `seat` VALUES (87, 'ghế thường', 'H3', 1, 70000);
-INSERT INTO `seat` VALUES (88, 'ghế thường', 'H4', 1, 70000);
-INSERT INTO `seat` VALUES (89, 'ghế thường', 'H5', 1, 70000);
-INSERT INTO `seat` VALUES (90, 'ghế thường', 'H6', 1, 70000);
-INSERT INTO `seat` VALUES (91, 'ghế thường', 'H7', 1, 70000);
-INSERT INTO `seat` VALUES (92, 'ghế thường', 'H8', 1, 70000);
-INSERT INTO `seat` VALUES (93, 'ghế thường', 'H9', 1, 70000);
-INSERT INTO `seat` VALUES (94, 'ghế thường', 'H10', 1, 70000);
-INSERT INTO `seat` VALUES (95, 'ghế thường', 'H11', 1, 70000);
-INSERT INTO `seat` VALUES (96, 'ghế thường', 'H12', 1, 70000);
-INSERT INTO `seat` VALUES (97, 'ghế đôi', 'I1', 1, 135000);
-INSERT INTO `seat` VALUES (98, 'ghế đôi', 'I2', 1, 135000);
-INSERT INTO `seat` VALUES (99, 'ghế đôi', 'I3', 1, 135000);
-INSERT INTO `seat` VALUES (100, 'ghế đôi', 'I4', 1, 135000);
-INSERT INTO `seat` VALUES (101, 'ghế đôi', 'I5', 1, 135000);
-INSERT INTO `seat` VALUES (102, 'ghế thường', 'A1', 2, 70000);
-INSERT INTO `seat` VALUES (103, 'ghế thường', 'A2', 2, 70000);
-INSERT INTO `seat` VALUES (104, 'ghế thường', 'A3', 2, 70000);
-INSERT INTO `seat` VALUES (105, 'ghế thường', 'A4', 2, 70000);
-INSERT INTO `seat` VALUES (106, 'ghế thường', 'A5', 2, 70000);
-INSERT INTO `seat` VALUES (107, 'ghế thường', 'A6', 2, 70000);
-INSERT INTO `seat` VALUES (108, 'ghế thường', 'A7', 2, 70000);
-INSERT INTO `seat` VALUES (109, 'ghế thường', 'A8', 2, 70000);
-INSERT INTO `seat` VALUES (110, 'ghế thường', 'A9', 2, 70000);
-INSERT INTO `seat` VALUES (111, 'ghế thường', 'A10', 2, 70000);
-INSERT INTO `seat` VALUES (112, 'ghế thường', 'A11', 2, 70000);
-INSERT INTO `seat` VALUES (113, 'ghế thường', 'A12', 2, 70000);
-INSERT INTO `seat` VALUES (114, 'ghế thường', 'B1', 2, 70000);
-INSERT INTO `seat` VALUES (115, 'ghế thường', 'B2', 2, 70000);
-INSERT INTO `seat` VALUES (116, 'ghế thường', 'B3', 2, 70000);
-INSERT INTO `seat` VALUES (117, 'ghế thường', 'B4', 2, 70000);
-INSERT INTO `seat` VALUES (118, 'ghế thường', 'B5', 2, 70000);
-INSERT INTO `seat` VALUES (119, 'ghế thường', 'B6', 2, 70000);
-INSERT INTO `seat` VALUES (120, 'ghế thường', 'B7', 2, 70000);
-INSERT INTO `seat` VALUES (121, 'ghế thường', 'B8', 2, 70000);
-INSERT INTO `seat` VALUES (122, 'ghế thường', 'B9', 2, 70000);
-INSERT INTO `seat` VALUES (123, 'ghế thường', 'B10', 2, 70000);
-INSERT INTO `seat` VALUES (124, 'ghế thường', 'B11', 2, 70000);
-INSERT INTO `seat` VALUES (125, 'ghế thường', 'B12', 2, 70000);
-INSERT INTO `seat` VALUES (126, 'ghế thường', 'C1', 2, 70000);
-INSERT INTO `seat` VALUES (127, 'ghế thường', 'C2', 2, 70000);
-INSERT INTO `seat` VALUES (128, 'ghế thường', 'C3', 2, 70000);
-INSERT INTO `seat` VALUES (129, 'ghế thường', 'C4', 2, 70000);
-INSERT INTO `seat` VALUES (130, 'ghế thường', 'C5', 2, 70000);
-INSERT INTO `seat` VALUES (131, 'ghế thường', 'C6', 2, 70000);
-INSERT INTO `seat` VALUES (132, 'ghế thường', 'C7', 2, 70000);
-INSERT INTO `seat` VALUES (133, 'ghế thường', 'C8', 2, 70000);
-INSERT INTO `seat` VALUES (134, 'ghế thường', 'C9', 2, 70000);
-INSERT INTO `seat` VALUES (135, 'ghế thường', 'C10', 2, 70000);
-INSERT INTO `seat` VALUES (136, 'ghế thường', 'C11', 2, 70000);
-INSERT INTO `seat` VALUES (137, 'ghế thường', 'C12', 2, 70000);
-INSERT INTO `seat` VALUES (138, 'ghế thường', 'D1', 2, 70000);
-INSERT INTO `seat` VALUES (139, 'ghế thường', 'D2', 2, 70000);
-INSERT INTO `seat` VALUES (140, 'ghế thường', 'D3', 2, 70000);
-INSERT INTO `seat` VALUES (141, 'ghế thường', 'D4', 2, 70000);
-INSERT INTO `seat` VALUES (142, 'ghế thường', 'D5', 2, 70000);
-INSERT INTO `seat` VALUES (143, 'ghế thường', 'D6', 2, 70000);
-INSERT INTO `seat` VALUES (144, 'ghế thường', 'D7', 2, 70000);
-INSERT INTO `seat` VALUES (145, 'ghế thường', 'D8', 2, 70000);
-INSERT INTO `seat` VALUES (146, 'ghế thường', 'D9', 2, 70000);
-INSERT INTO `seat` VALUES (147, 'ghế thường', 'D10', 2, 70000);
-INSERT INTO `seat` VALUES (148, 'ghế thường', 'D11', 2, 70000);
-INSERT INTO `seat` VALUES (149, 'ghế thường', 'D12', 2, 70000);
-INSERT INTO `seat` VALUES (150, 'ghế thường', 'E1', 2, 70000);
-INSERT INTO `seat` VALUES (151, 'ghế thường', 'E2', 2, 70000);
-INSERT INTO `seat` VALUES (152, 'ghế thường', 'E3', 2, 70000);
-INSERT INTO `seat` VALUES (153, 'ghế thường', 'E4', 2, 70000);
-INSERT INTO `seat` VALUES (154, 'ghế thường', 'E5', 2, 70000);
-INSERT INTO `seat` VALUES (155, 'ghế thường', 'E6', 2, 70000);
-INSERT INTO `seat` VALUES (156, 'ghế thường', 'E7', 2, 70000);
-INSERT INTO `seat` VALUES (157, 'ghế thường', 'E8', 2, 70000);
-INSERT INTO `seat` VALUES (158, 'ghế thường', 'E9', 2, 70000);
-INSERT INTO `seat` VALUES (159, 'ghế thường', 'E10', 2, 70000);
-INSERT INTO `seat` VALUES (160, 'ghế thường', 'E11', 2, 70000);
-INSERT INTO `seat` VALUES (161, 'ghế thường', 'E12', 2, 70000);
-INSERT INTO `seat` VALUES (162, 'ghế thường', 'F1', 2, 70000);
-INSERT INTO `seat` VALUES (163, 'ghế thường', 'F2', 2, 70000);
-INSERT INTO `seat` VALUES (164, 'ghế thường', 'F3', 2, 70000);
-INSERT INTO `seat` VALUES (165, 'ghế thường', 'F4', 2, 70000);
-INSERT INTO `seat` VALUES (166, 'ghế thường', 'F5', 2, 70000);
-INSERT INTO `seat` VALUES (167, 'ghế thường', 'F6', 2, 70000);
-INSERT INTO `seat` VALUES (168, 'ghế thường', 'F7', 2, 70000);
-INSERT INTO `seat` VALUES (169, 'ghế thường', 'F8', 2, 70000);
-INSERT INTO `seat` VALUES (170, 'ghế thường', 'F9', 2, 70000);
-INSERT INTO `seat` VALUES (171, 'ghế thường', 'F10', 2, 70000);
-INSERT INTO `seat` VALUES (172, 'ghế thường', 'F11', 2, 70000);
-INSERT INTO `seat` VALUES (173, 'ghế thường', 'F12', 2, 70000);
-INSERT INTO `seat` VALUES (174, 'ghế thường', 'G1', 2, 70000);
-INSERT INTO `seat` VALUES (175, 'ghế thường', 'G2', 2, 70000);
-INSERT INTO `seat` VALUES (176, 'ghế thường', 'G3', 2, 70000);
-INSERT INTO `seat` VALUES (177, 'ghế thường', 'G4', 2, 70000);
-INSERT INTO `seat` VALUES (178, 'ghế thường', 'G5', 2, 70000);
-INSERT INTO `seat` VALUES (179, 'ghế thường', 'G6', 2, 70000);
-INSERT INTO `seat` VALUES (180, 'ghế thường', 'G7', 2, 70000);
-INSERT INTO `seat` VALUES (181, 'ghế thường', 'G8', 2, 70000);
-INSERT INTO `seat` VALUES (182, 'ghế thường', 'G9', 2, 70000);
-INSERT INTO `seat` VALUES (183, 'ghế thường', 'G10', 2, 70000);
-INSERT INTO `seat` VALUES (184, 'ghế thường', 'G11', 2, 70000);
-INSERT INTO `seat` VALUES (185, 'ghế thường', 'G12', 2, 70000);
-INSERT INTO `seat` VALUES (186, 'ghế thường', 'H1', 2, 70000);
-INSERT INTO `seat` VALUES (187, 'ghế thường', 'H2', 2, 70000);
-INSERT INTO `seat` VALUES (188, 'ghế thường', 'H3', 2, 70000);
-INSERT INTO `seat` VALUES (189, 'ghế thường', 'H4', 2, 70000);
-INSERT INTO `seat` VALUES (190, 'ghế thường', 'H5', 2, 70000);
-INSERT INTO `seat` VALUES (191, 'ghế thường', 'H6', 2, 70000);
-INSERT INTO `seat` VALUES (192, 'ghế thường', 'H7', 2, 70000);
-INSERT INTO `seat` VALUES (193, 'ghế thường', 'H8', 2, 70000);
-INSERT INTO `seat` VALUES (194, 'ghế thường', 'H9', 2, 70000);
-INSERT INTO `seat` VALUES (195, 'ghế thường', 'H10', 2, 70000);
-INSERT INTO `seat` VALUES (196, 'ghế thường', 'H11', 2, 70000);
-INSERT INTO `seat` VALUES (197, 'ghế thường', 'H12', 2, 70000);
-INSERT INTO `seat` VALUES (198, 'ghế đôi', 'I1', 2, 135000);
-INSERT INTO `seat` VALUES (199, 'ghế đôi', 'I2', 2, 135000);
-INSERT INTO `seat` VALUES (200, 'ghế đôi', 'I3', 2, 135000);
-INSERT INTO `seat` VALUES (201, 'ghế đôi', 'I4', 2, 135000);
-INSERT INTO `seat` VALUES (202, 'ghế đôi', 'I5', 2, 135000);
-INSERT INTO `seat` VALUES (203, 'ghế thường', 'A1', 3, 70000);
-INSERT INTO `seat` VALUES (204, 'ghế thường', 'A2', 3, 70000);
-INSERT INTO `seat` VALUES (205, 'ghế thường', 'A3', 3, 70000);
-INSERT INTO `seat` VALUES (206, 'ghế thường', 'A4', 3, 70000);
-INSERT INTO `seat` VALUES (207, 'ghế thường', 'A5', 3, 70000);
-INSERT INTO `seat` VALUES (208, 'ghế thường', 'A6', 3, 70000);
-INSERT INTO `seat` VALUES (209, 'ghế thường', 'A7', 3, 70000);
-INSERT INTO `seat` VALUES (210, 'ghế thường', 'A8', 3, 70000);
-INSERT INTO `seat` VALUES (211, 'ghế thường', 'A9', 3, 70000);
-INSERT INTO `seat` VALUES (212, 'ghế thường', 'A10', 3, 70000);
-INSERT INTO `seat` VALUES (213, 'ghế thường', 'A11', 3, 70000);
-INSERT INTO `seat` VALUES (214, 'ghế thường', 'A12', 3, 70000);
-INSERT INTO `seat` VALUES (215, 'ghế thường', 'B1', 3, 70000);
-INSERT INTO `seat` VALUES (216, 'ghế thường', 'B2', 3, 70000);
-INSERT INTO `seat` VALUES (217, 'ghế thường', 'B3', 3, 70000);
-INSERT INTO `seat` VALUES (218, 'ghế thường', 'B4', 3, 70000);
-INSERT INTO `seat` VALUES (219, 'ghế thường', 'B5', 3, 70000);
-INSERT INTO `seat` VALUES (220, 'ghế thường', 'B6', 3, 70000);
-INSERT INTO `seat` VALUES (221, 'ghế thường', 'B7', 3, 70000);
-INSERT INTO `seat` VALUES (222, 'ghế thường', 'B8', 3, 70000);
-INSERT INTO `seat` VALUES (223, 'ghế thường', 'B9', 3, 70000);
-INSERT INTO `seat` VALUES (224, 'ghế thường', 'B10', 3, 70000);
-INSERT INTO `seat` VALUES (225, 'ghế thường', 'B11', 3, 70000);
-INSERT INTO `seat` VALUES (226, 'ghế thường', 'B12', 3, 70000);
-INSERT INTO `seat` VALUES (227, 'ghế thường', 'C1', 3, 70000);
-INSERT INTO `seat` VALUES (228, 'ghế thường', 'C2', 3, 70000);
-INSERT INTO `seat` VALUES (229, 'ghế thường', 'C3', 3, 70000);
-INSERT INTO `seat` VALUES (230, 'ghế thường', 'C4', 3, 70000);
-INSERT INTO `seat` VALUES (231, 'ghế thường', 'C5', 3, 70000);
-INSERT INTO `seat` VALUES (232, 'ghế thường', 'C6', 3, 70000);
-INSERT INTO `seat` VALUES (233, 'ghế thường', 'C7', 3, 70000);
-INSERT INTO `seat` VALUES (234, 'ghế thường', 'C8', 3, 70000);
-INSERT INTO `seat` VALUES (235, 'ghế thường', 'C9', 3, 70000);
-INSERT INTO `seat` VALUES (236, 'ghế thường', 'C10', 3, 70000);
-INSERT INTO `seat` VALUES (237, 'ghế thường', 'C11', 3, 70000);
-INSERT INTO `seat` VALUES (238, 'ghế thường', 'C12', 3, 70000);
-INSERT INTO `seat` VALUES (239, 'ghế thường', 'D1', 3, 70000);
-INSERT INTO `seat` VALUES (240, 'ghế thường', 'D2', 3, 70000);
-INSERT INTO `seat` VALUES (241, 'ghế thường', 'D3', 3, 70000);
-INSERT INTO `seat` VALUES (242, 'ghế thường', 'D4', 3, 70000);
-INSERT INTO `seat` VALUES (243, 'ghế thường', 'D5', 3, 70000);
-INSERT INTO `seat` VALUES (244, 'ghế thường', 'D6', 3, 70000);
-INSERT INTO `seat` VALUES (245, 'ghế thường', 'D7', 3, 70000);
-INSERT INTO `seat` VALUES (246, 'ghế thường', 'D8', 3, 70000);
-INSERT INTO `seat` VALUES (247, 'ghế thường', 'D9', 3, 70000);
-INSERT INTO `seat` VALUES (248, 'ghế thường', 'D10', 3, 70000);
-INSERT INTO `seat` VALUES (249, 'ghế thường', 'D11', 3, 70000);
-INSERT INTO `seat` VALUES (250, 'ghế thường', 'D12', 3, 70000);
-INSERT INTO `seat` VALUES (251, 'ghế thường', 'E1', 3, 70000);
-INSERT INTO `seat` VALUES (252, 'ghế thường', 'E2', 3, 70000);
-INSERT INTO `seat` VALUES (253, 'ghế thường', 'E3', 3, 70000);
-INSERT INTO `seat` VALUES (254, 'ghế thường', 'E4', 3, 70000);
-INSERT INTO `seat` VALUES (255, 'ghế thường', 'E5', 3, 70000);
-INSERT INTO `seat` VALUES (256, 'ghế thường', 'E6', 3, 70000);
-INSERT INTO `seat` VALUES (257, 'ghế thường', 'E7', 3, 70000);
-INSERT INTO `seat` VALUES (258, 'ghế thường', 'E8', 3, 70000);
-INSERT INTO `seat` VALUES (259, 'ghế thường', 'E9', 3, 70000);
-INSERT INTO `seat` VALUES (260, 'ghế thường', 'E10', 3, 70000);
-INSERT INTO `seat` VALUES (261, 'ghế thường', 'E11', 3, 70000);
-INSERT INTO `seat` VALUES (262, 'ghế thường', 'E12', 3, 70000);
-INSERT INTO `seat` VALUES (263, 'ghế thường', 'F1', 3, 70000);
-INSERT INTO `seat` VALUES (264, 'ghế thường', 'F2', 3, 70000);
-INSERT INTO `seat` VALUES (265, 'ghế thường', 'F3', 3, 70000);
-INSERT INTO `seat` VALUES (266, 'ghế thường', 'F4', 3, 70000);
-INSERT INTO `seat` VALUES (267, 'ghế thường', 'F5', 3, 70000);
-INSERT INTO `seat` VALUES (268, 'ghế thường', 'F6', 3, 70000);
-INSERT INTO `seat` VALUES (269, 'ghế thường', 'F7', 3, 70000);
-INSERT INTO `seat` VALUES (270, 'ghế thường', 'F8', 3, 70000);
-INSERT INTO `seat` VALUES (271, 'ghế thường', 'F9', 3, 70000);
-INSERT INTO `seat` VALUES (272, 'ghế thường', 'F10', 3, 70000);
-INSERT INTO `seat` VALUES (273, 'ghế thường', 'F11', 3, 70000);
-INSERT INTO `seat` VALUES (274, 'ghế thường', 'F12', 3, 70000);
-INSERT INTO `seat` VALUES (275, 'ghế thường', 'G1', 3, 70000);
-INSERT INTO `seat` VALUES (276, 'ghế thường', 'G2', 3, 70000);
-INSERT INTO `seat` VALUES (277, 'ghế thường', 'G3', 3, 70000);
-INSERT INTO `seat` VALUES (278, 'ghế thường', 'G4', 3, 70000);
-INSERT INTO `seat` VALUES (279, 'ghế thường', 'G5', 3, 70000);
-INSERT INTO `seat` VALUES (280, 'ghế thường', 'G6', 3, 70000);
-INSERT INTO `seat` VALUES (281, 'ghế thường', 'G7', 3, 70000);
-INSERT INTO `seat` VALUES (282, 'ghế thường', 'G8', 3, 70000);
-INSERT INTO `seat` VALUES (283, 'ghế thường', 'G9', 3, 70000);
-INSERT INTO `seat` VALUES (284, 'ghế thường', 'G10', 3, 70000);
-INSERT INTO `seat` VALUES (285, 'ghế thường', 'G11', 3, 70000);
-INSERT INTO `seat` VALUES (286, 'ghế thường', 'G12', 3, 70000);
-INSERT INTO `seat` VALUES (287, 'ghế thường', 'H1', 3, 70000);
-INSERT INTO `seat` VALUES (288, 'ghế thường', 'H2', 3, 70000);
-INSERT INTO `seat` VALUES (289, 'ghế thường', 'H3', 3, 70000);
-INSERT INTO `seat` VALUES (290, 'ghế thường', 'H4', 3, 70000);
-INSERT INTO `seat` VALUES (291, 'ghế thường', 'H5', 3, 70000);
-INSERT INTO `seat` VALUES (292, 'ghế thường', 'H6', 3, 70000);
-INSERT INTO `seat` VALUES (293, 'ghế thường', 'H7', 3, 70000);
-INSERT INTO `seat` VALUES (294, 'ghế thường', 'H8', 3, 70000);
-INSERT INTO `seat` VALUES (295, 'ghế thường', 'H9', 3, 70000);
-INSERT INTO `seat` VALUES (296, 'ghế thường', 'H10', 3, 70000);
-INSERT INTO `seat` VALUES (297, 'ghế thường', 'H11', 3, 70000);
-INSERT INTO `seat` VALUES (298, 'ghế thường', 'H12', 3, 70000);
-INSERT INTO `seat` VALUES (299, 'ghế đôi', 'I1', 3, 135000);
-INSERT INTO `seat` VALUES (300, 'ghế đôi', 'I2', 3, 135000);
-INSERT INTO `seat` VALUES (301, 'ghế đôi', 'I3', 3, 135000);
-INSERT INTO `seat` VALUES (302, 'ghế đôi', 'I4', 3, 135000);
-INSERT INTO `seat` VALUES (303, 'ghế đôi', 'I5', 3, 135000);
-INSERT INTO `seat` VALUES (304, 'ghế thường', 'A1', 4, 70000);
-INSERT INTO `seat` VALUES (305, 'ghế thường', 'A2', 4, 70000);
-INSERT INTO `seat` VALUES (306, 'ghế thường', 'A3', 4, 70000);
-INSERT INTO `seat` VALUES (307, 'ghế thường', 'A4', 4, 70000);
-INSERT INTO `seat` VALUES (308, 'ghế thường', 'A5', 4, 70000);
-INSERT INTO `seat` VALUES (309, 'ghế thường', 'A6', 4, 70000);
-INSERT INTO `seat` VALUES (310, 'ghế thường', 'A7', 4, 70000);
-INSERT INTO `seat` VALUES (311, 'ghế thường', 'A8', 4, 70000);
-INSERT INTO `seat` VALUES (312, 'ghế thường', 'A9', 4, 70000);
-INSERT INTO `seat` VALUES (313, 'ghế thường', 'A10', 4, 70000);
-INSERT INTO `seat` VALUES (314, 'ghế thường', 'A11', 4, 70000);
-INSERT INTO `seat` VALUES (315, 'ghế thường', 'A12', 4, 70000);
-INSERT INTO `seat` VALUES (316, 'ghế thường', 'B1', 4, 70000);
-INSERT INTO `seat` VALUES (317, 'ghế thường', 'B2', 4, 70000);
-INSERT INTO `seat` VALUES (318, 'ghế thường', 'B3', 4, 70000);
-INSERT INTO `seat` VALUES (319, 'ghế thường', 'B4', 4, 70000);
-INSERT INTO `seat` VALUES (320, 'ghế thường', 'B5', 4, 70000);
-INSERT INTO `seat` VALUES (321, 'ghế thường', 'B6', 4, 70000);
-INSERT INTO `seat` VALUES (322, 'ghế thường', 'B7', 4, 70000);
-INSERT INTO `seat` VALUES (323, 'ghế thường', 'B8', 4, 70000);
-INSERT INTO `seat` VALUES (324, 'ghế thường', 'B9', 4, 70000);
-INSERT INTO `seat` VALUES (325, 'ghế thường', 'B10', 4, 70000);
-INSERT INTO `seat` VALUES (326, 'ghế thường', 'B11', 4, 70000);
-INSERT INTO `seat` VALUES (327, 'ghế thường', 'B12', 4, 70000);
-INSERT INTO `seat` VALUES (328, 'ghế thường', 'C1', 4, 70000);
-INSERT INTO `seat` VALUES (329, 'ghế thường', 'C2', 4, 70000);
-INSERT INTO `seat` VALUES (330, 'ghế thường', 'C3', 4, 70000);
-INSERT INTO `seat` VALUES (331, 'ghế thường', 'C4', 4, 70000);
-INSERT INTO `seat` VALUES (332, 'ghế thường', 'C5', 4, 70000);
-INSERT INTO `seat` VALUES (333, 'ghế thường', 'C6', 4, 70000);
-INSERT INTO `seat` VALUES (334, 'ghế thường', 'C7', 4, 70000);
-INSERT INTO `seat` VALUES (335, 'ghế thường', 'C8', 4, 70000);
-INSERT INTO `seat` VALUES (336, 'ghế thường', 'C9', 4, 70000);
-INSERT INTO `seat` VALUES (337, 'ghế thường', 'C10', 4, 70000);
-INSERT INTO `seat` VALUES (338, 'ghế thường', 'C11', 4, 70000);
-INSERT INTO `seat` VALUES (339, 'ghế thường', 'C12', 4, 70000);
-INSERT INTO `seat` VALUES (340, 'ghế thường', 'D1', 4, 70000);
-INSERT INTO `seat` VALUES (341, 'ghế thường', 'D2', 4, 70000);
-INSERT INTO `seat` VALUES (342, 'ghế thường', 'D3', 4, 70000);
-INSERT INTO `seat` VALUES (343, 'ghế thường', 'D4', 4, 70000);
-INSERT INTO `seat` VALUES (344, 'ghế thường', 'D5', 4, 70000);
-INSERT INTO `seat` VALUES (345, 'ghế thường', 'D6', 4, 70000);
-INSERT INTO `seat` VALUES (346, 'ghế thường', 'D7', 4, 70000);
-INSERT INTO `seat` VALUES (347, 'ghế thường', 'D8', 4, 70000);
-INSERT INTO `seat` VALUES (348, 'ghế thường', 'D9', 4, 70000);
-INSERT INTO `seat` VALUES (349, 'ghế thường', 'D10', 4, 70000);
-INSERT INTO `seat` VALUES (350, 'ghế thường', 'D11', 4, 70000);
-INSERT INTO `seat` VALUES (351, 'ghế thường', 'D12', 4, 70000);
-INSERT INTO `seat` VALUES (352, 'ghế thường', 'E1', 4, 70000);
-INSERT INTO `seat` VALUES (353, 'ghế thường', 'E2', 4, 70000);
-INSERT INTO `seat` VALUES (354, 'ghế thường', 'E3', 4, 70000);
-INSERT INTO `seat` VALUES (355, 'ghế thường', 'E4', 4, 70000);
-INSERT INTO `seat` VALUES (356, 'ghế thường', 'E5', 4, 70000);
-INSERT INTO `seat` VALUES (357, 'ghế thường', 'E6', 4, 70000);
-INSERT INTO `seat` VALUES (358, 'ghế thường', 'E7', 4, 70000);
-INSERT INTO `seat` VALUES (359, 'ghế thường', 'E8', 4, 70000);
-INSERT INTO `seat` VALUES (360, 'ghế thường', 'E9', 4, 70000);
-INSERT INTO `seat` VALUES (361, 'ghế thường', 'E10', 4, 70000);
-INSERT INTO `seat` VALUES (362, 'ghế thường', 'E11', 4, 70000);
-INSERT INTO `seat` VALUES (363, 'ghế thường', 'E12', 4, 70000);
-INSERT INTO `seat` VALUES (364, 'ghế thường', 'F1', 4, 70000);
-INSERT INTO `seat` VALUES (365, 'ghế thường', 'F2', 4, 70000);
-INSERT INTO `seat` VALUES (366, 'ghế thường', 'F3', 4, 70000);
-INSERT INTO `seat` VALUES (367, 'ghế thường', 'F4', 4, 70000);
-INSERT INTO `seat` VALUES (368, 'ghế thường', 'F5', 4, 70000);
-INSERT INTO `seat` VALUES (369, 'ghế thường', 'F6', 4, 70000);
-INSERT INTO `seat` VALUES (370, 'ghế thường', 'F7', 4, 70000);
-INSERT INTO `seat` VALUES (371, 'ghế thường', 'F8', 4, 70000);
-INSERT INTO `seat` VALUES (372, 'ghế thường', 'F9', 4, 70000);
-INSERT INTO `seat` VALUES (373, 'ghế thường', 'F10', 4, 70000);
-INSERT INTO `seat` VALUES (374, 'ghế thường', 'F11', 4, 70000);
-INSERT INTO `seat` VALUES (375, 'ghế thường', 'F12', 4, 70000);
-INSERT INTO `seat` VALUES (376, 'ghế thường', 'G1', 4, 70000);
-INSERT INTO `seat` VALUES (377, 'ghế thường', 'G2', 4, 70000);
-INSERT INTO `seat` VALUES (378, 'ghế thường', 'G3', 4, 70000);
-INSERT INTO `seat` VALUES (379, 'ghế thường', 'G4', 4, 70000);
-INSERT INTO `seat` VALUES (380, 'ghế thường', 'G5', 4, 70000);
-INSERT INTO `seat` VALUES (381, 'ghế thường', 'G6', 4, 70000);
-INSERT INTO `seat` VALUES (382, 'ghế thường', 'G7', 4, 70000);
-INSERT INTO `seat` VALUES (383, 'ghế thường', 'G8', 4, 70000);
-INSERT INTO `seat` VALUES (384, 'ghế thường', 'G9', 4, 70000);
-INSERT INTO `seat` VALUES (385, 'ghế thường', 'G10', 4, 70000);
-INSERT INTO `seat` VALUES (386, 'ghế thường', 'G11', 4, 70000);
-INSERT INTO `seat` VALUES (387, 'ghế thường', 'G12', 4, 70000);
-INSERT INTO `seat` VALUES (388, 'ghế thường', 'H1', 4, 70000);
-INSERT INTO `seat` VALUES (389, 'ghế thường', 'H2', 4, 70000);
-INSERT INTO `seat` VALUES (390, 'ghế thường', 'H3', 4, 70000);
-INSERT INTO `seat` VALUES (391, 'ghế thường', 'H4', 4, 70000);
-INSERT INTO `seat` VALUES (392, 'ghế thường', 'H5', 4, 70000);
-INSERT INTO `seat` VALUES (393, 'ghế thường', 'H6', 4, 70000);
-INSERT INTO `seat` VALUES (394, 'ghế thường', 'H7', 4, 70000);
-INSERT INTO `seat` VALUES (395, 'ghế thường', 'H8', 4, 70000);
-INSERT INTO `seat` VALUES (396, 'ghế thường', 'H9', 4, 70000);
-INSERT INTO `seat` VALUES (397, 'ghế thường', 'H10', 4, 70000);
-INSERT INTO `seat` VALUES (398, 'ghế thường', 'H11', 4, 70000);
-INSERT INTO `seat` VALUES (399, 'ghế thường', 'H12', 4, 70000);
-INSERT INTO `seat` VALUES (400, 'ghế đôi', 'I1', 4, 135000);
-INSERT INTO `seat` VALUES (401, 'ghế đôi', 'I2', 4, 135000);
-INSERT INTO `seat` VALUES (402, 'ghế đôi', 'I3', 4, 135000);
-INSERT INTO `seat` VALUES (403, 'ghế đôi', 'I4', 4, 135000);
-INSERT INTO `seat` VALUES (404, 'ghế đôi', 'I5', 4, 135000);
+-- Dumping structure for table movie_booking.seat
+CREATE TABLE IF NOT EXISTS `seat` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `description` varchar(255) DEFAULT NULL,
+  `price` int(11) NOT NULL,
+  `seat_column` int(11) NOT NULL,
+  `seat_number` varchar(255) DEFAULT NULL,
+  `seat_row` varchar(255) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `room_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKd7f42843rt05tt66t6vcb7s9u` (`room_id`),
+  CONSTRAINT `FKd7f42843rt05tt66t6vcb7s9u` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=206 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for showtime
--- ----------------------------
-DROP TABLE IF EXISTS `showtime`;
-CREATE TABLE `showtime`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `show_date` date NULL DEFAULT NULL,
-  `start_time` datetime(6) NULL DEFAULT NULL,
-  `movie_id` bigint NULL DEFAULT NULL,
-  `room_id` bigint NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `FK8i90asti16tydhva795c3qwj2`(`movie_id` ASC) USING BTREE,
-  INDEX `FK6xi8d7qa7ww5iaypsrc0gjpa8`(`room_id` ASC) USING BTREE,
-  CONSTRAINT `FK6xi8d7qa7ww5iaypsrc0gjpa8` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `FK8i90asti16tydhva795c3qwj2` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.seat: ~205 rows (approximately)
+INSERT INTO `seat` (`id`, `description`, `price`, `seat_column`, `seat_number`, `seat_row`, `status`, `room_id`) VALUES
+	(1, 'Ghế thường', 70000, 1, 'A1', 'A', 0, 1),
+	(2, 'Ghế thường', 70000, 2, 'A2', 'A', 0, 1),
+	(3, 'Ghế thường', 70000, 3, 'A3', 'A', 0, 1),
+	(4, 'Ghế thường', 70000, 4, 'A4', 'A', 0, 1),
+	(5, 'Ghế thường', 70000, 5, 'A5', 'A', 0, 1),
+	(6, 'Ghế thường', 70000, 6, 'A6', 'A', 0, 1),
+	(7, 'Ghế thường', 70000, 7, 'A7', 'A', 0, 1),
+	(8, 'Ghế thường', 70000, 8, 'A8', 'A', 0, 1),
+	(9, 'Ghế thường', 70000, 9, 'A9', 'A', 0, 1),
+	(10, 'Ghế thường', 70000, 10, 'A10', 'A', 0, 1),
+	(11, 'Ghế thường', 70000, 11, 'A11', 'A', 0, 1),
+	(12, 'Ghế thường', 70000, 12, 'A12', 'A', 0, 1),
+	(13, 'Ghế thường', 70000, 13, 'A13', 'A', 0, 1),
+	(14, 'Ghế thường', 70000, 14, 'A14', 'A', 0, 1),
+	(15, 'Ghế thường', 70000, 15, 'A15', 'A', 0, 1),
+	(16, 'Ghế thường', 70000, 1, 'B1', 'B', 0, 1),
+	(17, 'Ghế thường', 70000, 2, 'B2', 'B', 0, 1),
+	(18, 'Ghế thường', 70000, 3, 'B3', 'B', 0, 1),
+	(19, 'Ghế thường', 70000, 4, 'B4', 'B', 0, 1),
+	(20, 'Ghế thường', 70000, 5, 'B5', 'B', 0, 1),
+	(21, 'Ghế thường', 70000, 6, 'B6', 'B', 0, 1),
+	(22, 'Ghế thường', 70000, 7, 'B7', 'B', 0, 1),
+	(23, 'Ghế thường', 70000, 8, 'B8', 'B', 0, 1),
+	(24, 'Ghế thường', 70000, 9, 'B9', 'B', 0, 1),
+	(25, 'Ghế thường', 70000, 10, 'B10', 'B', 0, 1),
+	(26, 'Ghế thường', 70000, 11, 'B11', 'B', 0, 1),
+	(27, 'Ghế thường', 70000, 12, 'B12', 'B', 0, 1),
+	(28, 'Ghế thường', 70000, 13, 'B13', 'B', 0, 1),
+	(29, 'Ghế thường', 70000, 14, 'B14', 'B', 0, 1),
+	(30, 'Ghế thường', 70000, 15, 'B15', 'B', 0, 1),
+	(31, 'Ghế thường', 70000, 1, 'C1', 'C', 0, 1),
+	(32, 'Ghế thường', 70000, 2, 'C2', 'C', 0, 1),
+	(33, 'Ghế thường', 70000, 3, 'C3', 'C', 0, 1),
+	(34, 'Ghế thường', 70000, 4, 'C4', 'C', 0, 1),
+	(35, 'Ghế thường', 70000, 5, 'C5', 'C', 0, 1),
+	(36, 'Ghế thường', 70000, 6, 'C6', 'C', 0, 1),
+	(37, 'Ghế thường', 70000, 7, 'C7', 'C', 0, 1),
+	(38, 'Ghế thường', 70000, 8, 'C8', 'C', 0, 1),
+	(39, 'Ghế thường', 70000, 9, 'C9', 'C', 0, 1),
+	(40, 'Ghế thường', 70000, 10, 'C10', 'C', 0, 1),
+	(41, 'Ghế thường', 70000, 11, 'C11', 'C', 0, 1),
+	(42, 'Ghế thường', 70000, 12, 'C12', 'C', 0, 1),
+	(43, 'Ghế thường', 70000, 13, 'C13', 'C', 0, 1),
+	(44, 'Ghế thường', 70000, 14, 'C14', 'C', 0, 1),
+	(45, 'Ghế thường', 70000, 15, 'C15', 'C', 0, 1),
+	(46, 'Ghế thường', 70000, 1, 'D1', 'D', 0, 1),
+	(47, 'Ghế thường', 70000, 2, 'D2', 'D', 0, 1),
+	(48, 'Ghế thường', 70000, 3, 'D3', 'D', 0, 1),
+	(49, 'Ghế thường', 70000, 4, 'D4', 'D', 0, 1),
+	(50, 'Ghế thường', 70000, 5, 'D5', 'D', 0, 1),
+	(51, 'Ghế thường', 70000, 6, 'D6', 'D', 0, 1),
+	(52, 'Ghế thường', 70000, 7, 'D7', 'D', 0, 1),
+	(53, 'Ghế thường', 70000, 8, 'D8', 'D', 0, 1),
+	(54, 'Ghế thường', 70000, 9, 'D9', 'D', 0, 1),
+	(55, 'Ghế thường', 70000, 10, 'D10', 'D', 0, 1),
+	(56, 'Ghế thường', 70000, 11, 'D11', 'D', 0, 1),
+	(57, 'Ghế thường', 70000, 12, 'D12', 'D', 0, 1),
+	(58, 'Ghế thường', 70000, 13, 'D13', 'D', 0, 1),
+	(59, 'Ghế thường', 70000, 14, 'D14', 'D', 0, 1),
+	(60, 'Ghế thường', 70000, 15, 'D15', 'D', 0, 1),
+	(61, 'Ghế thường', 70000, 1, 'E1', 'E', 0, 1),
+	(62, 'Ghế thường', 70000, 2, 'E2', 'E', 0, 1),
+	(63, 'Ghế thường', 70000, 3, 'E3', 'E', 0, 1),
+	(64, 'Ghế thường', 70000, 4, 'E4', 'E', 0, 1),
+	(65, 'Ghế thường', 70000, 5, 'E5', 'E', 0, 1),
+	(66, 'Ghế thường', 70000, 6, 'E6', 'E', 0, 1),
+	(67, 'Ghế thường', 70000, 7, 'E7', 'E', 0, 1),
+	(68, 'Ghế thường', 70000, 8, 'E8', 'E', 0, 1),
+	(69, 'Ghế thường', 70000, 9, 'E9', 'E', 0, 1),
+	(70, 'Ghế thường', 70000, 10, 'E10', 'E', 0, 1),
+	(71, 'Ghế thường', 70000, 11, 'E11', 'E', 0, 1),
+	(72, 'Ghế thường', 70000, 12, 'E12', 'E', 0, 1),
+	(73, 'Ghế thường', 70000, 13, 'E13', 'E', 0, 1),
+	(74, 'Ghế thường', 70000, 14, 'E14', 'E', 0, 1),
+	(75, 'Ghế thường', 70000, 15, 'E15', 'E', 0, 1),
+	(76, 'Ghế thường', 70000, 1, 'F1', 'F', 0, 1),
+	(77, 'Ghế thường', 70000, 2, 'F2', 'F', 0, 1),
+	(78, 'Ghế thường', 70000, 3, 'F3', 'F', 0, 1),
+	(79, 'Ghế thường', 70000, 4, 'F4', 'F', 0, 1),
+	(80, 'Ghế thường', 70000, 5, 'F5', 'F', 0, 1),
+	(81, 'Ghế thường', 70000, 6, 'F6', 'F', 0, 1),
+	(82, 'Ghế thường', 70000, 7, 'F7', 'F', 0, 1),
+	(83, 'Ghế thường', 70000, 8, 'F8', 'F', 0, 1),
+	(84, 'Ghế thường', 70000, 9, 'F9', 'F', 0, 1),
+	(85, 'Ghế thường', 70000, 10, 'F10', 'F', 0, 1),
+	(86, 'Ghế thường', 70000, 11, 'F11', 'F', 0, 1),
+	(87, 'Ghế thường', 70000, 12, 'F12', 'F', 0, 1),
+	(88, 'Ghế thường', 70000, 13, 'F13', 'F', 0, 1),
+	(89, 'Ghế thường', 70000, 14, 'F14', 'F', 0, 1),
+	(90, 'Ghế thường', 70000, 15, 'F15', 'F', 0, 1),
+	(91, 'Ghế đôi', 85000, 1, 'H1', 'H', 0, 1),
+	(92, 'Ghế đôi', 85000, 2, 'H2', 'H', 0, 1),
+	(93, 'Ghế đôi', 85000, 3, 'H3', 'H', 0, 1),
+	(94, 'Ghế đôi', 85000, 4, 'H4', 'H', 0, 1),
+	(95, 'Ghế đôi', 85000, 5, 'H5', 'H', 0, 1),
+	(96, 'Ghế đôi', 85000, 1, 'I1', 'I', 0, 1),
+	(97, 'Ghế đôi', 85000, 2, 'I2', 'I', 0, 1),
+	(98, 'Ghế đôi', 85000, 3, 'I3', 'I', 0, 1),
+	(99, 'Ghế thường', 65000, 1, 'A1', 'A', 0, 2),
+	(100, 'Ghế thường', 65000, 2, 'A2', 'A', 0, 2),
+	(101, 'Ghế thường', 65000, 3, 'A3', 'A', 0, 2),
+	(102, 'Ghế thường', 65000, 4, 'A4', 'A', 0, 2),
+	(103, 'Ghế thường', 65000, 5, 'A5', 'A', 0, 2),
+	(104, 'Ghế thường', 65000, 6, 'A6', 'A', 0, 2),
+	(105, 'Ghế thường', 65000, 7, 'A7', 'A', 0, 2),
+	(106, 'Ghế thường', 65000, 8, 'A8', 'A', 0, 2),
+	(107, 'Ghế thường', 65000, 9, 'A9', 'A', 0, 2),
+	(108, 'Ghế thường', 65000, 10, 'A10', 'A', 0, 2),
+	(109, 'Ghế thường', 65000, 11, 'A11', 'A', 0, 2),
+	(110, 'Ghế thường', 65000, 12, 'A12', 'A', 0, 2),
+	(111, 'Ghế thường', 65000, 13, 'A13', 'A', 0, 2),
+	(112, 'Ghế thường', 65000, 14, 'A14', 'A', 0, 2),
+	(113, 'Ghế thường', 65000, 15, 'A15', 'A', 0, 2),
+	(114, 'Ghế thường', 65000, 1, 'B1', 'B', 0, 2),
+	(115, 'Ghế thường', 65000, 2, 'B2', 'B', 0, 2),
+	(116, 'Ghế thường', 65000, 3, 'B3', 'B', 0, 2),
+	(117, 'Ghế thường', 65000, 4, 'B4', 'B', 0, 2),
+	(118, 'Ghế thường', 65000, 5, 'B5', 'B', 0, 2),
+	(119, 'Ghế thường', 65000, 6, 'B6', 'B', 0, 2),
+	(120, 'Ghế thường', 65000, 7, 'B7', 'B', 0, 2),
+	(121, 'Ghế thường', 65000, 8, 'B8', 'B', 0, 2),
+	(122, 'Ghế thường', 65000, 9, 'B9', 'B', 0, 2),
+	(123, 'Ghế thường', 65000, 10, 'B10', 'B', 0, 2),
+	(124, 'Ghế thường', 65000, 11, 'B11', 'B', 0, 2),
+	(125, 'Ghế thường', 65000, 12, 'B12', 'B', 0, 2),
+	(126, 'Ghế thường', 65000, 13, 'B13', 'B', 0, 2),
+	(127, 'Ghế thường', 65000, 14, 'B14', 'B', 0, 2),
+	(128, 'Ghế thường', 65000, 15, 'B15', 'B', 0, 2),
+	(129, 'Ghế thường', 65000, 1, 'C1', 'C', 0, 2),
+	(130, 'Ghế thường', 65000, 2, 'C2', 'C', 0, 2),
+	(131, 'Ghế thường', 65000, 3, 'C3', 'C', 0, 2),
+	(132, 'Ghế thường', 65000, 4, 'C4', 'C', 0, 2),
+	(133, 'Ghế thường', 65000, 5, 'C5', 'C', 0, 2),
+	(134, 'Ghế thường', 65000, 6, 'C6', 'C', 0, 2),
+	(135, 'Ghế thường', 65000, 7, 'C7', 'C', 0, 2),
+	(136, 'Ghế thường', 65000, 8, 'C8', 'C', 0, 2),
+	(137, 'Ghế thường', 65000, 9, 'C9', 'C', 0, 2),
+	(138, 'Ghế thường', 65000, 10, 'C10', 'C', 0, 2),
+	(139, 'Ghế thường', 65000, 11, 'C11', 'C', 0, 2),
+	(140, 'Ghế thường', 65000, 12, 'C12', 'C', 0, 2),
+	(141, 'Ghế thường', 65000, 13, 'C13', 'C', 0, 2),
+	(142, 'Ghế thường', 65000, 14, 'C14', 'C', 0, 2),
+	(143, 'Ghế thường', 65000, 15, 'C15', 'C', 0, 2),
+	(144, 'Ghế thường', 65000, 1, 'D1', 'D', 0, 2),
+	(145, 'Ghế thường', 65000, 2, 'D2', 'D', 0, 2),
+	(146, 'Ghế thường', 65000, 3, 'D3', 'D', 0, 2),
+	(147, 'Ghế thường', 65000, 4, 'D4', 'D', 0, 2),
+	(148, 'Ghế thường', 65000, 5, 'D5', 'D', 0, 2),
+	(149, 'Ghế thường', 65000, 6, 'D6', 'D', 0, 2),
+	(150, 'Ghế thường', 65000, 7, 'D7', 'D', 0, 2),
+	(151, 'Ghế thường', 65000, 8, 'D8', 'D', 0, 2),
+	(152, 'Ghế thường', 65000, 9, 'D9', 'D', 0, 2),
+	(153, 'Ghế thường', 65000, 10, 'D10', 'D', 0, 2),
+	(154, 'Ghế thường', 65000, 11, 'D11', 'D', 0, 2),
+	(155, 'Ghế thường', 65000, 12, 'D12', 'D', 0, 2),
+	(156, 'Ghế thường', 65000, 13, 'D13', 'D', 0, 2),
+	(157, 'Ghế thường', 65000, 14, 'D14', 'D', 0, 2),
+	(158, 'Ghế thường', 65000, 15, 'D15', 'D', 0, 2),
+	(159, 'Ghế thường', 65000, 1, 'E1', 'E', 0, 2),
+	(160, 'Ghế thường', 65000, 2, 'E2', 'E', 0, 2),
+	(161, 'Ghế thường', 65000, 3, 'E3', 'E', 0, 2),
+	(162, 'Ghế thường', 65000, 4, 'E4', 'E', 0, 2),
+	(163, 'Ghế thường', 65000, 5, 'E5', 'E', 0, 2),
+	(164, 'Ghế thường', 65000, 6, 'E6', 'E', 0, 2),
+	(165, 'Ghế thường', 65000, 7, 'E7', 'E', 0, 2),
+	(166, 'Ghế thường', 65000, 8, 'E8', 'E', 0, 2),
+	(167, 'Ghế thường', 65000, 9, 'E9', 'E', 0, 2),
+	(168, 'Ghế thường', 65000, 10, 'E10', 'E', 0, 2),
+	(169, 'Ghế thường', 65000, 11, 'E11', 'E', 0, 2),
+	(170, 'Ghế thường', 65000, 12, 'E12', 'E', 0, 2),
+	(171, 'Ghế thường', 65000, 13, 'E13', 'E', 0, 2),
+	(172, 'Ghế thường', 65000, 14, 'E14', 'E', 0, 2),
+	(173, 'Ghế thường', 65000, 15, 'E15', 'E', 0, 2),
+	(174, 'Ghế thường', 65000, 1, 'F1', 'F', 0, 2),
+	(175, 'Ghế thường', 65000, 2, 'F2', 'F', 0, 2),
+	(176, 'Ghế thường', 65000, 3, 'F3', 'F', 0, 2),
+	(177, 'Ghế thường', 65000, 4, 'F4', 'F', 0, 2),
+	(178, 'Ghế thường', 65000, 5, 'F5', 'F', 0, 2),
+	(179, 'Ghế thường', 65000, 6, 'F6', 'F', 0, 2),
+	(180, 'Ghế thường', 65000, 7, 'F7', 'F', 0, 2),
+	(181, 'Ghế thường', 65000, 8, 'F8', 'F', 0, 2),
+	(182, 'Ghế thường', 65000, 9, 'F9', 'F', 0, 2),
+	(183, 'Ghế thường', 65000, 10, 'F10', 'F', 0, 2),
+	(184, 'Ghế thường', 65000, 11, 'F11', 'F', 0, 2),
+	(185, 'Ghế thường', 65000, 12, 'F12', 'F', 0, 2),
+	(186, 'Ghế thường', 65000, 13, 'F13', 'F', 0, 2),
+	(187, 'Ghế thường', 65000, 14, 'F14', 'F', 0, 2),
+	(188, 'Ghế thường', 65000, 15, 'F15', 'F', 0, 2),
+	(189, 'Ghế thường', 65000, 1, 'G1', 'G', 0, 2),
+	(190, 'Ghế thường', 65000, 2, 'G2', 'G', 0, 2),
+	(191, 'Ghế thường', 65000, 3, 'G3', 'G', 0, 2),
+	(192, 'Ghế thường', 65000, 4, 'G4', 'G', 0, 2),
+	(193, 'Ghế thường', 65000, 5, 'G5', 'G', 0, 2),
+	(194, 'Ghế thường', 65000, 6, 'G6', 'G', 0, 2),
+	(195, 'Ghế thường', 65000, 7, 'G7', 'G', 0, 2),
+	(196, 'Ghế thường', 65000, 8, 'G8', 'G', 0, 2),
+	(197, 'Ghế thường', 65000, 9, 'G9', 'G', 0, 2),
+	(198, 'Ghế đôi', 75000, 1, 'H1', 'H', 0, 2),
+	(199, 'Ghế đôi', 75000, 2, 'H2', 'H', 0, 2),
+	(200, 'Ghế đôi', 75000, 3, 'H3', 'H', 0, 2),
+	(201, 'Ghế đôi', 75000, 4, 'H4', 'H', 0, 2),
+	(202, 'Ghế đôi', 75000, 5, 'H5', 'H', 0, 2),
+	(203, 'Ghế đôi', 75000, 1, 'I1', 'I', 0, 2),
+	(204, 'Ghế đôi', 75000, 2, 'I2', 'I', 0, 2),
+	(205, 'Ghế đôi', 75000, 3, 'I3', 'I', 0, 2);
 
--- ----------------------------
--- Records of showtime
--- ----------------------------
-INSERT INTO `showtime` VALUES (1, '2025-05-28', '2025-05-28 10:00:00.000000', 1, 1);
-INSERT INTO `showtime` VALUES (2, '2025-05-28', '2025-05-28 13:00:00.000000', 2, 2);
-INSERT INTO `showtime` VALUES (3, '2025-05-28', '2025-05-28 16:30:00.000000', 3, 3);
-INSERT INTO `showtime` VALUES (4, '2025-05-29', '2025-05-29 11:00:00.000000', 4, 1);
-INSERT INTO `showtime` VALUES (5, '2025-05-29', '2025-05-29 14:00:00.000000', 5, 4);
-INSERT INTO `showtime` VALUES (6, '2025-05-30', '2025-05-30 12:00:00.000000', 6, 2);
-INSERT INTO `showtime` VALUES (7, '2025-05-30', '2025-05-30 15:00:00.000000', 7, 3);
-INSERT INTO `showtime` VALUES (8, '2025-05-31', '2025-05-31 10:30:00.000000', 8, 1);
-INSERT INTO `showtime` VALUES (9, '2025-05-31', '2025-05-31 13:30:00.000000', 9, 4);
-INSERT INTO `showtime` VALUES (10, '2025-06-01', '2025-06-01 11:00:00.000000', 10, 2);
-INSERT INTO `showtime` VALUES (11, '2025-06-01', '2025-06-01 14:00:00.000000', 11, 3);
-INSERT INTO `showtime` VALUES (12, '2025-06-02', '2025-06-02 12:30:00.000000', 12, 1);
+-- Dumping structure for table movie_booking.showtime
+CREATE TABLE IF NOT EXISTS `showtime` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `show_date` date DEFAULT NULL,
+  `start_time` datetime(6) DEFAULT NULL,
+  `movie_id` bigint(20) DEFAULT NULL,
+  `room_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK8i90asti16tydhva795c3qwj2` (`movie_id`),
+  KEY `FK6xi8d7qa7ww5iaypsrc0gjpa8` (`room_id`),
+  CONSTRAINT `FK6xi8d7qa7ww5iaypsrc0gjpa8` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`),
+  CONSTRAINT `FK8i90asti16tydhva795c3qwj2` FOREIGN KEY (`movie_id`) REFERENCES `movie` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for status_film
--- ----------------------------
-DROP TABLE IF EXISTS `status_film`;
-CREATE TABLE `status_film`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-- Dumping data for table movie_booking.showtime: ~3 rows (approximately)
+INSERT INTO `showtime` (`id`, `show_date`, `start_time`, `movie_id`, `room_id`) VALUES
+	(1, '2025-06-21', '2025-06-21 11:59:00.000000', 11, 1),
+	(2, '2025-06-22', '2025-06-22 11:43:00.000000', 10, 1),
+	(3, '2025-06-21', '2025-06-21 01:43:00.000000', 12, 1);
 
--- ----------------------------
--- Records of status_film
--- ----------------------------
-INSERT INTO `status_film` VALUES (1, 'active');
-INSERT INTO `status_film` VALUES (2, 'inactive');
-INSERT INTO `status_film` VALUES (3, 'deleted');
+-- Dumping structure for table movie_booking.show_time_seat
+CREATE TABLE IF NOT EXISTS `show_time_seat` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `booking_id` bigint(20) DEFAULT NULL,
+  `lock_expires_at` datetime(6) DEFAULT NULL,
+  `locked_at` datetime(6) DEFAULT NULL,
+  `locked_by_user_id` bigint(20) DEFAULT NULL,
+  `price` int(11) NOT NULL,
+  `status` int(11) NOT NULL,
+  `seat_id` bigint(20) NOT NULL,
+  `showtime_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKhwacpq2mhk9hpjaw3f7b5icny` (`seat_id`),
+  KEY `FKph2vaor7smoihykyivugq1j8w` (`showtime_id`),
+  CONSTRAINT `FKhwacpq2mhk9hpjaw3f7b5icny` FOREIGN KEY (`seat_id`) REFERENCES `seat` (`id`),
+  CONSTRAINT `FKph2vaor7smoihykyivugq1j8w` FOREIGN KEY (`showtime_id`) REFERENCES `showtime` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=295 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Table structure for user
--- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `card_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+-- Dumping data for table movie_booking.show_time_seat: ~294 rows (approximately)
+INSERT INTO `show_time_seat` (`id`, `booking_id`, `lock_expires_at`, `locked_at`, `locked_by_user_id`, `price`, `status`, `seat_id`, `showtime_id`) VALUES
+	(1, NULL, NULL, NULL, NULL, 70000, 0, 1, 1),
+	(2, NULL, NULL, NULL, NULL, 70000, 0, 2, 1),
+	(3, NULL, NULL, NULL, NULL, 70000, 0, 3, 1),
+	(4, NULL, NULL, NULL, NULL, 70000, 0, 4, 1),
+	(5, NULL, NULL, NULL, NULL, 70000, 0, 5, 1),
+	(6, NULL, NULL, NULL, NULL, 70000, 0, 6, 1),
+	(7, NULL, NULL, NULL, NULL, 70000, 0, 7, 1),
+	(8, NULL, NULL, NULL, NULL, 70000, 0, 8, 1),
+	(9, NULL, NULL, NULL, NULL, 70000, 0, 9, 1),
+	(10, NULL, NULL, NULL, NULL, 70000, 0, 10, 1),
+	(11, 21, NULL, '2025-06-24 22:33:02.000000', 2, 70000, 2, 11, 1),
+	(12, NULL, NULL, NULL, NULL, 70000, 0, 12, 1),
+	(13, NULL, NULL, NULL, NULL, 70000, 0, 13, 1),
+	(14, NULL, NULL, NULL, NULL, 70000, 0, 14, 1),
+	(15, NULL, NULL, NULL, NULL, 70000, 0, 15, 1),
+	(16, NULL, NULL, NULL, NULL, 70000, 0, 16, 1),
+	(17, NULL, NULL, NULL, NULL, 70000, 0, 17, 1),
+	(18, NULL, NULL, NULL, NULL, 70000, 0, 18, 1),
+	(19, NULL, NULL, NULL, NULL, 70000, 0, 19, 1),
+	(20, NULL, NULL, NULL, NULL, 70000, 0, 20, 1),
+	(21, NULL, NULL, NULL, NULL, 70000, 0, 21, 1),
+	(22, NULL, NULL, NULL, NULL, 70000, 0, 22, 1),
+	(23, NULL, NULL, NULL, NULL, 70000, 0, 23, 1),
+	(24, NULL, NULL, NULL, NULL, 70000, 0, 24, 1),
+	(25, 5, NULL, NULL, 0, 70000, 0, 25, 1),
+	(26, 21, NULL, '2025-06-24 22:33:02.000000', 2, 70000, 2, 26, 1),
+	(27, 11, NULL, '2025-06-21 10:39:24.000000', 2, 70000, 2, 27, 1),
+	(28, 5, NULL, NULL, 0, 70000, 0, 28, 1),
+	(29, 11, NULL, '2025-06-21 10:39:24.000000', 2, 70000, 2, 29, 1),
+	(30, NULL, NULL, NULL, NULL, 70000, 0, 30, 1),
+	(31, NULL, NULL, NULL, NULL, 70000, 0, 31, 1),
+	(32, NULL, NULL, NULL, NULL, 70000, 0, 32, 1),
+	(33, NULL, NULL, NULL, NULL, 70000, 0, 33, 1),
+	(34, NULL, NULL, NULL, NULL, 70000, 0, 34, 1),
+	(35, NULL, NULL, NULL, NULL, 70000, 0, 35, 1),
+	(36, NULL, NULL, NULL, NULL, 70000, 0, 36, 1),
+	(37, NULL, NULL, NULL, NULL, 70000, 0, 37, 1),
+	(38, 6, NULL, '2025-06-21 09:32:08.000000', 2, 70000, 2, 38, 1),
+	(39, 6, NULL, '2025-06-21 09:32:08.000000', 2, 70000, 2, 39, 1),
+	(40, NULL, NULL, NULL, NULL, 70000, 0, 40, 1),
+	(41, 4, NULL, NULL, 0, 70000, 0, 41, 1),
+	(42, 5, NULL, NULL, 0, 70000, 0, 42, 1),
+	(43, 11, NULL, '2025-06-21 10:39:24.000000', 2, 70000, 2, 43, 1),
+	(44, NULL, NULL, NULL, NULL, 70000, 0, 44, 1),
+	(45, NULL, NULL, NULL, NULL, 70000, 0, 45, 1),
+	(46, NULL, NULL, NULL, NULL, 70000, 0, 46, 1),
+	(47, NULL, NULL, NULL, NULL, 70000, 0, 47, 1),
+	(48, NULL, NULL, NULL, NULL, 70000, 0, 48, 1),
+	(49, NULL, NULL, NULL, NULL, 70000, 0, 49, 1),
+	(50, NULL, NULL, NULL, NULL, 70000, 0, 50, 1),
+	(51, NULL, NULL, NULL, NULL, 70000, 0, 51, 1),
+	(52, NULL, NULL, NULL, NULL, 70000, 0, 52, 1),
+	(53, NULL, NULL, NULL, NULL, 70000, 0, 53, 1),
+	(54, NULL, NULL, NULL, NULL, 70000, 0, 54, 1),
+	(55, 4, NULL, NULL, 0, 70000, 0, 55, 1),
+	(56, 18, NULL, '2025-06-21 10:46:42.000000', 2, 70000, 2, 56, 1),
+	(57, NULL, NULL, NULL, NULL, 70000, 0, 57, 1),
+	(58, NULL, NULL, NULL, NULL, 70000, 0, 58, 1),
+	(59, NULL, NULL, NULL, NULL, 70000, 0, 59, 1),
+	(60, NULL, NULL, NULL, NULL, 70000, 0, 60, 1),
+	(61, NULL, NULL, NULL, NULL, 70000, 0, 61, 1),
+	(62, NULL, NULL, NULL, NULL, 70000, 0, 62, 1),
+	(63, NULL, NULL, NULL, NULL, 70000, 0, 63, 1),
+	(64, NULL, NULL, NULL, NULL, 70000, 0, 64, 1),
+	(65, NULL, NULL, NULL, NULL, 70000, 0, 65, 1),
+	(66, NULL, NULL, NULL, NULL, 70000, 0, 66, 1),
+	(67, NULL, NULL, NULL, NULL, 70000, 0, 67, 1),
+	(68, NULL, NULL, NULL, NULL, 70000, 0, 68, 1),
+	(69, NULL, NULL, NULL, NULL, 70000, 0, 69, 1),
+	(70, NULL, NULL, NULL, NULL, 70000, 0, 70, 1),
+	(71, 18, NULL, '2025-06-21 10:46:42.000000', 2, 70000, 2, 71, 1),
+	(72, NULL, NULL, NULL, NULL, 70000, 0, 72, 1),
+	(73, NULL, NULL, NULL, NULL, 70000, 0, 73, 1),
+	(74, NULL, NULL, NULL, NULL, 70000, 0, 74, 1),
+	(75, NULL, NULL, NULL, NULL, 70000, 0, 75, 1),
+	(76, NULL, NULL, NULL, NULL, 70000, 0, 76, 1),
+	(77, NULL, NULL, NULL, NULL, 70000, 0, 77, 1),
+	(78, NULL, NULL, NULL, NULL, 70000, 0, 78, 1),
+	(79, NULL, NULL, NULL, NULL, 70000, 0, 79, 1),
+	(80, NULL, NULL, NULL, NULL, 70000, 0, 80, 1),
+	(81, NULL, NULL, NULL, NULL, 70000, 0, 81, 1),
+	(82, NULL, NULL, NULL, NULL, 70000, 0, 82, 1),
+	(83, NULL, NULL, NULL, NULL, 70000, 0, 83, 1),
+	(84, NULL, NULL, NULL, NULL, 70000, 0, 84, 1),
+	(85, NULL, NULL, NULL, NULL, 70000, 0, 85, 1),
+	(86, NULL, NULL, NULL, NULL, 70000, 0, 86, 1),
+	(87, NULL, NULL, NULL, NULL, 70000, 0, 87, 1),
+	(88, NULL, NULL, NULL, NULL, 70000, 0, 88, 1),
+	(89, NULL, NULL, NULL, NULL, 70000, 0, 89, 1),
+	(90, NULL, NULL, NULL, NULL, 70000, 0, 90, 1),
+	(91, NULL, NULL, NULL, NULL, 85000, 0, 91, 1),
+	(92, NULL, NULL, NULL, NULL, 85000, 0, 92, 1),
+	(93, NULL, NULL, NULL, NULL, 85000, 0, 93, 1),
+	(94, NULL, NULL, NULL, NULL, 85000, 0, 94, 1),
+	(95, NULL, NULL, NULL, NULL, 85000, 0, 95, 1),
+	(96, NULL, NULL, NULL, NULL, 85000, 0, 96, 1),
+	(97, NULL, NULL, NULL, NULL, 85000, 0, 97, 1),
+	(98, NULL, NULL, NULL, NULL, 85000, 0, 98, 1),
+	(99, NULL, NULL, NULL, NULL, 70000, 0, 1, 2),
+	(100, NULL, NULL, NULL, NULL, 70000, 0, 2, 2),
+	(101, NULL, NULL, NULL, NULL, 70000, 0, 3, 2),
+	(102, NULL, NULL, NULL, NULL, 70000, 0, 4, 2),
+	(103, NULL, NULL, NULL, NULL, 70000, 0, 5, 2),
+	(104, NULL, NULL, NULL, NULL, 70000, 0, 6, 2),
+	(105, NULL, NULL, NULL, NULL, 70000, 0, 7, 2),
+	(106, NULL, NULL, NULL, NULL, 70000, 0, 8, 2),
+	(107, NULL, NULL, NULL, NULL, 70000, 0, 9, 2),
+	(108, NULL, NULL, NULL, NULL, 70000, 0, 10, 2),
+	(109, NULL, NULL, NULL, NULL, 70000, 0, 11, 2),
+	(110, NULL, NULL, NULL, NULL, 70000, 0, 12, 2),
+	(111, NULL, NULL, NULL, NULL, 70000, 0, 13, 2),
+	(112, NULL, NULL, NULL, NULL, 70000, 0, 14, 2),
+	(113, NULL, NULL, NULL, NULL, 70000, 0, 15, 2),
+	(114, NULL, NULL, NULL, NULL, 70000, 0, 16, 2),
+	(115, NULL, NULL, NULL, NULL, 70000, 0, 17, 2),
+	(116, NULL, NULL, NULL, NULL, 70000, 0, 18, 2),
+	(117, NULL, NULL, NULL, NULL, 70000, 0, 19, 2),
+	(118, 8, NULL, '2025-06-21 09:47:35.000000', 2, 70000, 2, 20, 2),
+	(119, NULL, NULL, NULL, NULL, 70000, 0, 21, 2),
+	(120, NULL, NULL, NULL, NULL, 70000, 0, 22, 2),
+	(121, NULL, NULL, NULL, NULL, 70000, 0, 23, 2),
+	(122, NULL, NULL, NULL, NULL, 70000, 0, 24, 2),
+	(123, NULL, NULL, NULL, NULL, 70000, 0, 25, 2),
+	(124, NULL, NULL, NULL, NULL, 70000, 0, 26, 2),
+	(125, NULL, NULL, NULL, NULL, 70000, 0, 27, 2),
+	(126, 8, NULL, '2025-06-21 09:47:35.000000', 2, 70000, 2, 28, 2),
+	(127, NULL, NULL, NULL, NULL, 70000, 0, 29, 2),
+	(128, NULL, NULL, NULL, NULL, 70000, 0, 30, 2),
+	(129, NULL, NULL, NULL, NULL, 70000, 0, 31, 2),
+	(130, NULL, NULL, NULL, NULL, 70000, 0, 32, 2),
+	(131, NULL, NULL, NULL, NULL, 70000, 0, 33, 2),
+	(132, NULL, NULL, NULL, NULL, 70000, 0, 34, 2),
+	(133, NULL, NULL, NULL, NULL, 70000, 0, 35, 2),
+	(134, 8, NULL, '2025-06-21 09:47:35.000000', 2, 70000, 2, 36, 2),
+	(135, NULL, NULL, NULL, NULL, 70000, 0, 37, 2),
+	(136, NULL, NULL, NULL, NULL, 70000, 0, 38, 2),
+	(137, NULL, NULL, NULL, NULL, 70000, 0, 39, 2),
+	(138, NULL, NULL, NULL, NULL, 70000, 0, 40, 2),
+	(139, NULL, NULL, NULL, NULL, 70000, 0, 41, 2),
+	(140, NULL, NULL, NULL, NULL, 70000, 0, 42, 2),
+	(141, NULL, NULL, NULL, NULL, 70000, 0, 43, 2),
+	(142, NULL, NULL, NULL, NULL, 70000, 0, 44, 2),
+	(143, NULL, NULL, NULL, NULL, 70000, 0, 45, 2),
+	(144, NULL, NULL, NULL, NULL, 70000, 0, 46, 2),
+	(145, NULL, NULL, NULL, NULL, 70000, 0, 47, 2),
+	(146, NULL, NULL, NULL, NULL, 70000, 0, 48, 2),
+	(147, NULL, NULL, NULL, NULL, 70000, 0, 49, 2),
+	(148, NULL, NULL, NULL, NULL, 70000, 0, 50, 2),
+	(149, NULL, NULL, NULL, NULL, 70000, 0, 51, 2),
+	(150, NULL, NULL, NULL, NULL, 70000, 0, 52, 2),
+	(151, NULL, NULL, NULL, NULL, 70000, 0, 53, 2),
+	(152, NULL, NULL, NULL, NULL, 70000, 0, 54, 2),
+	(153, NULL, NULL, NULL, NULL, 70000, 0, 55, 2),
+	(154, NULL, NULL, NULL, NULL, 70000, 0, 56, 2),
+	(155, NULL, NULL, NULL, NULL, 70000, 0, 57, 2),
+	(156, NULL, NULL, NULL, NULL, 70000, 0, 58, 2),
+	(157, NULL, NULL, NULL, NULL, 70000, 0, 59, 2),
+	(158, NULL, NULL, NULL, NULL, 70000, 0, 60, 2),
+	(159, NULL, NULL, NULL, NULL, 70000, 0, 61, 2),
+	(160, NULL, NULL, NULL, NULL, 70000, 0, 62, 2),
+	(161, NULL, NULL, NULL, NULL, 70000, 0, 63, 2),
+	(162, NULL, NULL, NULL, NULL, 70000, 0, 64, 2),
+	(163, NULL, NULL, NULL, NULL, 70000, 0, 65, 2),
+	(164, NULL, NULL, NULL, NULL, 70000, 0, 66, 2),
+	(165, NULL, NULL, NULL, NULL, 70000, 0, 67, 2),
+	(166, NULL, NULL, NULL, NULL, 70000, 0, 68, 2),
+	(167, NULL, NULL, NULL, NULL, 70000, 0, 69, 2),
+	(168, NULL, NULL, NULL, NULL, 70000, 0, 70, 2),
+	(169, NULL, NULL, NULL, NULL, 70000, 0, 71, 2),
+	(170, NULL, NULL, NULL, NULL, 70000, 0, 72, 2),
+	(171, NULL, NULL, NULL, NULL, 70000, 0, 73, 2),
+	(172, NULL, NULL, NULL, NULL, 70000, 0, 74, 2),
+	(173, NULL, NULL, NULL, NULL, 70000, 0, 75, 2),
+	(174, NULL, NULL, NULL, NULL, 70000, 0, 76, 2),
+	(175, NULL, NULL, NULL, NULL, 70000, 0, 77, 2),
+	(176, NULL, NULL, NULL, NULL, 70000, 0, 78, 2),
+	(177, NULL, NULL, NULL, NULL, 70000, 0, 79, 2),
+	(178, NULL, NULL, NULL, NULL, 70000, 0, 80, 2),
+	(179, NULL, NULL, NULL, NULL, 70000, 0, 81, 2),
+	(180, NULL, NULL, NULL, NULL, 70000, 0, 82, 2),
+	(181, NULL, NULL, NULL, NULL, 70000, 0, 83, 2),
+	(182, NULL, NULL, NULL, NULL, 70000, 0, 84, 2),
+	(183, NULL, NULL, NULL, NULL, 70000, 0, 85, 2),
+	(184, NULL, NULL, NULL, NULL, 70000, 0, 86, 2),
+	(185, NULL, NULL, NULL, NULL, 70000, 0, 87, 2),
+	(186, NULL, NULL, NULL, NULL, 70000, 0, 88, 2),
+	(187, NULL, NULL, NULL, NULL, 70000, 0, 89, 2),
+	(188, NULL, NULL, NULL, NULL, 70000, 0, 90, 2),
+	(189, NULL, NULL, NULL, NULL, 85000, 0, 91, 2),
+	(190, NULL, NULL, NULL, NULL, 85000, 0, 92, 2),
+	(191, NULL, NULL, NULL, NULL, 85000, 0, 93, 2),
+	(192, NULL, NULL, NULL, NULL, 85000, 0, 94, 2),
+	(193, NULL, NULL, NULL, NULL, 85000, 0, 95, 2),
+	(194, NULL, NULL, NULL, NULL, 85000, 0, 96, 2),
+	(195, NULL, NULL, NULL, NULL, 85000, 0, 97, 2),
+	(196, NULL, NULL, NULL, NULL, 85000, 0, 98, 2),
+	(197, NULL, NULL, NULL, NULL, 70000, 0, 1, 3),
+	(198, NULL, NULL, NULL, NULL, 70000, 0, 2, 3),
+	(199, NULL, NULL, NULL, NULL, 70000, 0, 3, 3),
+	(200, NULL, NULL, NULL, NULL, 70000, 0, 4, 3),
+	(201, NULL, NULL, NULL, NULL, 70000, 0, 5, 3),
+	(202, NULL, NULL, NULL, NULL, 70000, 0, 6, 3),
+	(203, NULL, NULL, NULL, NULL, 70000, 0, 7, 3),
+	(204, NULL, NULL, NULL, NULL, 70000, 0, 8, 3),
+	(205, 9, NULL, '2025-06-21 09:48:54.000000', 2, 70000, 2, 9, 3),
+	(206, 9, NULL, '2025-06-21 09:48:54.000000', 2, 70000, 2, 10, 3),
+	(207, NULL, NULL, NULL, NULL, 70000, 0, 11, 3),
+	(208, NULL, NULL, NULL, NULL, 70000, 0, 12, 3),
+	(209, NULL, NULL, NULL, NULL, 70000, 0, 13, 3),
+	(210, NULL, NULL, NULL, NULL, 70000, 0, 14, 3),
+	(211, NULL, NULL, NULL, NULL, 70000, 0, 15, 3),
+	(212, NULL, NULL, NULL, NULL, 70000, 0, 16, 3),
+	(213, NULL, NULL, NULL, NULL, 70000, 0, 17, 3),
+	(214, NULL, NULL, NULL, NULL, 70000, 0, 18, 3),
+	(215, NULL, NULL, NULL, NULL, 70000, 0, 19, 3),
+	(216, NULL, NULL, NULL, NULL, 70000, 0, 20, 3),
+	(217, NULL, NULL, NULL, NULL, 70000, 0, 21, 3),
+	(218, NULL, NULL, NULL, NULL, 70000, 0, 22, 3),
+	(219, NULL, NULL, NULL, NULL, 70000, 0, 23, 3),
+	(220, NULL, NULL, NULL, NULL, 70000, 0, 24, 3),
+	(221, NULL, NULL, NULL, NULL, 70000, 0, 25, 3),
+	(222, NULL, NULL, NULL, NULL, 70000, 0, 26, 3),
+	(223, NULL, NULL, NULL, NULL, 70000, 0, 27, 3),
+	(224, NULL, NULL, NULL, NULL, 70000, 0, 28, 3),
+	(225, NULL, NULL, NULL, NULL, 70000, 0, 29, 3),
+	(226, NULL, NULL, NULL, NULL, 70000, 0, 30, 3),
+	(227, NULL, NULL, NULL, NULL, 70000, 0, 31, 3),
+	(228, NULL, NULL, NULL, NULL, 70000, 0, 32, 3),
+	(229, NULL, NULL, NULL, NULL, 70000, 0, 33, 3),
+	(230, NULL, NULL, NULL, NULL, 70000, 0, 34, 3),
+	(231, 19, NULL, NULL, 0, 70000, 0, 35, 3),
+	(232, NULL, NULL, NULL, NULL, 70000, 0, 36, 3),
+	(233, NULL, NULL, NULL, NULL, 70000, 0, 37, 3),
+	(234, NULL, NULL, NULL, NULL, 70000, 0, 38, 3),
+	(235, NULL, NULL, NULL, NULL, 70000, 0, 39, 3),
+	(236, NULL, NULL, NULL, NULL, 70000, 0, 40, 3),
+	(237, NULL, NULL, NULL, NULL, 70000, 0, 41, 3),
+	(238, NULL, NULL, NULL, NULL, 70000, 0, 42, 3),
+	(239, NULL, NULL, NULL, NULL, 70000, 0, 43, 3),
+	(240, NULL, NULL, NULL, NULL, 70000, 0, 44, 3),
+	(241, NULL, NULL, NULL, NULL, 70000, 0, 45, 3),
+	(242, NULL, NULL, NULL, NULL, 70000, 0, 46, 3),
+	(243, NULL, NULL, NULL, NULL, 70000, 0, 47, 3),
+	(244, NULL, NULL, NULL, NULL, 70000, 0, 48, 3),
+	(245, NULL, NULL, NULL, NULL, 70000, 0, 49, 3),
+	(246, NULL, NULL, NULL, NULL, 70000, 0, 50, 3),
+	(247, 19, NULL, NULL, 0, 70000, 0, 51, 3),
+	(248, NULL, NULL, NULL, NULL, 70000, 0, 52, 3),
+	(249, NULL, NULL, NULL, NULL, 70000, 0, 53, 3),
+	(250, NULL, NULL, NULL, NULL, 70000, 0, 54, 3),
+	(251, NULL, NULL, NULL, NULL, 70000, 0, 55, 3),
+	(252, NULL, NULL, NULL, NULL, 70000, 0, 56, 3),
+	(253, NULL, NULL, NULL, NULL, 70000, 0, 57, 3),
+	(254, NULL, NULL, NULL, NULL, 70000, 0, 58, 3),
+	(255, NULL, NULL, NULL, NULL, 70000, 0, 59, 3),
+	(256, NULL, NULL, NULL, NULL, 70000, 0, 60, 3),
+	(257, NULL, NULL, NULL, NULL, 70000, 0, 61, 3),
+	(258, NULL, NULL, NULL, NULL, 70000, 0, 62, 3),
+	(259, NULL, NULL, NULL, NULL, 70000, 0, 63, 3),
+	(260, NULL, NULL, NULL, NULL, 70000, 0, 64, 3),
+	(261, NULL, NULL, NULL, NULL, 70000, 0, 65, 3),
+	(262, NULL, NULL, NULL, NULL, 70000, 0, 66, 3),
+	(263, NULL, NULL, NULL, NULL, 70000, 0, 67, 3),
+	(264, NULL, NULL, NULL, NULL, 70000, 0, 68, 3),
+	(265, NULL, NULL, NULL, NULL, 70000, 0, 69, 3),
+	(266, NULL, NULL, NULL, NULL, 70000, 0, 70, 3),
+	(267, NULL, NULL, NULL, NULL, 70000, 0, 71, 3),
+	(268, NULL, NULL, NULL, NULL, 70000, 0, 72, 3),
+	(269, NULL, NULL, NULL, NULL, 70000, 0, 73, 3),
+	(270, NULL, NULL, NULL, NULL, 70000, 0, 74, 3),
+	(271, NULL, NULL, NULL, NULL, 70000, 0, 75, 3),
+	(272, NULL, NULL, NULL, NULL, 70000, 0, 76, 3),
+	(273, NULL, NULL, NULL, NULL, 70000, 0, 77, 3),
+	(274, NULL, NULL, NULL, NULL, 70000, 0, 78, 3),
+	(275, NULL, NULL, NULL, NULL, 70000, 0, 79, 3),
+	(276, NULL, NULL, NULL, NULL, 70000, 0, 80, 3),
+	(277, NULL, NULL, NULL, NULL, 70000, 0, 81, 3),
+	(278, NULL, NULL, NULL, NULL, 70000, 0, 82, 3),
+	(279, NULL, NULL, NULL, NULL, 70000, 0, 83, 3),
+	(280, NULL, NULL, NULL, NULL, 70000, 0, 84, 3),
+	(281, NULL, NULL, NULL, NULL, 70000, 0, 85, 3),
+	(282, NULL, NULL, NULL, NULL, 70000, 0, 86, 3),
+	(283, NULL, NULL, NULL, NULL, 70000, 0, 87, 3),
+	(284, NULL, NULL, NULL, NULL, 70000, 0, 88, 3),
+	(285, NULL, NULL, NULL, NULL, 70000, 0, 89, 3),
+	(286, NULL, NULL, NULL, NULL, 70000, 0, 90, 3),
+	(287, NULL, NULL, NULL, NULL, 85000, 0, 91, 3),
+	(288, NULL, NULL, NULL, NULL, 85000, 0, 92, 3),
+	(289, NULL, NULL, NULL, NULL, 85000, 0, 93, 3),
+	(290, NULL, NULL, NULL, NULL, 85000, 0, 94, 3),
+	(291, NULL, NULL, NULL, NULL, 85000, 0, 95, 3),
+	(292, NULL, NULL, NULL, NULL, 85000, 0, 96, 3),
+	(293, NULL, NULL, NULL, NULL, 85000, 0, 97, 3),
+	(294, NULL, NULL, NULL, NULL, 85000, 0, 98, 3);
+
+-- Dumping structure for table movie_booking.status_film
+CREATE TABLE IF NOT EXISTS `status_film` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table movie_booking.status_film: ~3 rows (approximately)
+INSERT INTO `status_film` (`id`, `name`) VALUES
+	(1, 'active'),
+	(2, 'inactive'),
+	(3, 'deleted');
+
+-- Dumping structure for table movie_booking.user
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `address` varchar(255) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL,
+  `card_id` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `gender` bit(1) NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `phone_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `phone_number` varchar(255) DEFAULT NULL,
   `status` bit(1) NOT NULL,
-  `role_id` bigint NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `FKn82ha3ccdebhokx3a8fgdqeyy`(`role_id` ASC) USING BTREE,
-  CONSTRAINT `FKn82ha3ccdebhokx3a8fgdqeyy` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  `role_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKn82ha3ccdebhokx3a8fgdqeyy` (`role_id`),
+  CONSTRAINT `FKn82ha3ccdebhokx3a8fgdqeyy` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- ----------------------------
--- Records of user
--- ----------------------------
-INSERT INTO `user` VALUES (1, 'Hà Nội', 'https://canvato.net/2ETUv', '123456789', 'i0zdT', 'test@example.com', b'1', 'Nguyễn Văn A', '$2a$10$Lm/qk3./DPAuZHwfK1W3iux6MWUGEF/2R5iGqymQZG/i.C.qsX5B.', '0987654321', b'1', 2);
+-- Dumping data for table movie_booking.user: ~3 rows (approximately)
+INSERT INTO `user` (`id`, `address`, `avatar`, `card_id`, `code`, `email`, `gender`, `name`, `password`, `phone_number`, `status`, `role_id`) VALUES
+	(1, 'Hà Nội', 'https://canvato.net/2ETUv', '123456789', 'i0zdT', 'test@example.com', b'1', 'Nguyễn Văn A', '$2a$10$Lm/qk3./DPAuZHwfK1W3iux6MWUGEF/2R5iGqymQZG/i.C.qsX5B.', '0987654321', b'1', 2),
+	(2, 'thu duc', 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAFwAXAMBIgACEQEDEQH/', '', 'WtI3I', 'a@gmail.com', b'0', 'thao', '$2a$10$loc9f67zXB7Iw/4KLCKbKOiSBdrqGuPuOdU.HZJ0mOGQwa3/9qk4C', '0999876433', b'1', 1),
+	(5, 'TP', 'https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yasuo_87.jpg', '054203002111', 'yiMpV', 'nguyenquyduong0802@gmail.com', b'1', 'Nguyễn Quý Dươngg', '$2a$10$56eed/W5F3f7/tazXkhcY.BHU98rgjljG4MQJf7JXYLEbV/gJngpi', '0234567890', b'1', 1);
 
-SET FOREIGN_KEY_CHECKS = 1;
+/*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;

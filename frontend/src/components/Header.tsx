@@ -6,8 +6,10 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/images/logo.png';
 import Divider from "@mui/material/Divider";
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -80,23 +82,42 @@ export default function Header() {
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
           >
-            {user ? (
-                [
-                  <Box key="user-info" sx={{ p: 2, pb: 1.5 }}>
-                    <Typography variant="subtitle2" noWrap>
-                      {user.name}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                      {user.email}
-                    </Typography>
-                  </Box>,
-                  <Divider key="divider" sx={{ borderStyle: 'dashed' }} />,
-                  <Box key="logout" sx={{ p: 1 }}>
-                    <Button fullWidth color="error" size="medium" variant="text" onClick={handleLogout}>
-                      {t('nav.logout')} {/* "Đăng xuất" hoặc "Logout" */}
-                    </Button>
-                  </Box>
-                ]
+    {user ? (
+            [
+              <Box key="user-info" sx={{ p: 2, pb: 1.5 }}>
+                <Typography variant="subtitle2" noWrap>
+                  {user.name}
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                  {user.email}
+                </Typography>
+              </Box>,
+              <Divider key="divider1" sx={{ borderStyle: 'dashed' }} />,
+              <MenuItem
+                key="profile-edit"
+                onClick={() => {
+                  navigate('/profile/edit');
+                  handleMenuClose();
+                }}
+              >
+                Cập nhật thông tin
+              </MenuItem>,
+              <MenuItem
+                key="change-password"
+                onClick={() => {
+                  navigate('/change-password');
+                  handleMenuClose();
+                }}
+              >
+                Đổi mật khẩu
+              </MenuItem>,
+              <Divider key="divider2" sx={{ borderStyle: 'dashed' }} />,
+              <Box key="logout" sx={{ p: 1 }}>
+                <Button fullWidth color="error" size="medium" variant="text" onClick={handleLogout}>
+                  {t('nav.logout')}
+                </Button>
+              </Box>
+            ]
             ) : (
                 <Box sx={{ p: 1 }}>
                   <Button
