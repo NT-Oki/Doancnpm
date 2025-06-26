@@ -7,9 +7,25 @@ export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (loading) return;
+    
+    // Validate trước khi gửi
+    if (newPassword.length < 8) {
+      toast.error('Mật khẩu mới phải có ít nhất 8 ký tự');
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      toast.error('Mật khẩu xác nhận không khớp');
+      return;
+    }
+    
+    setLoading(true);
     try {
       await apiRequest(API_URLS.USER.changePassword, {
         method: 'POST',
@@ -21,6 +37,8 @@ export default function ChangePassword() {
       setConfirmPassword('');
     } catch (err: any) {
       toast.error(err.message || 'Đổi mật khẩu thất bại');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,6 +62,7 @@ export default function ChangePassword() {
           margin="normal"
           value={newPassword}
           onChange={e => setNewPassword(e.target.value)}
+          helperText="Mật khẩu phải có ít nhất 8 ký tự"
           required
         />
         <TextField
@@ -53,10 +72,12 @@ export default function ChangePassword() {
           margin="normal"
           value={confirmPassword}
           onChange={e => setConfirmPassword(e.target.value)}
+          error={confirmPassword !== '' && newPassword !== confirmPassword}
+          helperText={confirmPassword !== '' && newPassword !== confirmPassword ? 'Mật khẩu không khớp' : ''}
           required
         />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-          Đổi mật khẩu
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }} disabled={loading}>
+          {loading ? 'Đang xử lý...' : 'Đổi mật khẩu'}
         </Button>
       </form>
     </Paper>

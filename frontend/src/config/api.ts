@@ -14,12 +14,15 @@ const ADMIN_MOVIES_URL = `${ADMIN_URL}/movies`;
 const ADMIN_USER_URL = `${BASE_URL}/admin/users`;
 const ADMIN_BOOKING_URL = `${ADMIN_URL}/bookings`;
 const PAYMENT_URL = `${BOOKING_URL}/payment`;
-const USER_URL = `${BASE_URL}/profile`;
+const UPDATE_PROFILE_URL = `${BASE_URL}/updateProfile`;
+const GET_PROFILE_URL = `${BASE_URL}/getProfile`;
+const CHANGE_PASSWORD_URL = `${BASE_URL}/change-password`;
 
 const API_URLS = {
    USER: {
-    changePassword: `${BASE_URL}/change-password`, // POST
-    updateProfile: `${USER_URL}`,                  // PUT
+    changePassword: `${CHANGE_PASSWORD_URL}`, // POST
+    updateProfile: `${UPDATE_PROFILE_URL}`,                  // PUT
+    getProfile: `${GET_PROFILE_URL}`,                     // GET
   },
   BOOKING: {
     CHOOSE_SHOWTIME: `${BOOKING_URL}/show-time`,
@@ -62,7 +65,7 @@ const API_URLS = {
     },
     booking:{
       list_booking:`${ADMIN_BOOKING_URL}/`,
-      delete_booking:(bookingId:number)=>`${ADMIN_BOOKING_URL}/`,
+      delete_booking:(bookingId:number)=>`${ADMIN_BOOKING_URL}/${bookingId}`,
       SEATS_WEEKLY: `${ADMIN_BOOKING_URL}/seats-weekly`,
     }
   },

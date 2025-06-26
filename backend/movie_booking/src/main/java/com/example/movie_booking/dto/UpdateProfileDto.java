@@ -1,5 +1,4 @@
-package main.java.com.example.movie_booking.dto;
-
+package com.example.movie_booking.dto;
 
 import lombok.Getter;
 import lombok.Setter;

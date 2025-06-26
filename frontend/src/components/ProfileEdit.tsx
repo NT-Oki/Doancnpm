@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Box, Button, TextField, Typography, Paper, MenuItem } from '@mui/material';
 import { toast } from 'react-toastify';
+import API_URLS, { apiRequest } from '../config/api';
 
 
 export default function ProfileEdit() {
@@ -12,13 +12,33 @@ export default function ProfileEdit() {
     address: '',
     avatar: ''
   });
+  const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    // Gọi API lấy thông tin user hiện tại (nếu có endpoint)
-    // axios.get('/profile', { headers: { Authorization: `Bearer ${token}` } })
-    //   .then(res => setProfile(res.data));
+    // Gọi API lấy thông tin user hiện tại
+    const fetchProfile = async () => {
+      try {
+        const response = await apiRequest(API_URLS.USER.getProfile, {
+          method: 'GET'
+        });
+        setProfile({
+          name: response.name || '',
+          phoneNumber: response.phoneNumber || '',
+          gender: response.gender !== undefined ? response.gender : true,
+          address: response.address || '',
+          avatar: response.avatar || ''
+        });
+      } catch (error) {
+        console.error('Lỗi khi tải thông tin profile:', error);
+        toast.error('Không thể tải thông tin cá nhân');
+      }
+    };
+    
+    if (token) {
+      fetchProfile();
+    }
   }, [token]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,15 +51,19 @@ export default function ProfileEdit() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+    
+    setLoading(true);
     try {
-      await axios.put(
-        '/profile',
-        profile,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await apiRequest(API_URLS.USER.updateProfile, {
+        method: 'PUT',
+        body: JSON.stringify(profile)
+      });
       toast.success('Cập nhật thông tin thành công');
     } catch (err: any) {
-      toast.error(err.response?.data?.error || 'Cập nhật thất bại');
+      toast.error(err.message || 'Cập nhật thất bại');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,8 +116,8 @@ export default function ProfileEdit() {
           value={profile.avatar}
           onChange={handleChange}
         />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-          Cập nhật
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }} disabled={loading}>
+          {loading ? 'Đang cập nhật...' : 'Cập nhật'}
         </Button>
       </form>
     </Paper>

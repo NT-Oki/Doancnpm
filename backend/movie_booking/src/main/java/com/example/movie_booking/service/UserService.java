@@ -7,8 +7,7 @@ import com.example.movie_booking.model.Role;
 import com.example.movie_booking.model.User;
 import com.example.movie_booking.repository.PendingUserRepository;
 
-import main.java.com.example.movie_booking.dto.ChangePasswordDto;
-import main.java.com.example.movie_booking.dto.UpdateProfileDto;
+import com.example.movie_booking.dto.*;
 
 import com.example.movie_booking.repository.IRoleRepository;
 import com.example.movie_booking.repository.IUserRepository;
@@ -174,7 +173,7 @@ public class UserService {
         Role role = roleRepository.findByName(dto.getRole());
         if (role == null) {
             throw new IllegalArgumentException(messageSource.getMessage("user.role.invalid",
-                    new Object[]{dto.getRole()}, locale));
+                    new Object[] { dto.getRole() }, locale));
         }
 
         return User.builder()
@@ -196,7 +195,7 @@ public class UserService {
             existingUser = userRepository.findById(dto.getId()).orElse(null);
             if (existingUser == null) {
                 throw new IllegalArgumentException(messageSource.getMessage("user.id.notfound",
-                        new Object[]{dto.getId()}, locale));
+                        new Object[] { dto.getId() }, locale));
             }
         }
 
@@ -248,21 +247,44 @@ public class UserService {
 
     public void changePassword(String email, ChangePasswordDto dto, Locale locale) {
         User user = userRepository.findByEmail(email);
-        if (user == null) throw new IllegalArgumentException("User not found");
+        if (user == null) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage("user.not.found", null, locale));
+        }
+
         if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Mật khẩu cũ không đúng");
+            throw new IllegalArgumentException(
+                    messageSource.getMessage("auth.password.old.incorrect", null, locale));
         }
+
+        if (dto.getNewPassword().length() < 8) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage("auth.password.short", null, locale));
+        }
+
         if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
-            throw new IllegalArgumentException("Mật khẩu xác nhận không khớp");
+            throw new IllegalArgumentException(
+                    messageSource.getMessage("auth.password.confirm.mismatch", null, locale));
         }
+
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         userRepository.save(user);
     }
 
     public User updateProfile(String email, UpdateProfileDto dto, Locale locale) {
         User user = userRepository.findByEmail(email);
-        if (user == null) throw new IllegalArgumentException("User not found");
-        user.setName(dto.getName());
+        if (user == null) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage("user.not.found", null, locale));
+        }
+
+        // Validation cho các trường bắt buộc
+        if (dto.getName() == null || dto.getName().trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage("user.name.required", null, locale));
+        }
+
+        user.setName(dto.getName().trim());
         user.setPhoneNumber(dto.getPhoneNumber());
         user.setGender(dto.getGender());
         user.setAddress(dto.getAddress());
