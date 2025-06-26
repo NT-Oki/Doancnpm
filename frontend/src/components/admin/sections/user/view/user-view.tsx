@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import {
   Box, Card, Table, Button, TableBody, Typography,
   TableContainer, TablePagination, Dialog, DialogTitle,
-  DialogContent, TextField, DialogActions
+  DialogContent, TextField, DialogActions, Avatar
 } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -34,6 +34,8 @@ export function UserView() {
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -64,6 +66,7 @@ export function UserView() {
     } else {
       setIsEditing(false);
       setSelectedUserId(null);
+      setAvatarPreview(null);
       formik.resetForm();
       setOpenDialog(true);
     }
@@ -91,6 +94,7 @@ export function UserView() {
         cardId: data.cardId || '',
         avatar: data.avatar || '',
       });
+      setAvatarPreview(data.avatar || null);
       setOpenDialog(true);
     } catch (error: any) {
       console.error('Failed to fetch user detail:', error.message);
@@ -104,7 +108,40 @@ export function UserView() {
     setOpenDialog(false);
     setIsEditing(false);
     setSelectedUserId(null);
+    setAvatarError(null);
+    setAvatarPreview(null);
     formik.resetForm();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Kiểm tra định dạng và kích thước file
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (!validTypes.includes(file.type)) {
+      setAvatarError('Chỉ chấp nhận file JPEG, PNG hoặc GIF');
+      return;
+    }
+    if (file.size > maxSize) {
+      setAvatarError('Kích thước file không được vượt quá 5MB');
+      return;
+    }
+
+    // Đọc file thành Base64
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.result) {
+        formik.setFieldValue('avatar', reader.result as string);
+        setAvatarPreview(reader.result as string);
+        setAvatarError(null);
+      }
+    };
+    reader.onerror = () => {
+      setAvatarError('Lỗi khi đọc file ảnh');
+    };
+    reader.readAsDataURL(file);
   };
 
   const formik = useFormik({
@@ -149,7 +186,7 @@ export function UserView() {
             logout,
             navigate
         );
-         fetchUsers();
+        fetchUsers();
         handleCloseDialog();
       } catch (error: any) {
         console.error(`${isEditing ? 'Update' : 'Create'} user failed:`, error.message);
@@ -214,7 +251,7 @@ export function UserView() {
       <DashboardContent>
         <Box sx={{ mb: 5, display: 'flex', alignItems: 'center' }}>
           <Typography variant="h4" sx={{ flexGrow: 1 }}>
-            Users
+            Người dùng
           </Typography>
           <Button
               variant="contained"
@@ -222,7 +259,7 @@ export function UserView() {
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={() => handleOpenDialog()}
           >
-            New user
+            Thêm người dùng
           </Button>
         </Box>
 
@@ -358,14 +395,43 @@ export function UserView() {
                   error={formik.touched.cardId && !!formik.errors.cardId}
                   helperText={formik.touched.cardId && formik.errors.cardId}
               />
-              <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Avatar (URL)"
-                  {...formik.getFieldProps('avatar')}
-                  error={formik.touched.avatar && !!formik.errors.avatar}
-                  helperText={formik.touched.avatar && formik.errors.avatar}
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, marginY: 2 }}>
+                <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Avatar (URL)"
+                    {...formik.getFieldProps('avatar')}
+                    error={formik.touched.avatar && !!formik.errors.avatar}
+                    helperText={formik.touched.avatar && formik.errors.avatar}
+                />
+                <Button
+                    variant="outlined"
+                    component="label"
+                    startIcon={<Iconify icon="mingcute:upload-2-line" />}
+                >
+                  Chọn ảnh
+                  <input
+                      type="file"
+                      accept="image/*"
+                      hidden
+                      onChange={handleFileChange}
+                  />
+                </Button>
+              </Box>
+              {avatarPreview && (
+                  <Box sx={{ mt: 1, display: 'flex', justifyContent: 'center' }}>
+                    <Avatar
+                        src={avatarPreview}
+                        alt="Avatar Preview"
+                        sx={{ width: 100, height: 100 }}
+                    />
+                  </Box>
+              )}
+              {avatarError && (
+                  <Typography variant="caption" color="error" sx={{ ml: 2 }}>
+                    {avatarError}
+                  </Typography>
+              )}
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, paddingLeft: 1 }}>
                 <Typography sx={{ mr: 2, paddingBottom: 1 }}>Giới tính:</Typography>
                 <label style={{ marginLeft: '60px' }}>

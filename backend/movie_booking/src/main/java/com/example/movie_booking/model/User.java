@@ -15,6 +15,7 @@ public class User  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String code;
 
     private String name;
@@ -22,6 +23,7 @@ public class User  {
     private String cardId;
 
     private String email;
+
     private String password;
 
     private boolean gender;
@@ -29,8 +31,12 @@ public class User  {
     private boolean status;
 
     private String phoneNumber;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String avatar;
+
     private String address;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
