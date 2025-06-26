@@ -107,4 +107,33 @@ public class UserController {
         }
     }
 
+    @PostMapping("/verify-password")
+    public ResponseEntity<?> verifyPassword(@RequestBody Map<String, String> request,
+            @RequestHeader("Authorization") String authHeader, Locale locale) {
+        String email = jwtTokenUtil.getEmailFromToken(authHeader.substring(7).trim());
+        String password = request.get("password");
+
+        if (password == null || password.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error",
+                    messageSource.getMessage("auth.password.empty", null, locale)));
+        }
+
+        try {
+            User user = userService.findByEmail(email);
+            if (user == null) {
+                return ResponseEntity.badRequest().body(Map.of("error",
+                        messageSource.getMessage("user.not.found", null, locale)));
+            }
+
+            if (!userService.verifyPassword(password, user.getPassword())) {
+                return ResponseEntity.badRequest().body(Map.of("error",
+                        messageSource.getMessage("auth.password.old.incorrect", null, locale)));
+            }
+
+            return ResponseEntity.ok(Map.of("message", "Password verified successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
 }

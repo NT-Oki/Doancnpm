@@ -23,6 +23,7 @@ const API_URLS = {
     changePassword: `${CHANGE_PASSWORD_URL}`, // POST
     updateProfile: `${UPDATE_PROFILE_URL}`,                  // PUT
     getProfile: `${GET_PROFILE_URL}`,                     // GET
+    verifyPassword: `${BASE_URL}/verify-password`,        // POST
   },
   BOOKING: {
     CHOOSE_SHOWTIME: `${BOOKING_URL}/show-time`,
