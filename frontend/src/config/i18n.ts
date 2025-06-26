@@ -200,6 +200,9 @@ i18n
                     "dashboard.trafficBySite": "Traffic by site",
                     "dashboard.tasks": "Tasks",
                     "booking.stats.failed": "Failed to retrieve booking statistics",
+                //   header
+                    "nav.changePassword": "Change Password",
+                    "nav.profileEdit": "Edit Profile",
                 }
             },
             vi: {
@@ -395,6 +398,9 @@ i18n
                     "dashboard.trafficBySite": "Lưu lượng theo trang",
                     "dashboard.tasks": "Nhiệm vụ",
                     "booking.stats.failed": "Lấy thống kê đặt vé thất bại",
+                    //   header
+                    "nav.changePassword": "Đổi mật khẩu",
+                    "nav.profileEdit": "Cập nhật thông tin",
                 }
             }
         },
