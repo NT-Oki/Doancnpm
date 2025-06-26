@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, TextField, Box, IconButton, Menu, MenuItem } from '@mui/material';
-import { Search, AccountCircle, Language } from '@mui/icons-material';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Search, AccountCircle } from '@mui/icons-material'; // Loại bỏ Language vì không cần
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/images/logo.png';
-import Divider from "@mui/material/Divider";
+import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [languageAnchorEl, setLanguageAnchorEl] = useState<null | HTMLElement>(null);
   const { user, logout } = useAuth();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,17 +31,10 @@ export default function Header() {
     setAnchorEl(null);
   };
 
-  const handleLanguageMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setLanguageAnchorEl(event.currentTarget);
-  };
-
-  const handleLanguageMenuClose = () => {
-    setLanguageAnchorEl(null);
-  };
-
-  const handleChangeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
-    handleLanguageMenuClose();
+  const handleToggleLanguage = (event: React.MouseEvent<HTMLElement>, newLanguage: string | null) => {
+    if (newLanguage && ['vi', 'en'].includes(newLanguage)) {
+      i18n.changeLanguage(newLanguage);
+    }
   };
 
   const handleLogout = () => {
@@ -51,38 +43,75 @@ export default function Header() {
   };
 
   return (
-      <AppBar position="fixed" sx={{ backgroundColor: '#111', width: '100%', top: 0 }}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-            <Link
-                to="/"
-                style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}
-            >
-              <img src={logo} alt="CGV Logo" style={{ height: '50px', marginRight: '10px' }} />
-              {t('app.name')} {/* "Cinema" hoặc "Rạp phim" */}
-            </Link>
-          </Typography>
-         
-          <IconButton color="inherit" onClick={handleLanguageMenuOpen}>
-            <Language />
-          </IconButton>
-          <Menu
-              anchorEl={languageAnchorEl}
-              open={Boolean(languageAnchorEl)}
-              onClose={handleLanguageMenuClose}
+    <AppBar position="fixed" sx={{ backgroundColor: '#111', width: '100%', top: 0 }}>
+      <Toolbar>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+          <Link
+            to="/"
+            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}
           >
-            <MenuItem onClick={() => handleChangeLanguage('vi')}>Tiếng Việt (VI)</MenuItem>
-            <MenuItem onClick={() => handleChangeLanguage('en')}>English (EN)</MenuItem>
-          </Menu>
-          <IconButton color="inherit" onClick={handleMenuOpen}>
-            <AccountCircle />
-          </IconButton>
-          <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
+            <img src={logo} alt="CGV Logo" style={{ height: '50px', marginRight: '10px' }} />
+            {t('app.name')} {/* "Cinema" hoặc "Rạp phim" */}
+          </Link>
+        </Typography>
+
+        <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              bgcolor: '#f1e4ff',
+              borderRadius: '20px',
+              p: '2px',
+              mr: 2,
+              height: '24px',
+            }}
+        >
+          <Button
+              onClick={() => i18n.changeLanguage('vi')}
+              sx={{
+                borderRadius: '20px',
+                bgcolor: i18n.language === 'vi' ? '#4B0082' : 'transparent',
+                color: i18n.language === 'vi' ? '#fff' : '#4B0082',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                minWidth: '30px',
+                fontSize: '0.7rem',
+                padding: '2px 8px',
+                lineHeight: 1,
+                height: '20px',
+              }}
           >
-    {user ? (
+            VI
+          </Button>
+          <Button
+              onClick={() => i18n.changeLanguage('en')}
+              sx={{
+                borderRadius: '20px',
+                bgcolor: i18n.language === 'en' ? '#4B0082' : 'transparent',
+                color: i18n.language === 'en' ? '#fff' : '#4B0082',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                minWidth: '30px',
+                fontSize: '0.7rem',
+                padding: '2px 8px',
+                lineHeight: 1,
+                height: '20px',
+              }}
+          >
+            EN
+          </Button>
+        </Box>
+
+
+        <IconButton color="inherit" onClick={handleMenuOpen}>
+          <AccountCircle />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+          {user ? (
             [
               <Box key="user-info" sx={{ p: 2, pb: 1.5 }}>
                 <Typography variant="subtitle2" noWrap>
@@ -100,7 +129,7 @@ export default function Header() {
                   handleMenuClose();
                 }}
               >
-                Cập nhật thông tin
+                {t('nav.profileEdit')} {/* "Cập nhật thông tin" hoặc "Edit Profile" */}
               </MenuItem>,
               <MenuItem
                 key="change-password"
@@ -109,32 +138,32 @@ export default function Header() {
                   handleMenuClose();
                 }}
               >
-                Đổi mật khẩu
+                {t('nav.changePassword')} {/* "Đổi mật khẩu" hoặc "Change Password" */}
               </MenuItem>,
               <Divider key="divider2" sx={{ borderStyle: 'dashed' }} />,
               <Box key="logout" sx={{ p: 1 }}>
                 <Button fullWidth color="error" size="medium" variant="text" onClick={handleLogout}>
-                  {t('nav.logout')}
+                  {t('nav.logout')} {/* "Đăng xuất" hoặc "Logout" */}
                 </Button>
-              </Box>
+              </Box>,
             ]
-            ) : (
-                <Box sx={{ p: 1 }}>
-                  <Button
-                      fullWidth
-                      color="error"
-                      size="medium"
-                      variant="text"
-                      component={Link}
-                      to="/login"
-                      onClick={handleMenuClose}
-                  >
-                    {t('nav.login')} {/* "Đăng nhập" hoặc "Login" */}
-                  </Button>
-                </Box>
-            )}
-          </Menu>
-        </Toolbar>
-      </AppBar>
+          ) : (
+            <Box sx={{ p: 1 }}>
+              <Button
+                fullWidth
+                color="error"
+                size="medium"
+                variant="text"
+                component={Link}
+                to="/login"
+                onClick={handleMenuClose}
+              >
+                {t('nav.login')} {/* "Đăng nhập" hoặc "Login" */}
+              </Button>
+            </Box>
+          )}
+        </Menu>
+      </Toolbar>
+    </AppBar>
   );
 }
