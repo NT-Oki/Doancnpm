@@ -79,10 +79,10 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
             >
                 <Avatar
                     alt={user.name}
-                    src={user.avatar} // Sử dụng avatar hoặc ảnh mặc định
+                    src={user.avatar}
                     sx={{ width: 1, height: 1 }}
                 >
-                    {!user.avatar && user.name.charAt(0).toUpperCase()} {/* Hiển thị chữ cái nếu không có avatar */}
+                    {!user.avatar && user.name.charAt(0).toUpperCase()}
                 </Avatar>
             </IconButton>
 
