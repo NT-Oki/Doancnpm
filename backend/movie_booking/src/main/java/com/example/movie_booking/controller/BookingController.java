@@ -6,6 +6,7 @@ import com.example.movie_booking.dto.booking.ChooseSeatResponseDTO;
 import com.example.movie_booking.dto.payment.PaymentRequestDTO;
 import com.example.movie_booking.model.*;
 import com.example.movie_booking.service.BookingService;
+import com.example.movie_booking.service.PromotionService;
 import com.example.movie_booking.util.CodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -30,26 +31,31 @@ public class BookingController {
     @Autowired
     MessageSource messageSource;
 
+    @Autowired
+    private PromotionService promotionService;
+
     /**
      * Buoc 1
      * tạo 1 booking mới chứa (showtime,trạng thai(1)
+     * 
      * @param dto
      * @return
      */
     @PostMapping("/show-time")
-    public ResponseEntity<?> booking(@RequestBody BookingDTO dto, Locale locale) {//userId, showtimeId
+    public ResponseEntity<?> booking(@RequestBody BookingDTO dto, Locale locale) {// userId, showtimeId
         try {
             Booking booking = bookingService.createBooking(dto);
             Map<String, Object> response = new HashMap<>();
             response.put("id", booking.getId());
             response.put("message",
-                    messageSource.getMessage("booking.create.success", new Object[]{booking.getId()}, locale));
+                    messageSource.getMessage("booking.create.success", new Object[] { booking.getId() }, locale));
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error",
-                            messageSource.getMessage("booking.create.failed", new Object[]{e.getMessage()}, locale)));
+                            messageSource.getMessage("booking.create.failed", new Object[] { e.getMessage() },
+                                    locale)));
         }
     }
 
@@ -57,19 +63,20 @@ public class BookingController {
      * Bước 2
      * Lấy tất cả seat của showtime được chọn đó ra
      * Bỏ vào kèm thông tin
+     * 
      * @return
      */
     @GetMapping("/seats")
     public ResponseEntity<?> getSeats(@RequestParam Long showtimeId, Locale locale) {
         System.out.println("hiiiiiiiiiiii");
-        try{
-        ChooseSeatResponseDTO responseDTO=bookingService.getInformationForChooseSeat(showtimeId);
-        Map<String, Object> map = new HashMap<>();
-        map.put("showtimeDetail", responseDTO);
-        return ResponseEntity.ok(map);
-        } catch(Exception e){
+        try {
+            ChooseSeatResponseDTO responseDTO = bookingService.getInformationForChooseSeat(showtimeId);
+            Map<String, Object> map = new HashMap<>();
+            map.put("showtimeDetail", responseDTO);
+            return ResponseEntity.ok(map);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error",
-                    messageSource.getMessage("booking.seats.get.failed", new Object[]{e.getMessage()}, locale)));
+                    messageSource.getMessage("booking.seats.get.failed", new Object[] { e.getMessage() }, locale)));
         }
     }
 
@@ -80,50 +87,72 @@ public class BookingController {
      * @return
      */
     @PostMapping("/choose-seat")
-    public ResponseEntity<?> chooseSeats(@RequestBody BookingDTO dto, Locale locale) {//bookingId, seats :[1,2,3]
-        try{
-        BookingCheckoutDto checkoutDto = bookingService.addSeats(dto);
-        return ResponseEntity.ok(checkoutDto);
-        }catch (Exception e){
+    public ResponseEntity<?> chooseSeats(@RequestBody BookingDTO dto, Locale locale) {// bookingId, seats :[1,2,3]
+        try {
+            BookingCheckoutDto checkoutDto = bookingService.addSeats(dto);
+            return ResponseEntity.ok(checkoutDto);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error",
-                    messageSource.getMessage("booking.seats.failed", new Object[]{e.getMessage()}, locale)));
+                    messageSource.getMessage("booking.seats.failed", new Object[] { e.getMessage() }, locale)));
         }
     }
-//    @PostMapping("/payment")
-//    public ResponseEntity<?> payment(@RequestBody PaymentRequestDTO dto) {
-//        String qr = bookingService.createQR(dto);
-//        return ResponseEntity.ok(qr);
-//    }
+    // @PostMapping("/payment")
+    // public ResponseEntity<?> payment(@RequestBody PaymentRequestDTO dto) {
+    // String qr = bookingService.createQR(dto);
+    // return ResponseEntity.ok(qr);
+    // }
 
     @PostMapping("/payment-sucessful/{bookingId}")
     public ResponseEntity<?> createBookingSuccessful(@PathVariable long bookingId) {
-        try{
-            Booking booking=bookingService.paymentSuccessful(bookingId);
+        try {
+            Booking booking = bookingService.paymentSuccessful(bookingId);
             Map<String, Object> map = new HashMap<>();
             map.put("id", booking.getId());
             return ResponseEntity.ok(map);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-@GetMapping("/ticket/{bookingId}")
-public ResponseEntity<?> getQRCode(@PathVariable long bookingId) {
-    try {
-        // Giả sử lấy dữ liệu từ DB (ở đây hardcode để demo)
-        String qrContent = bookingService.buildQRContent(bookingId);
-        Booking booking=bookingService.getBooking(bookingId);
-        BookingCheckoutDto bookingCheckoutDto=new BookingCheckoutDto(booking);
-        byte[] image = CodeGenerator.generateQRCodeImage(qrContent, 300, 300);
-        String imageBase64 = Base64.getEncoder().encodeToString(image);
-        HttpHeaders headers = new HttpHeaders();
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("image", imageBase64);
-        map.put("bookingCheckoutDto",bookingCheckoutDto);
-        return ResponseEntity.ok().body(map);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return ResponseEntity.badRequest().build();
+    /**
+     * Apply promotion to booking
+     * 
+     * @param bookingId
+     * @param request
+     * @param locale
+     * @return
+     */
+    @PutMapping("/choose-seat/{bookingId}/apply-promotion")
+    public ResponseEntity<?> applyPromotionToBooking(@PathVariable long bookingId,
+            @RequestBody com.example.movie_booking.dto.promotion.ApplyPromotionRequest request,
+            Locale locale) {
+        try {
+            BookingCheckoutDto updatedBooking = bookingService.applyPromotionToBooking(bookingId, request);
+            return ResponseEntity.ok(updatedBooking);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error",
+                    "Có lỗi xảy ra khi áp dụng mã khuyến mãi: " + e.getMessage()));
+        }
     }
-}
+
+    @GetMapping("/ticket/{bookingId}")
+    public ResponseEntity<?> getQRCode(@PathVariable long bookingId) {
+        try {
+            // Giả sử lấy dữ liệu từ DB (ở đây hardcode để demo)
+            String qrContent = bookingService.buildQRContent(bookingId);
+            Booking booking = bookingService.getBooking(bookingId);
+            BookingCheckoutDto bookingCheckoutDto = new BookingCheckoutDto(booking);
+            byte[] image = CodeGenerator.generateQRCodeImage(qrContent, 300, 300);
+            String imageBase64 = Base64.getEncoder().encodeToString(image);
+            HttpHeaders headers = new HttpHeaders();
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("image", imageBase64);
+            map.put("bookingCheckoutDto", bookingCheckoutDto);
+            return ResponseEntity.ok().body(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

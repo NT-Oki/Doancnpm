@@ -16,7 +16,9 @@ public class Booking {
     private String codeBooking;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateBooking;
-    private Integer totalAmount;//tổng giá của 1 lần order
+    private Integer totalAmount;// tổng giá của 1 lần order
+    private Integer originalAmount; // Giá gốc trước khi giảm
+    private Integer discountAmount; // Số tiền được giảm
     @ManyToOne
     @JoinColumn(name = "booking_status_id")
     private BookingStatus bookingStatus;
@@ -26,8 +28,13 @@ public class Booking {
     @ManyToOne
     @JoinColumn(name = "showtime_id")
     private Showtime showTime;
+    @ManyToOne
+    @JoinColumn(name = "promotion_id")
+    private Promotion promotion;
     private String paymentId;
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)//orphanRemoval = true giúp tự động xóa ghế nếu bị xóa khỏi danh sách.
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval = true giúp tự
+                                                                                      // động xóa ghế nếu bị xóa khỏi
+                                                                                      // danh sách.
     private List<BookingSeat> bookingSeats;
 
 }
