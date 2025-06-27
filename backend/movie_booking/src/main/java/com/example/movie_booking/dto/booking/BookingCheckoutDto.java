@@ -34,6 +34,13 @@ public class BookingCheckoutDto {
     private String userName;
     private String userEmail;
     private String userCode;
+
+    // Promotion related fields
+    private String promotionCode;
+    private String promotionName;
+    private Integer originalAmount;
+    private Integer discountAmount;
+
     public BookingCheckoutDto(Booking booking) {
         List<String> nameSeats = new ArrayList<>();
         int quantityNormalSeat = 0;
@@ -42,12 +49,12 @@ public class BookingCheckoutDto {
         int totalPriceCoupleSeat = 0;
         this.bookingId = booking.getId();
         this.userId = booking.getUser().getId();
-        for (BookingSeat seat : booking.getBookingSeats()){
+        for (BookingSeat seat : booking.getBookingSeats()) {
             nameSeats.add(seat.getSeat().getSeatNumber());
-            if(seat.getSeat().getDescription().equals("Ghế thường")){
+            if (seat.getSeat().getDescription().equals("Ghế thường")) {
                 quantityNormalSeat++;
                 totalPriceNormalSeat += seat.getPrice();
-            }else if(seat.getSeat().getDescription().equals("Ghế đôi")){
+            } else if (seat.getSeat().getDescription().equals("Ghế đôi")) {
                 quantityCoupleSeat++;
                 totalPriceCoupleSeat += seat.getPrice();
             }
@@ -57,16 +64,22 @@ public class BookingCheckoutDto {
         this.quantityCoupleSeat = quantityCoupleSeat;
         this.totalPriceNormalSeat = totalPriceNormalSeat;
         this.totalPriceCoupleSeat = totalPriceCoupleSeat;
-        this.totalPrice = booking.getTotalAmount()==null?null   :booking.getTotalAmount();
-        this.movieName=booking.getShowTime().getMovie().getNameMovie();
-        this.startTime=booking.getShowTime().getStartTime().format(DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy"));
-        this.roomName=booking.getShowTime().getRoom().getRoomName();
-        this.bookingCode=booking.getCodeBooking()==null?null:booking.getCodeBooking();
-        this.userName=booking.getUser().getName();
-        this.userEmail=booking.getUser().getEmail();
-        this.userCode=booking.getUser().getCode();
+        this.totalPrice = booking.getTotalAmount() == null ? null : booking.getTotalAmount();
+        this.movieName = booking.getShowTime().getMovie().getNameMovie();
+        this.startTime = booking.getShowTime().getStartTime().format(DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy"));
+        this.roomName = booking.getShowTime().getRoom().getRoomName();
+        this.bookingCode = booking.getCodeBooking() == null ? null : booking.getCodeBooking();
+        this.userName = booking.getUser().getName();
+        this.userEmail = booking.getUser().getEmail();
+        this.userCode = booking.getUser().getCode();
+
+        // Set promotion fields if available
+        if (booking.getPromotion() != null) {
+            this.promotionCode = booking.getPromotion().getCode();
+            this.promotionName = booking.getPromotion().getName();
+        }
+        this.originalAmount = booking.getOriginalAmount();
+        this.discountAmount = booking.getDiscountAmount();
     }
-
-
 
 }

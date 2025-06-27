@@ -39,11 +39,17 @@ public class BookingService {
     @Autowired
     IShowTimeSeatRepository showTimeSeatRepository;
 
+    @Autowired
+    private PromotionService promotionService;
+
+    @Autowired
+    private IPromotionRepository promotionRepository;
+
     public Booking save(Booking booking) {
         return bookingRepository.save(booking);
     }
 
-@Transactional
+    @Transactional
     public Booking createBooking(BookingDTO dto) {
         Booking booking = new Booking();
         BookingStatus bookingStatus = bookingStatusRepository.getReferenceById(1l);
@@ -70,8 +76,8 @@ public class BookingService {
 
         for (Long l : dto.getShowtimeSeats()) {
             BookingSeat bookingSeat = new BookingSeat();
-            ShowTimeSeat showTimeSeat=showTimeSeatRepository.findById(l).orElse(null);
-            if(showTimeSeat==null){
+            ShowTimeSeat showTimeSeat = showTimeSeatRepository.findById(l).orElse(null);
+            if (showTimeSeat == null) {
                 return null;
             }
             showTimeSeat.setStatus(2);
@@ -89,46 +95,50 @@ public class BookingService {
         bookingSeatRepository.saveAll(seatList);
         booking.setTotalAmount(dto.getTotalAmount());
         bookingRepository.save(booking);
-        BookingCheckoutDto bookingCheckoutDto=new BookingCheckoutDto(booking);
+        BookingCheckoutDto bookingCheckoutDto = new BookingCheckoutDto(booking);
         return bookingCheckoutDto;
     }
-    public Booking updateTotalAmount(long id){
+
+    public Booking updateTotalAmount(long id) {
         Booking booking = bookingRepository.getReferenceById(id);
-        List<BookingSeat> bookingSeats=booking.getBookingSeats();
-        int total=0;
-        for(BookingSeat bookingSeat:bookingSeats){
-            total+=bookingSeat.getPrice();
+        List<BookingSeat> bookingSeats = booking.getBookingSeats();
+        int total = 0;
+        for (BookingSeat bookingSeat : bookingSeats) {
+            total += bookingSeat.getPrice();
         }
         booking.setTotalAmount(total);
         bookingRepository.save(booking);
         return booking;
     }
-    public ChooseSeatResponseDTO getInformationForChooseSeat(long showtimeId){
-        Showtime showtime=showTimeRepository.findById(showtimeId).orElse(null);
-        if(showtime==null){
+
+    public ChooseSeatResponseDTO getInformationForChooseSeat(long showtimeId) {
+        Showtime showtime = showTimeRepository.findById(showtimeId).orElse(null);
+        if (showtime == null) {
             return null;
         }
-        List<ShowTimeSeat> showTimeSeats=showTimeSeatRepository.findByShowtimeId(showtimeId);
-        List<ShowtimeSeatResponseDTO> showtimeSeatResponseDTOS=new ArrayList<>();
-        for(ShowTimeSeat showTimeSeat:showTimeSeats){
-            showtimeSeatResponseDTOS.add(new ShowtimeSeatResponseDTO(showTimeSeat ));
+        List<ShowTimeSeat> showTimeSeats = showTimeSeatRepository.findByShowtimeId(showtimeId);
+        List<ShowtimeSeatResponseDTO> showtimeSeatResponseDTOS = new ArrayList<>();
+        for (ShowTimeSeat showTimeSeat : showTimeSeats) {
+            showtimeSeatResponseDTOS.add(new ShowtimeSeatResponseDTO(showTimeSeat));
         }
-        ChooseSeatResponseDTO responseDTO=new ChooseSeatResponseDTO(showtime,showtimeSeatResponseDTOS);
+        ChooseSeatResponseDTO responseDTO = new ChooseSeatResponseDTO(showtime, showtimeSeatResponseDTOS);
         return responseDTO;
     }
-    public Booking paymentSuccessful(long bookingId){
-        Booking booking =bookingRepository.findById(bookingId).orElse(null);
-        if(booking==null){
+
+    public Booking paymentSuccessful(long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking == null) {
             return null;
         }
-        String bookingCode= CodeGenerator.generateBookingCode();
+        String bookingCode = CodeGenerator.generateBookingCode();
         booking.setCodeBooking(bookingCode);
-        Booking booking1=bookingRepository.save(booking);
+        Booking booking1 = bookingRepository.save(booking);
         return booking1;
     }
+
     public String buildQRContent(long bookingId) throws Exception {
-        Booking booking =bookingRepository.findById(bookingId).orElse(null);
-        if(booking==null){
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking == null) {
             return null;
         }
         Map<String, Object> data = new LinkedHashMap<>();
@@ -140,27 +150,61 @@ public class BookingService {
                 .map(s -> s.getSeat().getSeatNumber())
                 .collect(Collectors.joining(",")));
         data.put("room", booking.getShowTime().getRoom().getRoomName());
-        data.put("bookingCode",booking.getCodeBooking());
+        data.put("bookingCode", booking.getCodeBooking());
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(data);
     }
 
     public List<BookingCheckoutDto> getAllBookings() {
-        List<BookingCheckoutDto> list=new ArrayList<>();
-        List<Booking> bookings=bookingRepository.findByCodeBookingIsNotNull();
-        for(Booking booking:bookings){
-            BookingCheckoutDto bookingCheckoutDto=new BookingCheckoutDto(booking);
+        List<BookingCheckoutDto> list = new ArrayList<>();
+        List<Booking> bookings = bookingRepository.findByCodeBookingIsNotNull();
+        for (Booking booking : bookings) {
+            BookingCheckoutDto bookingCheckoutDto = new BookingCheckoutDto(booking);
             list.add(bookingCheckoutDto);
         }
         return list;
     }
 
+    // public String createQR(PaymentRequestDTO dto){
+    // String
+    // qr="https://img.vietqr.io/image/BIDV-3148149366-compact.png?amount="+dto.getAmount()+
+    // "&addInfo="+dto.getAddInfo();
+    // return qr;
+    // }
+    @Transactional
+    public BookingCheckoutDto applyPromotionToBooking(long bookingId,
+            com.example.movie_booking.dto.promotion.ApplyPromotionRequest request) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
 
-//    public String createQR(PaymentRequestDTO dto){
-//        String qr="https://img.vietqr.io/image/BIDV-3148149366-compact.png?amount="+dto.getAmount()+
-//                "&addInfo="+dto.getAddInfo();
-//        return qr;
-//    }
+        // Validate promotion again for security
+        com.example.movie_booking.dto.promotion.PromotionValidationResult validationResult = promotionService
+                .validatePromotion(request.getPromotionCode(),
+                        request.getFinalAmount().add(request.getDiscountAmount()));
+
+        if (!validationResult.isValid()) {
+            throw new RuntimeException(validationResult.getErrorMessage());
+        }
+
+        Promotion promotion = validationResult.getPromotion();
+
+        // Save original amount if not already saved
+        if (booking.getOriginalAmount() == null) {
+            booking.setOriginalAmount(booking.getTotalAmount());
+        }
+
+        // Apply promotion
+        booking.setPromotion(promotion);
+        booking.setDiscountAmount(request.getDiscountAmount().intValue());
+        booking.setTotalAmount(request.getFinalAmount().intValue());
+
+        // Increment usage count
+        promotionService.incrementUsageCount(promotion);
+
+        bookingRepository.save(booking);
+
+        return new BookingCheckoutDto(booking);
+    }
 
     public long countSeatsSoldByDate(LocalDate date) {
         return bookingSeatRepository.countSeatsSoldByDate(date);

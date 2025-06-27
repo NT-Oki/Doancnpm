@@ -6,6 +6,7 @@ import Header from "./Header";
 import axios from "axios";
 import API_URLS from "../config/api";
 import Footer from "./Footer";
+import PromotionCode from "./PromotionCode";
 
 interface BookingCheckoutDto {
   bookingId: number;
@@ -19,6 +20,17 @@ interface BookingCheckoutDto {
   movieName: string;
   startTime: string;
   roomName: string;
+  promotionCode?: string;
+  promotionName?: string;
+  originalAmount?: number;
+  discountAmount?: number;
+}
+
+interface PromotionData {
+  code: string;
+  name: string;
+  discountAmount: number;
+  finalAmount: number;
 }
 
 const CheckoutPage = () => {
@@ -29,15 +41,55 @@ const CheckoutPage = () => {
   const data: BookingCheckoutDto | null = dataJson ? JSON.parse(dataJson) : null;
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [appliedPromotion, setAppliedPromotion] = useState<PromotionData | null>(null);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+
+  // Calculate display amounts
+  const originalAmount = data ? (appliedPromotion ? data.totalPrice + appliedPromotion.discountAmount : data.totalPrice) : 0;
+  const finalAmount = appliedPromotion ? appliedPromotion.finalAmount : (data?.totalPrice || 0);
+  const discountAmount = appliedPromotion ? appliedPromotion.discountAmount : 0;
 
 
     const getTicket = async () => {
+      if (isProcessingPayment) return;
+      
+      setIsProcessingPayment(true);
+      setMessage('');
+      setError('');
+      
       try {
+        // If promotion is applied, update booking with promotion data first
+        if (appliedPromotion && data) {
+          const updateResponse = await axios.put(
+            `${API_URLS.BOOKING.TOCHECKOUT}/${data.bookingId}/apply-promotion`,
+            {
+              promotionCode: appliedPromotion.code,
+              finalAmount: appliedPromotion.finalAmount,
+              discountAmount: appliedPromotion.discountAmount
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
+            }
+          );
+          
+          if (updateResponse.data.error) {
+            setError('Có lỗi khi áp dụng mã khuyến mãi. Vui lòng thử lại.');
+            return;
+          }
+          
+          // Update session storage with new data
+          const updatedData = { ...data, ...updateResponse.data };
+          sessionStorage.setItem("bookingCheckoutDto", JSON.stringify(updatedData));
+        }
+        
         const response = await axios.get(
           API_URLS.PAYMENT.create_payment,
           {
             params: {
-              amount: Number(data?.totalPrice),
+              amount: finalAmount, // Use final amount after discount
               bookingId: data?.bookingId
             },
             headers: {
@@ -45,6 +97,7 @@ const CheckoutPage = () => {
             }
           }
         );
+        
         if (response.data.status === 'OK' && response.data.url) {
           setMessage('Đang chuyển hướng đến trang thanh toán VNPAY...');
           // Chuyển hướng người dùng đến URL của VNPAY
@@ -55,6 +108,9 @@ const CheckoutPage = () => {
 
       } catch (error) {
         console.error("Lỗi khi gửi thanh toán:", error);
+        setError('Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại.');
+      } finally {
+        setIsProcessingPayment(false);
       }
     };
 
@@ -163,9 +219,34 @@ const CheckoutPage = () => {
                   <Typography>{data?.quantityCoupleSeat}</Typography>
                   <Typography>{data?.totalPriceCoupleSeat.toLocaleString('vi-VN')} vnđ</Typography>
                 </Box>
+                
+                {/* Promotion Section */}
+                <Box sx={{ mb: 2, p: 1 }}>
+                  <PromotionCode
+                    originalAmount={originalAmount}
+                    onPromotionApplied={setAppliedPromotion}
+                    disabled={isProcessingPayment}
+                  />
+                </Box>
+                
+                {/* Pricing Summary */}
+                {appliedPromotion && (
+                  <>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, p: 1, borderBottom: "1px dashed rgba(0, 0, 0, 0.12)" }}>
+                      <Typography>{t('total.original')} {/* "Tổng gốc" hoặc "Original Total" */}</Typography>
+                      <Typography>{originalAmount.toLocaleString('vi-VN')} vnđ</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, p: 1, borderBottom: "1px dashed rgba(0, 0, 0, 0.12)" }}>
+                      <Typography color="success.main">{t('discount')} {/* "Giảm giá" hoặc "Discount" */}</Typography>
+                      <Typography color="success.main">-{discountAmount.toLocaleString('vi-VN')} vnđ</Typography>
+                    </Box>
+                  </>
+                )}
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, p: 1 }}>
                   <Typography fontWeight="bold">{t('total')} {/* "Tổng" hoặc "Total" */}</Typography>
-                  <Typography fontWeight="bold">{data?.totalPrice.toLocaleString('vi-VN')} vnđ</Typography>
+                  <Typography fontWeight="bold" color={appliedPromotion ? "success.main" : "inherit"}>
+                    {finalAmount.toLocaleString('vi-VN')} vnđ
+                  </Typography>
                 </Box>
               </Box>
             </Box>
@@ -191,8 +272,13 @@ const CheckoutPage = () => {
 
                 <Box sx={{ mt: 2 }}>
                   <Typography fontWeight="bold" variant="h6">
-                    {t('booking.total')} {data?.totalPrice.toLocaleString('vi-VN')} {/* "Tổng đơn hàng" hoặc "Total Order" */}
+                    {t('booking.total')} {finalAmount.toLocaleString('vi-VN')} vnđ {/* "Tổng đơn hàng" hoặc "Total Order" */}
                   </Typography>
+                  {appliedPromotion && (
+                    <Typography variant="body2" color="success.main" sx={{ mt: 0.5 }}>
+                      {t('discount.applied')}: -{discountAmount.toLocaleString('vi-VN')} vnđ {/* "Đã giảm giá" */}
+                    </Typography>
+                  )}
                 </Box>
 
                 <Box sx={{ mt: 2 }}>
@@ -206,9 +292,14 @@ const CheckoutPage = () => {
 
               {/* Xác nhận */}
               <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-                <Button variant="outlined">{t('back')} {/* "Quay lại" hoặc "Back" */}</Button>
-                <Button variant="contained" color="primary" onClick={getTicket}>
-                  {t('confirm')} {/* "Xác nhận" hoặc "Confirm" */}
+                <Button variant="outlined" disabled={isProcessingPayment}>{t('back')} {/* "Quay lại" hoặc "Back" */}</Button>
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  onClick={getTicket}
+                  disabled={isProcessingPayment}
+                >
+                  {isProcessingPayment ? 'Đang xử lý...' : t('confirm')} {/* "Xác nhận" hoặc "Confirm" */}
                 </Button>
               </Box>
             </Box>

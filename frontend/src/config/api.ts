@@ -79,6 +79,9 @@ const API_URLS = {
   },
   PAYMENT:{
     create_payment:`${PAYMENT_URL}/create_payment`
+  },
+  PROMOTION:{
+    validate:`${BOOKING_URL}/promotion/validate`
   }
 };
 
