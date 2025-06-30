@@ -4,7 +4,6 @@ import com.example.movie_booking.config.VnPayConfig;
 import com.example.movie_booking.dto.payment.PaymentResDTO;
 import com.example.movie_booking.dto.payment.TransactionStatusDTO;
 import com.example.movie_booking.model.Booking;
-import com.example.movie_booking.model.BookingSeat;
 import com.example.movie_booking.model.BookingStatus;
 import com.example.movie_booking.model.ShowTimeSeat;
 import com.example.movie_booking.repository.IBookingRepository;
@@ -39,6 +38,7 @@ public class PaymentController {
     IBookingSeatRepository bookingSeatRepository;
     @Autowired
     private VnPayConfig vnPayConfig;
+
 
     @GetMapping("/create_payment")
     public ResponseEntity<PaymentResDTO> createPayment(@RequestParam long amount,@RequestParam long bookingId, HttpServletRequest request) {

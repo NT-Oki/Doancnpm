@@ -292,7 +292,7 @@ const CheckoutPage = () => {
 
               {/* Xác nhận */}
               <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-                <Button variant="outlined" disabled={isProcessingPayment}>{t('back')} {/* "Quay lại" hoặc "Back" */}</Button>
+                {/* <Button variant="outlined" disabled={isProcessingPayment}>{t('back')} "Quay lại" hoặc "Back"</Button> */}
                 <Button 
                   variant="contained" 
                   color="primary" 

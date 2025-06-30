@@ -6,6 +6,7 @@ import com.example.movie_booking.dto.booking.ChooseSeatResponseDTO;
 import com.example.movie_booking.dto.payment.PaymentRequestDTO;
 import com.example.movie_booking.model.*;
 import com.example.movie_booking.service.BookingService;
+import com.example.movie_booking.service.EmailService;
 import com.example.movie_booking.service.PromotionService;
 import com.example.movie_booking.util.CodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class BookingController {
 
     @Autowired
     private PromotionService promotionService;
+    @Autowired
+    EmailService emailService;
 
     /**
      * Buoc 1
@@ -142,7 +145,9 @@ public class BookingController {
             String qrContent = bookingService.buildQRContent(bookingId);
             Booking booking = bookingService.getBooking(bookingId);
             BookingCheckoutDto bookingCheckoutDto = new BookingCheckoutDto(booking);
+
             byte[] image = CodeGenerator.generateQRCodeImage(qrContent, 300, 300);
+            emailService.sendTicketEmailWithQRCode(bookingCheckoutDto.getUserEmail(),bookingCheckoutDto.getUserName(),bookingCheckoutDto,image);
             String imageBase64 = Base64.getEncoder().encodeToString(image);
             HttpHeaders headers = new HttpHeaders();
 
