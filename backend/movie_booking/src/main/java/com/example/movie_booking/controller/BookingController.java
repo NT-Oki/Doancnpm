@@ -155,4 +155,14 @@ public class BookingController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @DeleteMapping("/cancel/{bookingId}")
+    public ResponseEntity<?> cancelBooking(@PathVariable long bookingId) {
+        try {
+            bookingService.deleteById(bookingId);
+            return ResponseEntity.ok().body("Xóa bản ghi thành công");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

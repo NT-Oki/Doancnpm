@@ -32,6 +32,7 @@ const API_URLS = {
     PAYMENT:`${BOOKING_URL}/payment`,
     CREATE_BOOKING_SUCCESSFUL:(bookingId:number)=>`${BOOKING_URL}/payment-sucessful/${bookingId}`,
     TICKET:(bookingId:number)=>`${BOOKING_URL}/ticket/${bookingId}`,
+    CANCEL_BOOKING:(bookingId:number)=>`${BOOKING_URL}/cancel/${bookingId}`,
   },
   MOVIE: {
     list: `${MOVIE_URL}/list`,
