@@ -11,6 +11,7 @@ import com.example.movie_booking.util.CodeGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -208,6 +209,9 @@ public class BookingService {
 
     public long countSeatsSoldByDate(LocalDate date) {
         return bookingSeatRepository.countSeatsSoldByDate(date);
+    }
+    public void deleteById(long bookingId){
+       bookingRepository.deleteById(bookingId);
     }
 
 }
