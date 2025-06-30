@@ -486,8 +486,8 @@ export default function SeatSelector() {
                             {t('continue')}
                         </Button>
                          <Button
-                            variant="contained"
-                            color="success"
+                            variant="outlined"
+                            color="info"
                             fullWidth
                             size="large"
                             sx={{ mt: 3, py: 1.5, borderRadius: '8px' }}
