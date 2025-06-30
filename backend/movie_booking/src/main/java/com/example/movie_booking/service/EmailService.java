@@ -1,8 +1,10 @@
 package com.example.movie_booking.service;
 
+import com.example.movie_booking.dto.booking.BookingCheckoutDto;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -107,4 +109,38 @@ public class EmailService {
             throw new RuntimeException("Lỗi khi gửi email đặt lại mật khẩu: " + e.getMessage());
         }
     }
+    public void sendTicketEmailWithQRCode(String to, String name, BookingCheckoutDto info, byte[] qrCodeImageBytes) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject("Vé xem phim của bạn - Movie Booking");
+
+
+            String content = "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
+                    + "<h2 style='color: #e50914;'>Xin chào " + name + ",</h2>"
+                    + "<p>Cảm ơn bạn đã đặt vé xem phim. Dưới đây là thông tin vé của bạn:</p>"
+                    + "<ul>"
+                    + "<li><strong>Phim:</strong> " + info.getMovieName() + "</li>"
+                    + "<li><strong>Suất chiếu:</strong> " + info.getStartTime() + "</li>"
+                    + "<li><strong>Phòng:</strong> " + info.getRoomName() + "</li>"
+                    + "<li><strong>Ghế:</strong> " + String.join(", ", info.getNameSeats()) + "</li>"
+                    + "<li><strong>Mã vé:</strong> " + info.getBookingCode() + "</li>"
+                    + "</ul>"
+                    + "<p>Vui lòng quét mã QR dưới đây khi đến rạp:</p>"
+                    + "<img src='cid:qrcodeImage' style='width:200px; height:200px;'/>"
+                    + "<p style='margin-top: 20px;'>Trân trọng,<br/>Movie Booking</p>"
+                    + "</div>";
+
+            helper.setText(content, true);
+
+
+            helper.addInline("qrcodeImage", new ByteArrayResource(qrCodeImageBytes), "image/png");
+
+            mailSender.send(message);
+        } catch (MessagingException | MailException e) {
+            throw new RuntimeException("Lỗi khi gửi email vé có mã QR: " + e.getMessage());
+        }
+    }
+
 }
