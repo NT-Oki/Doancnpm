@@ -53,6 +53,9 @@ public class Promotion {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -66,5 +69,31 @@ public class Promotion {
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    // Helper methods
+    public boolean isValid() {
+        LocalDateTime now = LocalDateTime.now();
+        return isActive && !isDeleted && 
+               now.isAfter(startDate) && now.isBefore(endDate) &&
+               usedCount < usageLimit;
+    }
+
+    public BigDecimal calculateDiscount(BigDecimal orderAmount) {
+        if (!isValid() || orderAmount.compareTo(minOrderAmount) < 0) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal discount = BigDecimal.ZERO;
+        if (discountType == DiscountType.PERCENTAGE) {
+            discount = orderAmount.multiply(discountValue.divide(BigDecimal.valueOf(100)));
+            if (maxDiscountAmount != null && discount.compareTo(maxDiscountAmount) > 0) {
+                discount = maxDiscountAmount;
+            }
+        } else {
+            discount = discountValue;
+        }
+
+        return discount.min(orderAmount);
     }
 }
