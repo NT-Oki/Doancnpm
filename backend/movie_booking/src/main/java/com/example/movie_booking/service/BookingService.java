@@ -44,7 +44,7 @@ public class BookingService {
     private PromotionService promotionService;
 
     @Autowired
-    private IPromotionRepository promotionRepository;
+    private PromotionRepository promotionRepository;
 
     public Booking save(Booking booking) {
         return bookingRepository.save(booking);
@@ -210,8 +210,9 @@ public class BookingService {
     public long countSeatsSoldByDate(LocalDate date) {
         return bookingSeatRepository.countSeatsSoldByDate(date);
     }
-    public void deleteById(long bookingId){
-       bookingRepository.deleteById(bookingId);
+
+    public void deleteById(long bookingId) {
+        bookingRepository.deleteById(bookingId);
     }
 
 }

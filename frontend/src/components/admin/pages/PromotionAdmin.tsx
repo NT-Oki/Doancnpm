@@ -112,30 +112,122 @@ const PromotionAdmin: React.FC = () => {
     fetchPromotions();
   }, [showDeleted, page, rowsPerPage]);
 
-  const fetchPromotions = async () => {
-    try {
-      setLoading(true);
-      const url = showDeleted 
-        ? `${API_URLS.ADMIN.promotion.list}?includeDeleted=true&page=${page}&size=${rowsPerPage}` 
-        : `${API_URLS.ADMIN.promotion.list}?page=${page}&size=${rowsPerPage}`;
-        
-      const response = await apiRequest(url, { method: 'GET' });
-      
-      // Xử lý response từ backend có format: {data: [...], totalElements: ..., totalPages: ...}
-      if (response.data) {
-        setPromotions(response.data);
-        setTotalElements(response.totalElements || 0);
-      } else {
-        setPromotions(response || []);
-        setTotalElements(response.length || 0);
+// ...existing code...
+const fetchPromotions = async () => {
+  try {
+    setLoading(true);
+    const token = localStorage.getItem('token');
+    
+    // SỬA: Đảm bảo parameter được gửi chính xác
+    const params = new URLSearchParams({
+      page: page.toString(),
+      size: rowsPerPage.toString(),
+      includeDeleted: showDeleted.toString(), // Gửi boolean dưới dạng string
+      sortBy: 'createdAt',
+      sortDir: 'desc'
+    });
+    
+    const url = `${API_URLS.ADMIN.promotion.list}?${params.toString()}`;
+    
+    console.log('=== fetchPromotions ===');
+    console.log('URL:', url);
+    console.log('showDeleted:', showDeleted);
+    console.log('page:', page, 'rowsPerPage:', rowsPerPage);
+    console.log('Token present:', !!token);
+    
+    const response = await apiRequest(url, { 
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
-    } catch (error) {
-      console.error('Error fetching promotions:', error);
-      showSnackbar('Lỗi khi tải danh sách khuyến mãi', 'error');
-    } finally {
-      setLoading(false);
+    });
+    
+    console.log('Raw API Response:', response);
+    console.log('Response type:', typeof response);
+    
+    if (response && typeof response === 'object') {
+      if ('data' in response && Array.isArray(response.data)) {
+        console.log('Setting promotions from response.data:', response.data.length);
+        console.log('Backend includeDeleted:', response.includeDeleted);
+        console.log('Total elements:', response.totalElements);
+        
+        // Log chi tiết promotions để debug
+        response.data.forEach((promo: any, index: number) => {
+          console.log(`Promotion ${index + 1}:`, {
+            code: promo.code,
+            name: promo.name,
+            isDeleted: promo.isDeleted,
+            isActive: promo.isActive,
+            createdAt: promo.createdAt
+          });
+        });
+        
+        setPromotions(response.data);
+        setTotalElements(response.totalElements || response.data.length);
+      } else if (Array.isArray(response)) {
+        console.log('Setting promotions from direct array:', response.length);
+        setPromotions(response);
+        setTotalElements(response.length);
+      } else {
+        console.warn('Unexpected response structure:', response);
+        setPromotions([]);
+        setTotalElements(0);
+      }
+    } else {
+      console.error('Invalid response:', response);
+      setPromotions([]);
+      setTotalElements(0);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching promotions:', error);
+    console.error('Error type:', typeof error);
+    console.error('Error details:', error);
+    
+    // Xử lý error message an toàn
+    let errorMessage = 'Có lỗi xảy ra khi tải danh sách khuyến mãi';
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else if (error && typeof error === 'object') {
+      if ('message' in error && typeof error.message === 'string') {
+        errorMessage = error.message;
+      } else if ('error' in error && typeof error.error === 'string') {
+        errorMessage = error.error;
+      } else {
+        errorMessage = JSON.stringify(error);
+      }
+    }
+    
+    showSnackbar(`Lỗi khi tải danh sách khuyến mãi: ${errorMessage}`, 'error');
+    setPromotions([]);
+    setTotalElements(0);
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  console.log('useEffect triggered - showDeleted changed to:', showDeleted);
+  
+  // Reset page về 0 khi thay đổi filter
+  setPage(0);
+  
+  // Reset dữ liệu trước khi fetch
+  setPromotions([]);
+  setTotalElements(0);
+  
+  fetchPromotions();
+}, [showDeleted, rowsPerPage]);
+
+// useEffect riêng cho page change
+useEffect(() => {
+  if (page !== 0) { // Chỉ fetch khi page > 0 (để tránh duplicate fetch khi reset page)
+    fetchPromotions();
+  }
+}, [page]);
 
   const showSnackbar = (message: string, severity: 'success' | 'error' | 'warning' | 'info') => {
     setSnackbar({ open: true, message, severity });
