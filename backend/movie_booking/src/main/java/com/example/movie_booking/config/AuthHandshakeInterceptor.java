@@ -15,8 +15,6 @@ public class AuthHandshakeInterceptor implements HandshakeInterceptor {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-
-
     @Override
     public boolean beforeHandshake(ServerHttpRequest request,
                                    ServerHttpResponse response,
