@@ -69,6 +69,15 @@ const API_URLS = {
       list_booking:`${ADMIN_BOOKING_URL}/`,
       delete_booking:(bookingId:number)=>`${ADMIN_BOOKING_URL}/${bookingId}`,
       SEATS_WEEKLY: `${ADMIN_BOOKING_URL}/seats-weekly`,
+    },
+    promotion: {
+      list: `${ADMIN_URL}/promotions`,
+      add: `${ADMIN_URL}/promotions`,
+      update: (id: number) => `${ADMIN_URL}/promotions/${id}`,
+      delete: (id: number) => `${ADMIN_URL}/promotions/${id}`,
+      detail: (id: number) => `${ADMIN_URL}/promotions/${id}`,
+      restore: (id: number) => `${ADMIN_URL}/promotions/${id}/restore`,
+      active: `${ADMIN_URL}/promotions/active`,
     }
   },
   ADMIN_USER: {
@@ -82,7 +91,8 @@ const API_URLS = {
     create_payment:`${PAYMENT_URL}/create_payment`
   },
   PROMOTION:{
-    validate:`${BOOKING_URL}/promotion/validate`
+    validate:`${BASE_URL}/promotion/validate`,
+    active: `${ADMIN_URL}/promotions/active`, // API để lấy danh sách mã khuyến mãi đang hoạt động
   }
 };
 

@@ -4,25 +4,27 @@ import com.example.movie_booking.dto.promotion.PromotionValidationRequest;
 import com.example.movie_booking.dto.promotion.PromotionValidationResult;
 import com.example.movie_booking.service.PromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/booking/promotion")
+@RequestMapping("/promotion")
+@CrossOrigin(origins = "http://localhost:5173")
 public class PromotionController {
 
     @Autowired
     private PromotionService promotionService;
 
-    @Autowired
-    private MessageSource messageSource;
-
+   
+    // ===== PUBLIC ENDPOINTS =====
+    
+    /**
+     * Validate promotion for booking (Public)
+     */
     @PostMapping("/validate")
     public ResponseEntity<?> validatePromotion(@RequestBody PromotionValidationRequest request,
             Locale locale) {
