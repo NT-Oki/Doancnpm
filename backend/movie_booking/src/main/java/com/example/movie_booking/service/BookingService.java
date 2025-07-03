@@ -1,9 +1,8 @@
 package com.example.movie_booking.service;
 
 import com.example.movie_booking.dto.BookingDTO;
-import com.example.movie_booking.dto.booking.BookingCheckoutDto;
-import com.example.movie_booking.dto.booking.ChooseSeatResponseDTO;
-import com.example.movie_booking.dto.booking.ShowtimeSeatResponseDTO;
+import com.example.movie_booking.dto.MovieViewCountDTO;
+import com.example.movie_booking.dto.booking.*;
 import com.example.movie_booking.dto.payment.PaymentRequestDTO;
 import com.example.movie_booking.model.*;
 import com.example.movie_booking.repository.*;
@@ -11,15 +10,13 @@ import com.example.movie_booking.util.CodeGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -209,5 +206,109 @@ public class BookingService {
     public long countSeatsSoldByDate(LocalDate date) {
         return bookingSeatRepository.countSeatsSoldByDate(date);
     }
+
+    public List<UserHistoryBooking> getBookingByUserId(long userId) {
+        List<Booking> bookings = bookingRepository.findByUserId(userId);
+        return bookings.stream().map(booking ->
+                UserHistoryBooking.builder()
+                        .codeBooking(booking.getCodeBooking())
+                        .dateBooking(booking.getDateBooking().toString())
+                        .totalAmount(booking.getTotalAmount())
+                        .status(booking.getBookingStatus().getName())
+                        .movieTitle(booking.getShowTime().getMovie().getNameMovie())
+                        .startTime(booking.getShowTime().getStartTime().toString())
+                        .seatNames(
+                                booking.getBookingSeats().stream().map(
+                                        seat -> seat.getSeat().getSeatNumber()
+                                ).collect(Collectors.toList())
+                        )
+                        .build()).toList();
+    }
+
+//    Thống kê
+    public List<RevenueStatusDTO> getRevenueStatus(String type, Integer year, Integer month) {
+        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("Confirmed");
+
+        return switch (type.toLowerCase()) {
+            case "daily" -> getDailyRevenue(bookings, year, month);
+            case "monthly" -> getMonthRevenue(bookings, year);
+            case "yearly" -> getYearRevenue(bookings);
+            default -> throw new IllegalArgumentException("Invalid type: " + type);
+        };
+    }
+
+    public Integer getTotalRevenue() {
+        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("Confirmed");
+        return bookings.stream()
+                .mapToInt(Booking::getTotalAmount)
+                .sum();
+    }
+
+    public Integer getTotalTicketsSold() {
+        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("Confirmed");
+        return bookings.stream()
+                .flatMap(b -> b.getBookingSeats().stream())
+                .mapToInt(seat -> 1)
+                .sum();
+    }
+
+    private List<RevenueStatusDTO> getYearRevenue(List<Booking> bookings) {
+        return bookings.stream()
+                .collect(Collectors.groupingBy(
+                        b -> String.valueOf(b.getDateBooking().getYear()),
+                        Collectors.summingInt(Booking::getTotalAmount)
+                ))
+                .entrySet()
+                .stream()
+                .map(e -> new RevenueStatusDTO(e.getKey(), e.getValue()))
+                .sorted(Comparator.comparing(RevenueStatusDTO::getDate))
+                .toList();
+
+    }
+
+    private List<RevenueStatusDTO> getMonthRevenue(List<Booking> bookings, Integer year) {
+        if (year == null) {
+            throw new IllegalArgumentException("Year is required for monthly stats.");
+        }
+
+        return bookings.stream()
+                .filter(b -> b.getDateBooking().getYear() == year)
+                .collect(Collectors.groupingBy(
+                        b -> String.format("%d-%02d", year, b.getDateBooking().getMonthValue()),
+                        Collectors.summingInt(Booking::getTotalAmount)
+                ))
+                .entrySet()
+                .stream()
+                .map(e -> new RevenueStatusDTO(e.getKey(), e.getValue()))
+                .sorted(Comparator.comparing(RevenueStatusDTO::getDate))
+                .toList();
+    }
+
+    private List<RevenueStatusDTO> getDailyRevenue(List<Booking> bookings, Integer year, Integer month) {
+        if (year == null || month == null) {
+            throw new IllegalArgumentException("Invalid year/month");
+        }
+        return bookings.stream()
+                .filter(b -> b.getDateBooking().getYear() == year  && b.getDateBooking().getMonthValue() == month)
+                .collect(Collectors.groupingBy(
+                        Booking::getDateBooking,
+                        Collectors.summarizingInt(Booking::getTotalAmount)
+                ))
+                .entrySet()
+                .stream().map(e -> new RevenueStatusDTO(e.getKey().toString(), Integer.valueOf((int) e.getValue().getSum())))
+                .sorted(Comparator.comparing(RevenueStatusDTO::getDate))
+                .toList();
+    }
+
+    public List<MovieViewCountDTO> getTop5MostMovies() {
+        List<Object[]> res = bookingSeatRepository.findTop5MostWatchedMovies(PageRequest.of(0, 5));
+        return res.stream()
+                .map(row -> new MovieViewCountDTO(
+                        (String) row[0], ((Number) row[1]).longValue()
+                ))
+                .toList();
+    }
+
+
 
 }

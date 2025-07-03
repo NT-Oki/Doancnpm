@@ -3,6 +3,8 @@ package com.example.movie_booking.controller;
 import com.example.movie_booking.dto.BookingDTO;
 import com.example.movie_booking.dto.booking.BookingCheckoutDto;
 import com.example.movie_booking.dto.booking.ChooseSeatResponseDTO;
+import com.example.movie_booking.dto.booking.RevenueStatusDTO;
+import com.example.movie_booking.dto.booking.UserHistoryBooking;
 import com.example.movie_booking.dto.payment.PaymentRequestDTO;
 import com.example.movie_booking.model.*;
 import com.example.movie_booking.service.BookingService;
@@ -17,10 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Base64;
-import java.util.Locale;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/booking")
@@ -155,4 +154,11 @@ public class BookingController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<UserHistoryBooking>> getUserBookings(@PathVariable Long userId) {
+        List<UserHistoryBooking> bookings = bookingService.getBookingByUserId(userId);
+        return ResponseEntity.ok(bookings);
+    }
+
 }

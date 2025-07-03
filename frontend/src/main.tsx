@@ -1,10 +1,11 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Outlet, RouterProvider, createBrowserRouter } from 'react-router';
-import './config/i18n';
-import App from './App';
-import { routesSection } from './components/routes/sections';
-import { ErrorBoundary } from './components/routes/components';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { Outlet, RouterProvider, createBrowserRouter } from "react-router";
+import "./config/i18n";
+import App from "./App";
+import { routesSection } from "./components/routes/sections";
+import { ErrorBoundary } from "./components/routes/components";
+// import "./index.css";
 
 // ----------------------------------------------------------------------
 
@@ -20,10 +21,10 @@ const router = createBrowserRouter([
   },
 ]);
 
-const root = createRoot(document.getElementById('root')!);
+const root = createRoot(document.getElementById("root")!);
 
 root.render(
   <StrictMode>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   </StrictMode>
 );

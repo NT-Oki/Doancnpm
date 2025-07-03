@@ -32,6 +32,7 @@ const API_URLS = {
     PAYMENT:`${BOOKING_URL}/payment`,
     CREATE_BOOKING_SUCCESSFUL:(bookingId:number)=>`${BOOKING_URL}/payment-sucessful/${bookingId}`,
     TICKET:(bookingId:number)=>`${BOOKING_URL}/ticket/${bookingId}`,
+    GET_USER_HISTORY:(userId: number) => `${BOOKING_URL}/user/${userId}`,
   },
   MOVIE: {
     list: `${MOVIE_URL}/list`,
@@ -61,6 +62,8 @@ const API_URLS = {
     movie: {
       list_movie: `${ADMIN_MOVIES_URL}/list`,
       add: `${ADMIN_MOVIES_URL}/add`,
+      NOW_SHOWING_COUNT: `${ADMIN_MOVIES_URL}/now-showing/count`,
+
       detail: (id: number) => `${ADMIN_MOVIES_URL}/detail/${id}`,
       delete: (id: number) => `${ADMIN_MOVIES_URL}/delete/${id}`,
     },
@@ -68,6 +71,10 @@ const API_URLS = {
       list_booking:`${ADMIN_BOOKING_URL}/`,
       delete_booking:(bookingId:number)=>`${ADMIN_BOOKING_URL}/${bookingId}`,
       SEATS_WEEKLY: `${ADMIN_BOOKING_URL}/seats-weekly`,
+      REVENUE_STATS: `${ADMIN_BOOKING_URL}/revenue`,
+      REVENUE_TOTAL: `${ADMIN_BOOKING_URL}/revenue/total`,
+      TICKETS_TOTAL: `${ADMIN_BOOKING_URL}/tickets/total`,
+      TOP_MOVIES: `${ADMIN_BOOKING_URL}/top5-most-watched-movies`
     }
   },
   ADMIN_USER: {
