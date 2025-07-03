@@ -161,12 +161,6 @@ public class BookingController {
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserHistoryBooking>> getUserBookings(@PathVariable Long userId) {
-        List<UserHistoryBooking> bookings = bookingService.getBookingByUserId(userId);
-        return ResponseEntity.ok(bookings);
-    }
-
     @DeleteMapping("/cancel/{bookingId}")
     public ResponseEntity<?> cancelBooking(@PathVariable long bookingId) {
         try {
@@ -177,4 +171,11 @@ public class BookingController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<UserHistoryBooking>> getUserBookings(@PathVariable Long userId) {
+        List<UserHistoryBooking> bookings = bookingService.getBookingByUserId(userId);
+        return ResponseEntity.ok(bookings);
+    }
+
 }

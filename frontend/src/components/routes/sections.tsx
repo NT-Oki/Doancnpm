@@ -42,6 +42,9 @@ export const Checkout = lazy(() => import(`../Checkout`));
 export const Ticket = lazy(() => import(`../Ticket`));
 export const ShowTimeAdmin = lazy(() => import(`../admin/pages/ShowTimeAdmin`));
 export const RoomAdmin = lazy(() => import(`../admin/pages/RoomAdmin`));
+export const PromotionAdmin = lazy(
+  () => import(`../admin/pages/PromotionAdmin`)
+);
 
 const renderFallback = () => (
   <Box
@@ -117,6 +120,7 @@ export const routesSection: RouteObject[] = [
           { path: "showtime", element: <ShowTimeAdmin /> },
           { path: "room", element: <RoomAdmin /> },
           { path: "booking", element: <BookingAdminW /> },
+          { path: "promotions", element: <PromotionAdmin /> },
         ],
       },
     ],
