@@ -138,6 +138,7 @@ export default function SeatSelector() {
     const [timeLeft, setTimeLeft] = useState<number>(600); // 10 phút = 600 giây
     const timerRef = useRef<number | null>(null); // Để lưu trữ ID của setInterval cho timer
     const [openTimeoutDialog, setOpenTimeoutDialog] = useState<boolean>(false);
+    const [openBackDialog, setOpenBackDialog] = useState<boolean>(false);
 
     const fetchShowtimeDetails = async () => {
         setLoading(true);
@@ -214,6 +215,30 @@ export default function SeatSelector() {
     const handleCloseTimeoutDialog = () => {
         setOpenTimeoutDialog(false);
         navigate(`/movie/${movieId}`, { state: { scrollToShowtime: true } });
+    };
+    const handleCloseBackDialog = async() => {
+        const parsedBookingId = Number(bookingId!);
+        setOpenBackDialog(false);
+        setLoading(true);
+        try{
+            const res=await axios.delete(API_URLS.BOOKING.CANCEL_BOOKING(parsedBookingId),{
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            })
+            toast.success(t('booking.back.success'));
+            console.log(res.data);
+            navigate(`/movie/${movieId}`, { state: { scrollToShowtime: true } });
+            
+        }catch(err:any){
+              toast.error(t('booking.back.failed'));
+            console.log(err.response.data);
+            
+            
+        }finally{
+            setLoading(false);
+        }
+      
     };
 
     const handleSeatClick = (seat: ShowtimeSeatResponseDTO) => {
@@ -460,6 +485,17 @@ export default function SeatSelector() {
                         >
                             {t('continue')}
                         </Button>
+                         <Button
+                            variant="outlined"
+                            color="info"
+                            fullWidth
+                            size="large"
+                            sx={{ mt: 3, py: 1.5, borderRadius: '8px' }}
+                            onClick={()=>setOpenBackDialog(true)}
+                            // disabled={selectedSeats.length === 0}
+                        >
+                            {t('back')}
+                        </Button>
                     </Paper>
                 </Container>
             </Box>
@@ -484,6 +520,25 @@ export default function SeatSelector() {
                 <DialogActions>
                     <Button onClick={handleCloseTimeoutDialog} variant="contained" color="primary">
                         {t('ok')}
+                    </Button>
+                </DialogActions>
+            </Dialog>
+             <Dialog
+                open={openBackDialog}
+                onClose={handleCloseBackDialog}
+                aria-labelledby="timeout-dialog-title"
+                aria-describedby="timeout-dialog-description"
+            >
+                <DialogTitle id="timeout-dialog-title" sx={{ color: 'error.main', fontWeight: 'bold' }}>
+                    {t('booking.back')}
+                </DialogTitle>
+              
+                <DialogActions>
+                    <Button onClick={handleCloseBackDialog} variant="contained" color="primary">
+                        {t('ok')}
+                    </Button>
+                      <Button onClick={()=>setOpenBackDialog(false)} variant="contained" color="primary">
+                        {t('back')}
                     </Button>
                 </DialogActions>
             </Dialog>

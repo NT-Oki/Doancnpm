@@ -1,0 +1,9 @@
+spring:
+  ai:
+    openai:
+      api-key: AIzaSyAVub7MLej7F_pEbZvQIClquljzwct1SAs
+      chat:
+        base-url: https://generativelanguage.googleapis.com
+        completions-path: /v1beta/openai/chat/completions
+        options:
+          model: gemini-2.0-flash

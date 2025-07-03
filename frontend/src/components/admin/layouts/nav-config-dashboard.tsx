@@ -41,11 +41,18 @@ export const navData = [
     icon: icon("ic-blog"),
   },
   {
-    title: "Phòng",
+    title: "Room",
     path: "/admin/room",
+    icon: icon("ic-cart"),
   },
   {
-    title: "Vé đặt",
+    title: "Booking",
     path: "/admin/booking",
+    icon: icon("ic-analytics"),
+  },
+  {
+    title: "Promotions",
+    path: "/admin/promotions",
+    icon: icon("ic-cart"),
   },
 ];

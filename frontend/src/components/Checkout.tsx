@@ -232,18 +232,15 @@ const CheckoutPage = () => {
                 {/* Pricing Summary */}
                 {appliedPromotion && (
                   <>
+                  
                     <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, p: 1, borderBottom: "1px dashed rgba(0, 0, 0, 0.12)" }}>
-                      <Typography>{t('total.original')} {/* "Tổng gốc" hoặc "Original Total" */}</Typography>
-                      <Typography>{originalAmount.toLocaleString('vi-VN')} vnđ</Typography>
-                    </Box>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, p: 1, borderBottom: "1px dashed rgba(0, 0, 0, 0.12)" }}>
-                      <Typography color="success.main">{t('discount')} {/* "Giảm giá" hoặc "Discount" */}</Typography>
+                      <Typography color="success.main">{t('Giảm giá') }</Typography>
                       <Typography color="success.main">-{discountAmount.toLocaleString('vi-VN')} vnđ</Typography>
                     </Box>
                   </>
                 )}
                 <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2, p: 1 }}>
-                  <Typography fontWeight="bold">{t('total')} {/* "Tổng" hoặc "Total" */}</Typography>
+                  <Typography fontWeight="bold">{t('Tổng')} </Typography>
                   <Typography fontWeight="bold" color={appliedPromotion ? "success.main" : "inherit"}>
                     {finalAmount.toLocaleString('vi-VN')} vnđ
                   </Typography>
@@ -258,13 +255,13 @@ const CheckoutPage = () => {
                   <strong>{data?.movieName}</strong>
                 </Typography>
                 <Typography variant="body2" sx={{ mt: 1 }}>
-                  <strong>{t('app.name')} {/* "ThuThao Cinema" hoặc "ThuThao Cinema" */}</strong>
+                  <strong>{t('app.name')} </strong>
                 </Typography>
                 <Typography variant="body2">
                   {t('showtime')} <strong>{data?.startTime.split(' ')[0]} {data?.startTime.split(' ')[1]}</strong> {/* "Suất" hoặc "Showtime" */}
                 </Typography>
                 <Typography variant="body2">
-                  {t('room')} <strong>{data?.roomName}</strong> {/* "Phòng chiếu" hoặc "Room" */}
+                  {t('room')} <strong>{data?.roomName}</strong> 
                 </Typography>
                 <Typography variant="body2">
                   {t('seat.selected.label')} <strong>{data?.nameSeats.map((name: string) => name).join(", ")}</strong> {/* "Ghế" hoặc "Seats" */}
@@ -292,7 +289,7 @@ const CheckoutPage = () => {
 
               {/* Xác nhận */}
               <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-                <Button variant="outlined" disabled={isProcessingPayment}>{t('back')} {/* "Quay lại" hoặc "Back" */}</Button>
+                {/* <Button variant="outlined" disabled={isProcessingPayment}>{t('back')} "Quay lại" hoặc "Back"</Button> */}
                 <Button 
                   variant="contained" 
                   color="primary" 
