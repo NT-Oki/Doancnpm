@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, ToggleButtonGroup, ToggleButton } from '@mui/material';
-import { Search, AccountCircle } from '@mui/icons-material'; // Loại bỏ Language vì không cần
-import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { useTranslation } from 'react-i18next';
-import logo from '../assets/images/logo.png';
-import Divider from '@mui/material/Divider';
-import { useNavigate } from 'react-router-dom';
-import ChangePassword from './ChangePassword';
-import ProfileEdit from './ProfileEdit';
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@mui/material";
+import { Search, AccountCircle } from "@mui/icons-material"; // Loại bỏ Language vì không cần
+import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+import { useTranslation } from "react-i18next";
+import logo from "../assets/images/logo.png";
+import Divider from "@mui/material/Divider";
+import { useNavigate } from "react-router-dom";
+import ChangePassword from "./ChangePassword";
+import ProfileEdit from "./ProfileEdit";
 
 export default function Header() {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [openProfileEdit, setOpenProfileEdit] = useState(false);
@@ -24,7 +35,7 @@ export default function Header() {
   };
 
   const handleSearchSubmit = () => {
-    console.log('Tìm kiếm:', searchQuery);
+    console.log("Tìm kiếm:", searchQuery);
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -35,8 +46,11 @@ export default function Header() {
     setAnchorEl(null);
   };
 
-  const handleToggleLanguage = (event: React.MouseEvent<HTMLElement>, newLanguage: string | null) => {
-    if (newLanguage && ['vi', 'en'].includes(newLanguage)) {
+  const handleToggleLanguage = (
+    event: React.MouseEvent<HTMLElement>,
+    newLanguage: string | null
+  ) => {
+    if (newLanguage && ["vi", "en"].includes(newLanguage)) {
       i18n.changeLanguage(newLanguage);
     }
   };
@@ -47,65 +61,80 @@ export default function Header() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: '#111', width: '100%', top: 0 }}>
+    <AppBar
+      position="fixed"
+      sx={{ backgroundColor: "#111", width: "100%", top: 0 }}
+    >
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}
+        >
           <Link
             to="/"
-            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              textDecoration: "none",
+              color: "inherit",
+            }}
           >
-            <img src={logo} alt="CGV Logo" style={{ height: '50px', marginRight: '10px' }} />
-            {t('app.name')} {/* "Cinema" hoặc "Rạp phim" */}
+            <img
+              src={logo}
+              alt="CGV Logo"
+              style={{ height: "50px", marginRight: "10px" }}
+            />
+            {t("app.name")} {/* "Cinema" hoặc "Rạp phim" */}
           </Link>
         </Typography>
 
         <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              bgcolor: '#f1e4ff',
-              borderRadius: '20px',
-              p: '2px',
-              mr: 2,
-              height: '24px',
-            }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            bgcolor: "#f1e4ff",
+            borderRadius: "20px",
+            p: "2px",
+            mr: 2,
+            height: "24px",
+          }}
         >
           <Button
-              onClick={() => i18n.changeLanguage('vi')}
-              sx={{
-                borderRadius: '20px',
-                bgcolor: i18n.language === 'vi' ? '#4B0082' : 'transparent',
-                color: i18n.language === 'vi' ? '#fff' : '#4B0082',
-                fontWeight: 'bold',
-                textTransform: 'none',
-                minWidth: '30px',
-                fontSize: '0.7rem',
-                padding: '2px 8px',
-                lineHeight: 1,
-                height: '20px',
-              }}
+            onClick={() => i18n.changeLanguage("vi")}
+            sx={{
+              borderRadius: "20px",
+              bgcolor: i18n.language === "vi" ? "#4B0082" : "transparent",
+              color: i18n.language === "vi" ? "#fff" : "#4B0082",
+              fontWeight: "bold",
+              textTransform: "none",
+              minWidth: "30px",
+              fontSize: "0.7rem",
+              padding: "2px 8px",
+              lineHeight: 1,
+              height: "20px",
+            }}
           >
             VI
           </Button>
           <Button
-              onClick={() => i18n.changeLanguage('en')}
-              sx={{
-                borderRadius: '20px',
-                bgcolor: i18n.language === 'en' ? '#4B0082' : 'transparent',
-                color: i18n.language === 'en' ? '#fff' : '#4B0082',
-                fontWeight: 'bold',
-                textTransform: 'none',
-                minWidth: '30px',
-                fontSize: '0.7rem',
-                padding: '2px 8px',
-                lineHeight: 1,
-                height: '20px',
-              }}
+            onClick={() => i18n.changeLanguage("en")}
+            sx={{
+              borderRadius: "20px",
+              bgcolor: i18n.language === "en" ? "#4B0082" : "transparent",
+              color: i18n.language === "en" ? "#fff" : "#4B0082",
+              fontWeight: "bold",
+              textTransform: "none",
+              minWidth: "30px",
+              fontSize: "0.7rem",
+              padding: "2px 8px",
+              lineHeight: 1,
+              height: "20px",
+            }}
           >
             EN
           </Button>
         </Box>
-
 
         <IconButton color="inherit" onClick={handleMenuOpen}>
           <AccountCircle />
@@ -121,25 +150,35 @@ export default function Header() {
                 <Typography variant="subtitle2" noWrap>
                   {user.name}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "text.secondary" }}
+                  noWrap
+                >
                   {user.email}
                 </Typography>
                 {(user.phoneNumber || user.address) && (
                   <Box sx={{ mt: 0.5 }}>
                     {user.phoneNumber && (
-                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "text.secondary", display: "block" }}
+                      >
                         SĐT: {user.phoneNumber}
                       </Typography>
                     )}
                     {user.address && (
-                      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "text.secondary", display: "block" }}
+                      >
                         Địa chỉ: {user.address}
                       </Typography>
                     )}
                   </Box>
                 )}
               </Box>,
-              <Divider key="divider1" sx={{ borderStyle: 'dashed' }} />,
+              <Divider key="divider1" sx={{ borderStyle: "dashed" }} />,
               <MenuItem
                 key="profile-edit"
                 onClick={() => {
@@ -147,7 +186,8 @@ export default function Header() {
                   handleMenuClose();
                 }}
               >
-                {t('nav.profileEdit')} {/* "Cập nhật thông tin" hoặc "Edit Profile" */}
+                {t("nav.profileEdit")}{" "}
+                {/* "Cập nhật thông tin" hoặc "Edit Profile" */}
               </MenuItem>,
               <MenuItem
                 key="change-password"
@@ -156,12 +196,28 @@ export default function Header() {
                   handleMenuClose();
                 }}
               >
-                {t('nav.changePassword')} {/* "Đổi mật khẩu" hoặc "Change Password" */}
+                {t("nav.changePassword")}{" "}
+                {/* "Đổi mật khẩu" hoặc "Change Password" */}
               </MenuItem>,
-              <Divider key="divider2" sx={{ borderStyle: 'dashed' }} />,
+              <MenuItem
+                key="view-history"
+                onClick={() => {
+                  navigate("/profile/history");
+                  handleMenuClose();
+                }}
+              >
+                {t("nav.history")} {/* "Xem lịch sử" hoặc "View History" */}
+              </MenuItem>,
+              <Divider key="divider2" sx={{ borderStyle: "dashed" }} />,
               <Box key="logout" sx={{ p: 1 }}>
-                <Button fullWidth color="error" size="medium" variant="text" onClick={handleLogout}>
-                  {t('nav.logout')} {/* "Đăng xuất" hoặc "Logout" */}
+                <Button
+                  fullWidth
+                  color="error"
+                  size="medium"
+                  variant="text"
+                  onClick={handleLogout}
+                >
+                  {t("nav.logout")} {/* "Đăng xuất" hoặc "Logout" */}
                 </Button>
               </Box>,
             ]
@@ -176,21 +232,21 @@ export default function Header() {
                 to="/login"
                 onClick={handleMenuClose}
               >
-                {t('nav.login')} {/* "Đăng nhập" hoặc "Login" */}
+                {t("nav.login")} {/* "Đăng nhập" hoặc "Login" */}
               </Button>
             </Box>
           )}
         </Menu>
 
         {/* Dialogs */}
-        <ProfileEdit 
-          open={openProfileEdit} 
-          onClose={() => setOpenProfileEdit(false)} 
+        <ProfileEdit
+          open={openProfileEdit}
+          onClose={() => setOpenProfileEdit(false)}
         />
-        
-        <ChangePassword 
-          open={openChangePassword} 
-          onClose={() => setOpenChangePassword(false)} 
+
+        <ChangePassword
+          open={openChangePassword}
+          onClose={() => setOpenChangePassword(false)}
         />
       </Toolbar>
     </AppBar>
