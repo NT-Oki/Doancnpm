@@ -1,9 +1,11 @@
-import { Label } from '../components/label';
-import { SvgColor } from '../components/svg-color';
+import { Label } from "../components/label";
+import { SvgColor } from "../components/svg-color";
 
 // ----------------------------------------------------------------------
 
-const icon = (name: string) => <SvgColor src={`src/assets/icons/navbar/${name}.svg`} />;
+const icon = (name: string) => (
+  <SvgColor src={`src/assets/icons/navbar/${name}.svg`} />
+);
 
 export type NavItem = {
   title: string;
@@ -14,19 +16,19 @@ export type NavItem = {
 
 export const navData = [
   {
-    title: 'Dashboard',
-    path: '/admin/dashboard',
-    icon: icon('ic-analytics'),
+    title: "Thống kê",
+    path: "/admin/dashboard",
+    icon: icon("ic-analytics"),
   },
   {
-    title: 'User',
-    path: '/admin/users',
-    icon: icon('ic-user'),
+    title: "Người dùng",
+    path: "/admin/users",
+    icon: icon("ic-user"),
   },
   {
-    title: 'Movie',
-    path: '/admin/movies',
-    icon: icon('ic-cart'),
+    title: "Phim",
+    path: "/admin/movies",
+    icon: icon("ic-cart"),
     // info: (
     //   <Label color="error" variant="inverted">
     //     +3
@@ -34,24 +36,23 @@ export const navData = [
     // ),
   },
   {
-    title: 'Showtime',
-    path: '/admin/showtime',
-    icon: icon('ic-blog'),
+    title: "Lịch chiếu",
+    path: "/admin/showtime",
+    icon: icon("ic-blog"),
   },
   {
-    title: 'Room',
-    path: '/admin/room',
-    icon: icon('ic-cart'),
+    title: "Room",
+    path: "/admin/room",
+    icon: icon("ic-cart"),
   },
   {
-    title: 'Booking',
-    path: '/admin/booking',
-    icon: icon('ic-analytics'),
+    title: "Booking",
+    path: "/admin/booking",
+    icon: icon("ic-analytics"),
   },
   {
-    title: 'Promotions',
-    path: '/admin/promotions',
-    icon: icon('ic-cart'),
+    title: "Promotions",
+    path: "/admin/promotions",
+    icon: icon("ic-cart"),
   },
-  
 ];

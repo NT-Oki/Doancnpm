@@ -78,4 +78,10 @@ public class MovieManagerController {
         success.put("message", messageSource.getMessage("movie.delete.success", null, locale));
         return ResponseEntity.ok(success);
     }
+
+    @GetMapping("/now-showing/count")
+    public ResponseEntity<?> getCurrentlyShowingMovieCount() {
+        Long count = movieService.getCurrentlyShowingMovies();
+        return ResponseEntity.ok(count);
+    }
 }

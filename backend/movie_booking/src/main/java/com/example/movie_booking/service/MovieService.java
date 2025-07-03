@@ -65,4 +65,8 @@ public class MovieService {
                 .statusFilmId(statusFilm)
                 .build();
     }
+
+    public Long getCurrentlyShowingMovies() {
+        return movieRepository.countByStatusFilmId_Name("active");
+    }
 }
