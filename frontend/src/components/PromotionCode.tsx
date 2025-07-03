@@ -219,7 +219,7 @@ const PromotionCode: React.FC<PromotionCodeProps> = ({
               disabled={disabled}
               sx={{ color: '#d32f2f' }}
             >
-              Gỡ bỏ
+              Gỡ
             </Button>
           </Box>
         </Paper>

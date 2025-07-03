@@ -33,6 +33,7 @@ const API_URLS = {
     CREATE_BOOKING_SUCCESSFUL:(bookingId:number)=>`${BOOKING_URL}/payment-sucessful/${bookingId}`,
     TICKET:(bookingId:number)=>`${BOOKING_URL}/ticket/${bookingId}`,
     GET_USER_HISTORY:(userId: number) => `${BOOKING_URL}/user/${userId}`,
+    CANCEL_BOOKING:(bookingId:number)=>`${BOOKING_URL}/cancel/${bookingId}`,
   },
   MOVIE: {
     list: `${MOVIE_URL}/list`,
@@ -75,6 +76,15 @@ const API_URLS = {
       REVENUE_TOTAL: `${ADMIN_BOOKING_URL}/revenue/total`,
       TICKETS_TOTAL: `${ADMIN_BOOKING_URL}/tickets/total`,
       TOP_MOVIES: `${ADMIN_BOOKING_URL}/top5-most-watched-movies`
+    },
+    promotion: {
+      list: `${ADMIN_URL}/promotions`,
+      add: `${ADMIN_URL}/promotions`,
+      update: (id: number) => `${ADMIN_URL}/promotions/${id}`,
+      delete: (id: number) => `${ADMIN_URL}/promotions/${id}`,
+      detail: (id: number) => `${ADMIN_URL}/promotions/${id}`,
+      restore: (id: number) => `${ADMIN_URL}/promotions/${id}/restore`,
+      active: `${ADMIN_URL}/promotions/active`,
     }
   },
   ADMIN_USER: {
@@ -88,7 +98,8 @@ const API_URLS = {
     create_payment:`${PAYMENT_URL}/create_payment`
   },
   PROMOTION:{
-    validate:`${BOOKING_URL}/promotion/validate`
+    validate:`${BASE_URL}/promotion/validate`,
+    active: `${ADMIN_URL}/promotions/active`, // API để lấy danh sách mã khuyến mãi đang hoạt động
   }
 };
 

@@ -30,18 +30,19 @@ import ViewHistory from "../ViewHistory";
 
 // ----------------------------------------------------------------------
 
-export const DashboardPage = lazy(() => import("../admin/pages/dashboard"));
-export const BlogPage = lazy(() => import("../admin/pages/blog"));
-export const UserPage = lazy(() => import("../admin/pages/user"));
-export const SignInPage = lazy(() => import("../admin/pages/sign-in"));
-export const Movie = lazy(() => import("../admin/pages/MovieAdmin"));
-export const Page404 = lazy(() => import("../admin/pages/page-not-found"));
-export const Hello = lazy(() => import("../Hello"));
-export const SeatSelector = lazy(() => import("../SeatSelector"));
-export const Checkout = lazy(() => import(`../Checkout`));
-export const Ticket = lazy(() => import(`../Ticket`));
-export const ShowTimeAdmin = lazy(() => import(`../admin/pages/ShowTimeAdmin`));
-export const RoomAdmin = lazy(() => import(`../admin/pages/RoomAdmin`));
+export const DashboardPage = lazy(() => import('../admin/pages/dashboard'));
+export const BlogPage = lazy(() => import('../admin/pages/blog'));
+export const UserPage = lazy(() => import('../admin/pages/user'));
+export const SignInPage = lazy(() => import('../admin/pages/sign-in'));
+export const Movie = lazy(() => import('../admin/pages/MovieAdmin'));
+export const Page404 = lazy(() => import('../admin/pages/page-not-found'));
+export const Hello = lazy(() => import('../Hello'));
+export const SeatSelector = lazy(() => import('../SeatSelector'));
+export const Checkout =lazy(()=> import(`../Checkout`));
+export const Ticket =lazy(()=> import(`../Ticket`));
+export const ShowTimeAdmin =lazy(()=> import(`../admin/pages/ShowTimeAdmin`));
+export const RoomAdmin =lazy(()=> import(`../admin/pages/RoomAdmin`));
+export const PromotionAdmin =lazy(()=> import(`../admin/pages/PromotionAdmin`));
 
 const renderFallback = () => (
   <Box
@@ -115,12 +116,13 @@ export const routesSection: RouteObject[] = [
           </DashboardLayout>
         ),
         children: [
-          { path: "dashboard", element: <DashboardPage /> },
-          { path: "users", element: <UserPage /> },
-          { path: "movies", element: <Movie /> },
-          { path: "showtime", element: <ShowTimeAdmin /> },
-          { path: "room", element: <RoomAdmin /> },
-          { path: "booking", element: <BookingAdminW /> },
+          { path: 'dashboard', element: <DashboardPage /> },
+          { path: 'users', element: <UserPage /> },
+          { path: 'movies', element: <Movie /> },
+          { path: 'showtime', element: <ShowTimeAdmin /> },
+          { path: 'room', element: <RoomAdmin /> },
+          { path: 'booking', element: <BookingAdminW /> },
+          { path: 'promotions', element: <PromotionAdmin /> },      
         ],
       },
     ],

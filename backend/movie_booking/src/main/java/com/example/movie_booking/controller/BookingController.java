@@ -8,6 +8,7 @@ import com.example.movie_booking.dto.booking.UserHistoryBooking;
 import com.example.movie_booking.dto.payment.PaymentRequestDTO;
 import com.example.movie_booking.model.*;
 import com.example.movie_booking.service.BookingService;
+import com.example.movie_booking.service.EmailService;
 import com.example.movie_booking.service.PromotionService;
 import com.example.movie_booking.util.CodeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class BookingController {
 
     @Autowired
     private PromotionService promotionService;
+    @Autowired
+    EmailService emailService;
 
     /**
      * Buoc 1
@@ -141,7 +144,9 @@ public class BookingController {
             String qrContent = bookingService.buildQRContent(bookingId);
             Booking booking = bookingService.getBooking(bookingId);
             BookingCheckoutDto bookingCheckoutDto = new BookingCheckoutDto(booking);
+
             byte[] image = CodeGenerator.generateQRCodeImage(qrContent, 300, 300);
+            emailService.sendTicketEmailWithQRCode(bookingCheckoutDto.getUserEmail(),bookingCheckoutDto.getUserName(),bookingCheckoutDto,image);
             String imageBase64 = Base64.getEncoder().encodeToString(image);
             HttpHeaders headers = new HttpHeaders();
 
@@ -159,6 +164,18 @@ public class BookingController {
     public ResponseEntity<List<UserHistoryBooking>> getUserBookings(@PathVariable Long userId) {
         List<UserHistoryBooking> bookings = bookingService.getBookingByUserId(userId);
         return ResponseEntity.ok(bookings);
+    }
+
+
+    @DeleteMapping("/cancel/{bookingId}")
+    public ResponseEntity<?> cancelBooking(@PathVariable long bookingId) {
+        try {
+            bookingService.deleteById(bookingId);
+            return ResponseEntity.ok().body("Xóa bản ghi thành công");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }
