@@ -77,6 +77,10 @@ export const routesSection: RouteObject[] = [
     element: <ChangePassword />,
   },
   {
+    path: "profile/history",
+    element: <ViewHistory />,
+  },
+  {
     path: "/",
     element: (
       <Suspense fallback={renderFallback()}>
