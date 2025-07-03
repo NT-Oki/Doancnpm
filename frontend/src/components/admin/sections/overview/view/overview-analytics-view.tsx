@@ -453,25 +453,26 @@ export function OverviewAnalyticsView() {
               {t("dashboard.excelExport")}
             </Button>
           </Box>
-          {revenueStats.length ? (
-            <AnalyticsWebsiteVisits
-              title={t("dashboard.revenueStatistics")}
-              subheader={t("dashboard.revenueDescription")}
-              chart={{
-                categories: revenueStats.map((item) => item.date),
-                series: [
-                  {
-                    name: t("dashboard.revenue"),
-                    data: revenueStats.map((item) => item.revenue),
-                  },
-                ],
-              }}
-            />
-          ) : (
-            <Typography variant="body1" color="text.secondary">
-              {t("dashboard.noData")}
-            </Typography>
-          )}
+          <AnalyticsWebsiteVisits
+            title={t("dashboard.revenueStatistics")}
+            subheader={t("dashboard.revenueDescription")}
+            chart={{
+              categories:
+                revenueStats.length > 0
+                  ? revenueStats.map((item) => item.date)
+                  : [""],
+
+              series: [
+                {
+                  name: t("dashboard.revenue"),
+                  data:
+                    revenueStats.length > 0
+                      ? revenueStats.map((item) => item.revenue)
+                      : [0],
+                },
+              ],
+            }}
+          />
         </Grid>
 
         <Grid size={{ xs: 12 }}>
