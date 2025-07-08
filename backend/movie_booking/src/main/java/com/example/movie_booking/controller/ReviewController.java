@@ -23,4 +23,20 @@ public class ReviewController {
         return ResponseEntity.ok().body("OK");
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<?> getListReviews(){
+        return ResponseEntity.ok(reviewService.getListReviews());
+    }
+
+    @GetMapping("/list-by-movie/{id}")
+    public ResponseEntity<?> getListReviewsByMovieId(@PathVariable long id){
+
+        return ResponseEntity.ok(reviewService.getListReviewsByMovieId(id));
+    }
+
+    @GetMapping("/list-movie-sentiment")
+    public ResponseEntity<?> getListMovieSentiment(){
+        return ResponseEntity.ok(reviewService.getListMoviesSentiment());
+    }
+
 }
