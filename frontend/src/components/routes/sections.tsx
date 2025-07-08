@@ -45,6 +45,7 @@ export const RoomAdmin = lazy(() => import(`../admin/pages/RoomAdmin`));
 export const PromotionAdmin = lazy(
   () => import(`../admin/pages/PromotionAdmin`)
 );
+export const MovieSentiments = lazy(() => import("../admin/pages/movie-sentiment-admin.tsx"));
 
 const renderFallback = () => (
   <Box
@@ -125,6 +126,7 @@ export const routesSection: RouteObject[] = [
           { path: "room", element: <RoomAdmin /> },
           { path: "booking", element: <BookingAdminW /> },
           { path: "promotions", element: <PromotionAdmin /> },
+          { path: "sentiments", element: <MovieSentiments /> },
         ],
       },
     ],

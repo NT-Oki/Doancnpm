@@ -18,6 +18,8 @@ const UPDATE_PROFILE_URL = `${BASE_URL}/updateProfile`;
 const GET_PROFILE_URL = `${BASE_URL}/getProfile`;
 const CHANGE_PASSWORD_URL = `${BASE_URL}/change-password`;
 
+const REVIEW_URL = `${BASE_URL}/review`;
+
 const API_URLS = {
    USER: {
     changePassword: `${CHANGE_PASSWORD_URL}`, // POST
@@ -100,6 +102,12 @@ const API_URLS = {
   PROMOTION:{
     validate:`${BASE_URL}/promotion/validate`,
     active: `${ADMIN_URL}/promotions/active`, // API để lấy danh sách mã khuyến mãi đang hoạt động
+  },
+  REVIEW:{
+    getListReviewsByMovieId: (movieId: number) =>`${REVIEW_URL}/list-by-movie/${movieId}`,
+    getListMovieSestiments: `${REVIEW_URL}/list-movie-sentiment`,
+    addReview: `${REVIEW_URL}/`,
+    updateReview: (reviewId : number) => `${REVIEW_URL}/${reviewId}`
   }
 };
 
