@@ -13,4 +13,5 @@ public interface IBookingRepository extends JpaRepository<Booking,Long> {
     List<Booking> findByUserId(Long userId);
     List<Booking> findByBookingStatus_Name(String status);
     boolean existsByUserIdAndBookingStatus_Id(Long userId, Long bookingStatusId);
+    List<Booking> findByBookingStatusIdNot( long bookingStatusId);
 }

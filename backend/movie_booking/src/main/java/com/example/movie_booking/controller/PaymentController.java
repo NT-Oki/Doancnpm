@@ -10,8 +10,10 @@ import com.example.movie_booking.repository.IBookingRepository;
 import com.example.movie_booking.repository.IBookingSeatRepository;
 import com.example.movie_booking.repository.IBookingStatusRepository;
 import com.example.movie_booking.repository.IShowTimeSeatRepository;
+import com.example.movie_booking.service.BookingService;
 import com.example.movie_booking.util.CodeGenerator;
 import jakarta.servlet.http.HttpServletRequest;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +40,8 @@ public class PaymentController {
     IBookingSeatRepository bookingSeatRepository;
     @Autowired
     private VnPayConfig vnPayConfig;
-
+    @Autowired
+    BookingService bookingService;
 
     @GetMapping("/create_payment")
     public ResponseEntity<PaymentResDTO> createPayment(@RequestParam long amount,@RequestParam long bookingId, HttpServletRequest request) {
@@ -115,6 +118,15 @@ public class PaymentController {
                 booking.setBookingStatus(bookingStatus);
                 booking.setCodeBooking(CodeGenerator.generateBookingCode());
                 bookingRepository.save(booking);
+                try {
+                    int durationMinutes = Integer.parseInt(booking.getShowTime().getMovie().getDurationMovie());
+                    bookingService.scheduleBookingStatusJob(
+                            booking.getId(),
+                            booking.getShowTime().getStartTime().plusMinutes(durationMinutes)
+                    );
+                } catch (SchedulerException e) {
+                    e.printStackTrace();
+                }
                 return ResponseEntity.status(HttpStatus.FOUND).header("Location", "http://localhost:5173/ticket?bookingId=" + booking.getId()).build();
 
             } else {
