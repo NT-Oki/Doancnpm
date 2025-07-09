@@ -6,6 +6,8 @@ import com.example.movie_booking.dto.booking.RevenueStatusDTO;
 import com.example.movie_booking.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +27,32 @@ public class BookingManagerController {
     @Autowired
     private MessageSource messageSource;
     @GetMapping("/")
-    public ResponseEntity<?> getListBookings() {
+    public ResponseEntity<?> getListBookings(
+            @RequestParam(defaultValue = "0") int page, // Trang hiện tại (mặc định 0)
+            @RequestParam(defaultValue = "10") int size, // Kích thước trang (mặc định 10)
+            @RequestParam(required = false) String search // Tham số tìm kiếm (không bắt buộc)
+    ) {
         try {
-            List<BookingCheckoutDto> list = bookingService.getAllBookings();
-            return ResponseEntity.ok(list);
+            // Tạo PageRequest từ page và size
+            PageRequest pageable = PageRequest.of(page, size);
+
+            // Gọi service với các tham số phân trang và tìm kiếm
+            Page<BookingCheckoutDto> bookingPage = bookingService.getAllBookings(pageable, search);
+
+            // Tạo một Map để trả về cả nội dung và tổng số phần tử,
+            // khớp với định dạng mà frontend mong đợi ({ content: [], totalElements: X })
+            Map<String, Object> response = new HashMap<>();
+            response.put("content", bookingPage.getContent()); // Danh sách các booking của trang hiện tại
+            response.put("totalElements", bookingPage.getTotalElements()); // Tổng số booking
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
+            // Log lỗi chi tiết hơn trong môi trường production
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
     @GetMapping("/seats-weekly")
     public ResponseEntity<?> getSeatsSoldWeekly(Locale locale) {

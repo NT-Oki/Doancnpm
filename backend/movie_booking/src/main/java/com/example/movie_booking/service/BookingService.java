@@ -12,8 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -159,15 +161,15 @@ public class BookingService {
         return mapper.writeValueAsString(data);
     }
 
-    public List<BookingCheckoutDto> getAllBookings() {
-        List<BookingCheckoutDto> list = new ArrayList<>();
-        List<Booking> bookings = bookingRepository.findByCodeBookingIsNotNull();
-        for (Booking booking : bookings) {
-            BookingCheckoutDto bookingCheckoutDto = new BookingCheckoutDto(booking);
-            list.add(bookingCheckoutDto);
-        }
-        return list;
-    }
+//    public List<BookingCheckoutDto> getAllBookings() {
+//        List<BookingCheckoutDto> list = new ArrayList<>();
+//        List<Booking> bookings = bookingRepository.findByCodeBookingIsNotNull();
+//        for (Booking booking : bookings) {
+//            BookingCheckoutDto bookingCheckoutDto = new BookingCheckoutDto(booking);
+//            list.add(bookingCheckoutDto);
+//        }
+//        return list;
+//    }
 
     // public String createQR(PaymentRequestDTO dto){
     // String
@@ -331,5 +333,17 @@ public class BookingService {
     }
     public BookingStatus findByBookingStatusId(long bookingStatusId){
         return bookingStatusRepository.findById(bookingStatusId).orElse(null);
+    }
+    public Page<BookingCheckoutDto> getAllBookings(Pageable pageable, String search) {
+        Page<Booking> bookingEntities;
+
+        if (search != null && !search.trim().isEmpty()) {
+            String searchTerm = "%" + search.toLowerCase() + "%"; // Thêm % cho LIKE query
+            bookingEntities = bookingRepository.searchBookings(searchTerm, pageable);
+        } else {
+            bookingEntities = bookingRepository.findByCodeBookingIsNotNull(pageable);
+        }
+        return bookingEntities.map(BookingCheckoutDto::new);
+
     }
 }
