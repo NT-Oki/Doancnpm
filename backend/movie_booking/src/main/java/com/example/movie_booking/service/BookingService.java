@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
+
     @Autowired
     IBookingRepository bookingRepository;
     @Autowired

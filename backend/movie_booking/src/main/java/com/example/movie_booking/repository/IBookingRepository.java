@@ -16,6 +16,7 @@ public interface IBookingRepository extends JpaRepository<Booking,Long> {
     Page<Booking> findByCodeBookingIsNotNull(Pageable pageable);
     List<Booking> findByUserId(Long userId);
     List<Booking> findByBookingStatus_Name(String status);
+    boolean existsByUserIdAndBookingStatus_Id(Long userId, Long bookingStatusId);
     List<Booking> findByBookingStatusIdNot( long bookingStatusId);
     @Query("SELECT b FROM Booking b " +
             "JOIN b.showTime st " +       // Tên thuộc tính trong Booking Entity trỏ đến Showtime
@@ -27,6 +28,4 @@ public interface IBookingRepository extends JpaRepository<Booking,Long> {
             "LOWER(u.name) LIKE :searchTerm OR " +           // Tên thuộc tính trong User Entity
             "LOWER(b.codeBooking) LIKE :searchTerm")         // Tên thuộc tính trong Booking Entity
     Page<Booking> searchBookings(@Param("searchTerm") String searchTerm, Pageable pageable);
-
-
 }
