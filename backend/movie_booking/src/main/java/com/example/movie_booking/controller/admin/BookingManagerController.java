@@ -30,14 +30,25 @@ public class BookingManagerController {
     public ResponseEntity<?> getListBookings(
             @RequestParam(defaultValue = "0") int page, // Trang hiện tại (mặc định 0)
             @RequestParam(defaultValue = "10") int size, // Kích thước trang (mặc định 10)
-            @RequestParam(required = false) String search // Tham số tìm kiếm (không bắt buộc)
+            @RequestParam(required = false) String search, // Tham số tìm kiếm (không bắt buộc)
+            @RequestParam(required = false) String status
     ) {
         try {
             // Tạo PageRequest từ page và size
             PageRequest pageable = PageRequest.of(page, size);
-
+            Long statusSearch=null;
+            if (status != null && !status.trim().isEmpty()) {
+                try {
+                    statusSearch = Long.parseLong(status);
+                } catch (NumberFormatException e) {
+                    // Xử lý trường hợp chuỗi status không phải là số hợp lệ
+                    // Có thể log lỗi, hoặc trả về lỗi cho client
+                    System.err.println("Invalid status parameter: " + status);
+                    return ResponseEntity.badRequest().body("Tham số trạng thái không hợp lệ: " + status);
+                }
+            }
             // Gọi service với các tham số phân trang và tìm kiếm
-            Page<BookingCheckoutDto> bookingPage = bookingService.getAllBookings(pageable, search);
+            Page<BookingCheckoutDto> bookingPage = bookingService.getAllBookings(pageable, search,statusSearch);
 
             // Tạo một Map để trả về cả nội dung và tổng số phần tử,
             // khớp với định dạng mà frontend mong đợi ({ content: [], totalElements: X })

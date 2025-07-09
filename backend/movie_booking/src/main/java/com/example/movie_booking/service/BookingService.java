@@ -334,16 +334,23 @@ public class BookingService {
     public BookingStatus findByBookingStatusId(long bookingStatusId){
         return bookingStatusRepository.findById(bookingStatusId).orElse(null);
     }
-    public Page<BookingCheckoutDto> getAllBookings(Pageable pageable, String search) {
+    public Page<BookingCheckoutDto> getAllBookings(Pageable pageable, String search, Long status) {
         Page<Booking> bookingEntities;
 
-        if (search != null && !search.trim().isEmpty()) {
-            String searchTerm = "%" + search.toLowerCase() + "%"; // Thêm % cho LIKE query
+        boolean hasSearch = search != null && !search.trim().isEmpty();
+        boolean hasStatus = status != null;
+
+        if (hasSearch && hasStatus) {
+            String searchTerm = "%" + search.toLowerCase() + "%";
+            bookingEntities = bookingRepository.searchBookingsByTermAndStatus(searchTerm, status, pageable);
+        } else if (hasSearch) {
+            String searchTerm = "%" + search.toLowerCase() + "%";
             bookingEntities = bookingRepository.searchBookings(searchTerm, pageable);
+        } else if (hasStatus) {
+            bookingEntities = bookingRepository.findByBookingStatusIdAndCodeBookingIsNotNull(status, pageable); // Dùng phương thức chỉ lọc theo status
         } else {
             bookingEntities = bookingRepository.findByCodeBookingIsNotNull(pageable);
         }
         return bookingEntities.map(BookingCheckoutDto::new);
-
     }
 }

@@ -26,12 +26,12 @@ export const navData = [
     icon: icon("ic-analytics"),
   },
   {
-    title: "Người dùng",
+    title: "Quản lý người dùng",
     path: "/admin/users",
     icon: icon("ic-user"),
   },
   {
-    title: "Phim",
+    title: "Quản lý phim",
     path: "/admin/movies",
     icon: icon("ic-cart"),
     // info: (
@@ -41,22 +41,22 @@ export const navData = [
     // ),
   },
   {
-    title: "Lịch chiếu",
+    title: "Quản lý lịch chiếu",
     path: "/admin/showtime",
     icon: icon("ic-blog"),
   },
   {
-    title: "Room",
+    title: "Quản lý phòng",
     path: "/admin/room",
     icon: icon("ic-cart"),
   },
   {
-    title: "Booking",
+    title: "Quản lý vé",
     path: "/admin/booking",
     icon: icon("ic-analytics"),
   },
   {
-    title: "Promotions",
+    title: "Quản lý khuyến mãi",
     path: "/admin/promotions",
     icon: icon("ic-cart"),
   },
