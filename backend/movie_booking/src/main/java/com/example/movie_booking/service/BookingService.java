@@ -6,14 +6,17 @@ import com.example.movie_booking.dto.booking.*;
 import com.example.movie_booking.dto.payment.PaymentRequestDTO;
 import com.example.movie_booking.model.*;
 import com.example.movie_booking.repository.*;
+import com.example.movie_booking.util.BookingStatusJob;
 import com.example.movie_booking.util.CodeGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,6 +45,8 @@ public class BookingService {
 
     @Autowired
     private PromotionRepository promotionRepository;
+    @Autowired
+    private Scheduler scheduler;
 
     public Booking save(Booking booking) {
         return bookingRepository.save(booking);
@@ -307,5 +312,23 @@ public class BookingService {
     public void deleteById(long bookingId) {
         bookingRepository.deleteById(bookingId);
     }
+    public void scheduleBookingStatusJob(Long bookingId, LocalDateTime runAt) throws SchedulerException {
+        JobDetail jobDetail = JobBuilder.newJob(BookingStatusJob.class)
+                .withIdentity("bookingJob-" + bookingId, "booking")
+                .usingJobData("bookingId", bookingId)
+                .build();
 
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity("bookingTrigger-" + bookingId, "booking")
+                .startAt(Timestamp.valueOf(runAt))
+                .build();
+
+        scheduler.scheduleJob(jobDetail, trigger);
+    }
+    public List<Booking> findBookingbyBookingStatusIdNot(long bookingId) {
+        return bookingRepository.findByBookingStatusIdNot(bookingId);
+    }
+    public BookingStatus findByBookingStatusId(long bookingStatusId){
+        return bookingStatusRepository.findById(bookingStatusId).orElse(null);
+    }
 }

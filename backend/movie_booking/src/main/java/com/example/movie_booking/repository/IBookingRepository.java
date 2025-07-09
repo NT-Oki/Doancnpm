@@ -12,5 +12,6 @@ public interface IBookingRepository extends JpaRepository<Booking,Long> {
     List<Booking> findByCodeBookingIsNotNull();
     List<Booking> findByUserId(Long userId);
     List<Booking> findByBookingStatus_Name(String status);
+    List<Booking> findByBookingStatusIdNot( long bookingStatusId);
 
 }
