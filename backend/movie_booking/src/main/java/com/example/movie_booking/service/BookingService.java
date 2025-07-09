@@ -233,7 +233,7 @@ public class BookingService {
 
     // Thống kê
     public List<RevenueStatusDTO> getRevenueStatus(String type, Integer year, Integer month) {
-        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("Confirmed");
+        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("seen");
 
         return switch (type.toLowerCase()) {
             case "daily" -> getDailyRevenue(bookings, year, month);
@@ -244,14 +244,14 @@ public class BookingService {
     }
 
     public Integer getTotalRevenue() {
-        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("Confirmed");
+        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("seen");
         return bookings.stream()
-                .mapToInt(Booking::getTotalAmount)
+                .mapToInt(b -> b.getTotalAmount() != null ? b.getTotalAmount() : 0)
                 .sum();
     }
 
     public Integer getTotalTicketsSold() {
-        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("Confirmed");
+        List<Booking> bookings = bookingRepository.findByBookingStatus_Name("seen");
         return bookings.stream()
                 .flatMap(b -> b.getBookingSeats().stream())
                 .mapToInt(seat -> 1)
@@ -262,7 +262,7 @@ public class BookingService {
         return bookings.stream()
                 .collect(Collectors.groupingBy(
                         b -> String.valueOf(b.getDateBooking().getYear()),
-                        Collectors.summingInt(Booking::getTotalAmount)))
+                        Collectors.summingInt(b -> b.getTotalAmount() != null ? b.getTotalAmount() : 0)))
                 .entrySet()
                 .stream()
                 .map(e -> new RevenueStatusDTO(e.getKey(), e.getValue()))
@@ -280,7 +280,7 @@ public class BookingService {
                 .filter(b -> b.getDateBooking().getYear() == year)
                 .collect(Collectors.groupingBy(
                         b -> String.format("%d-%02d", year, b.getDateBooking().getMonthValue()),
-                        Collectors.summingInt(Booking::getTotalAmount)))
+                        Collectors.summingInt(b -> b.getTotalAmount() != null ? b.getTotalAmount() : 0)))
                 .entrySet()
                 .stream()
                 .map(e -> new RevenueStatusDTO(e.getKey(), e.getValue()))
@@ -296,7 +296,7 @@ public class BookingService {
                 .filter(b -> b.getDateBooking().getYear() == year && b.getDateBooking().getMonthValue() == month)
                 .collect(Collectors.groupingBy(
                         Booking::getDateBooking,
-                        Collectors.summarizingInt(Booking::getTotalAmount)))
+                        Collectors.summarizingInt(b -> b.getTotalAmount() != null ? b.getTotalAmount() : 0)))
                 .entrySet()
                 .stream()
                 .map(e -> new RevenueStatusDTO(e.getKey().toString(), Integer.valueOf((int) e.getValue().getSum())))
