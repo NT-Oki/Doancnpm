@@ -107,7 +107,8 @@ const API_URLS = {
     getListReviewsByMovieId: (movieId: number) =>`${REVIEW_URL}/list-by-movie/${movieId}`,
     getListMovieSestiments: `${REVIEW_URL}/list-movie-sentiment`,
     addReview: `${REVIEW_URL}/`,
-    updateReview: (reviewId : number) => `${REVIEW_URL}/${reviewId}`
+    updateReview: (reviewId : number) => `${REVIEW_URL}/${reviewId}`,
+    chechkPermissionReview: () => `${REVIEW_URL}/check-permission`,
   }
 };
 

@@ -39,4 +39,8 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getListMoviesSentiment());
     }
 
+    @GetMapping("/check-permission")
+    public ResponseEntity<?> checkPermissionForReview(@RequestParam int userId, @RequestParam int movieId){
+        return ResponseEntity.ok(reviewService.checkPermissionReview(userId, movieId));
+    }
 }

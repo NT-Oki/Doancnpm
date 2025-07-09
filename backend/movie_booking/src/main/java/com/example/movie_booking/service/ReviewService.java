@@ -6,6 +6,7 @@ import com.example.movie_booking.dto.SentimentResponseDTO;
 import com.example.movie_booking.dto.request.ReviewRequestDTO;
 import com.example.movie_booking.model.Movie;
 import com.example.movie_booking.model.Review;
+import com.example.movie_booking.repository.IBookingRepository;
 import com.example.movie_booking.repository.IReviewRepository;
 import com.example.movie_booking.service.ai.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,10 @@ public class ReviewService {
     private final ChatService chatService;
     private final MovieService movieService;
     private final UserService userService;
-
+    private final IBookingRepository bookingRepository;
 
     public long addReview(ReviewRequestDTO reviewRequestDTO){
+//        if(!bookingRepository.existsByUserIdAndBookingStatus_Id(reviewRequestDTO.getUserId(), reviewRequestDTO.getMovieId())) throw new RuntimeException();
         SentimentResponseDTO sentimentResponseDTO = chatService.getSentimentAssessment(reviewRequestDTO.getComment(), reviewRequestDTO.getRating());
         Review review = Review.builder()
                 .comment(reviewRequestDTO.getComment())
@@ -91,4 +93,9 @@ public class ReviewService {
                 .toList();
         return result;
     }
+
+    public boolean checkPermissionReview(int userId, int movieId){
+        return bookingRepository.existsByUserIdAndBookingStatus_Id((long) userId, (long) movieId);
+    }
+
 }

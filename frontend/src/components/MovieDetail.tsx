@@ -1,5 +1,4 @@
-"use client"
-
+import "./util.css"
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import {
@@ -101,6 +100,7 @@ const MovieDetail = () => {
         rating: 5,
         comment: "",
     })
+    const [permissionReview, setPermissionReview] = useState<boolean | null>(null);
     const [userReview, setUserReview] = useState<ReviewResponse | null>(null)
 
     const showtimeSectionRef = useRef<HTMLDivElement>(null)
@@ -137,12 +137,40 @@ const MovieDetail = () => {
         if (!id) return
         fetchReviews()
     }, [id])
+
+    useEffect(() => {
+        if (userId != null) {
+            checkPermissionReview();
+        }
+    }, [userId]);
+
+    const checkPermissionReview = async () => {
+        try {
+            const response = await axios.get(API_URLS.REVIEW.chechkPermissionReview(), {
+                headers: {
+                    "Accept-Language": i18n.language,
+                    "Authorization": `Bearer ${token}`,
+                },
+                params: {
+                    userId: userId,
+                    movieId: id,
+                },
+            });
+            setPermissionReview(response.data === true); // hoặc kiểm tra kỹ hơn nếu response.data là object
+        } catch (error) {
+            console.error("Error fetching permission review:", error);
+            setPermissionReview(false); // fallback nếu lỗi
+        } finally {
+            setReviewsLoading(false);
+        }
+    };
+
     console.log("token", token)
     const fetchReviews = async () => {
         setReviewsLoading(true)
         try {
             const response = await axios.get(API_URLS.REVIEW.getListReviewsByMovieId(id), {
-                headers: { "Accept-Language": i18n.language,                     "Authorization": `Bearer ${token}`
+                headers: { "Accept-Language": i18n.language,
                 },
             })
             setReviews(response.data)
@@ -156,7 +184,6 @@ const MovieDetail = () => {
             }
         } catch (error) {
             console.error("Error fetching reviews:", error)
-            toast.error("Không thể tải đánh giá")
         } finally {
             setReviewsLoading(false)
         }
@@ -378,9 +405,11 @@ const MovieDetail = () => {
                             <Button variant="contained" color="error" size="large" onClick={handleScrollToShowtime}>
                                 {t("booking.create.success").split(" ")[0]}
                             </Button>
-                            <Button variant="outlined" color="primary" size="large" onClick={handleScrollToReviews}>
-                                Xem đánh giá
-                            </Button>
+                                <Button variant="outlined" color="primary" size="large" onClick={handleScrollToReviews}>
+                                    Xem đánh giá
+                                </Button>
+
+
                         </Box>
                     </Box>
                 </Box>
@@ -403,7 +432,7 @@ const MovieDetail = () => {
                 <Box ref={reviewSectionRef} sx={{ mt: 6 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                         <Typography variant="h5">Đánh giá & Xếp hạng</Typography>
-                        {userId && (
+                        {permissionReview && (
                             <Button
                                 variant="contained"
                                 startIcon={userReview ? <Edit /> : <Add />}
