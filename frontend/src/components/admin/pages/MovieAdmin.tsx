@@ -1,321 +1,342 @@
+import React, { useEffect, useState } from 'react';
+import {
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    Typography,
+    TextField,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
+    Alert, Box,
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import API_URLS, { apiRequest } from '../../../config/api';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import {Iconify} from "../components/iconify";
 
-import type React from "react"
-import { useEffect, useRef, useState } from "react"
-import { Box, Typography, Button, CardMedia, Chip, Toolbar, Tabs, Tab } from "@mui/material"
-import { useLocation, useNavigate, useParams } from "react-router-dom"
-import axios from "axios"
-import { useTranslation } from "react-i18next"
-import { toast } from "react-toastify"
-import API_URLS from "../../../config/api.ts"
-// import Header from "./Header"
-// import Footer from "./Footer"
-// import ReviewSection from "./components/ReviewSection"
-
-interface ShowtimeDetail {
-    id: number
-    startTime: string
-    cinema: string
-    room: string
+export interface StatusFilm {
+    id: number;
+    nameStatus: string;
 }
 
-interface Movie {
-    id: number
-    nameMovie: string
-    releaseDate: string
-    durationMovie: string
-    actor: string
-    director: string
-    studio: string
-    content: string
-    trailer: string
-    avatar: string
-    statusFilmId: StatusFilm
+export interface Movie {
+    id: number;
+    nameMovie: string;
+    releaseDate: string;
+    durationMovie: string;
+    actor: string;
+    director: string;
+    studio: string;
+    content: string;
+    trailer: string;
+    avatar: string;
+    statusFilmId: StatusFilm; // Khôi phục thành StatusFilm
 }
 
-interface StatusFilm {
-    id: number
-    name: string
-}
-
-interface GroupedShowtimesMap {
-    [date: string]: ShowtimeDetail[]
-}
-
-interface MovieDetailResponse {
-    movie: Movie
-    showtimes: GroupedShowtimesMap
-}
-
-const MovieDetail = () => {
-    const { t, i18n } = useTranslation()
-    const { id } = useParams()
-    const [movie, setMovie] = useState<Movie | null>(null)
-    const [groupedShowtimes, setGroupedShowtimes] = useState<GroupedShowtimesMap | null>(null)
-    const [selectedDate, setSelectedDate] = useState<string | null>(null)
-
-    const showtimeSectionRef = useRef<HTMLDivElement>(null)
-    const reviewSectionRef = useRef<HTMLDivElement>(null)
-    const token = localStorage.getItem("token")
-    const userId = localStorage.getItem("userId")
-    const navigate = useNavigate()
-    const location = useLocation()
-
-    // Fetch movie details
-    useEffect(() => {
-        if (!id) return
-        axios
-            .get<MovieDetailResponse>(API_URLS.MOVIE.detail(id), {
-                headers: { "Accept-Language": i18n.language },
-            })
-            .then((res) => {
-                setMovie(res.data.movie)
-                const fetchedShowtimes = res.data.showtimes || {}
-                setGroupedShowtimes(fetchedShowtimes)
-                const sortedDates = Object.keys(fetchedShowtimes).sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-                if (sortedDates.length > 0) {
-                    setSelectedDate(sortedDates[0])
-                }
-            })
-            .catch((err) => {
-                console.error("Lỗi khi tải chi tiết phim:", err)
-                toast.error(t("movie.notfound"))
-            })
-    }, [id, t, i18n.language])
+export default function MovieManagement() {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+    const [movies, setMovies] = useState<Movie[]>([]);
+    const [open, setOpen] = useState(false);
+    const [selectedMovie, setSelectedMovie] = useState<Partial<Movie> | null>(null);
+    const [search, setSearch] = useState('');
+    const [error, setError] = useState<string | null>(null);
+    const [formError, setFormError] = useState<string | null>(null);
 
     useEffect(() => {
-        const shouldScroll = location.state && (location.state as { scrollToShowtime?: boolean }).scrollToShowtime
-        if (shouldScroll && groupedShowtimes && Object.keys(groupedShowtimes).length > 0) {
-            handleScrollToShowtime()
-            navigate(location.pathname, { replace: true, state: {} })
+        if (!user || user.role !== 'admin') {
+            navigate('/login');
+            return;
         }
-    }, [groupedShowtimes, location.state, navigate, location.pathname])
+        fetchMovies();
+    }, [user, navigate]);
 
-    if (!movie) {
-        return (
-            <Typography variant="h6" sx={{ padding: 4 }}>
-                {t("movie.loading")}
-            </Typography>
-        )
-    }
-
-    const castList = movie.actor ? movie.actor.split(",") : []
-
-    const getEmbedUrl = (url: string) => {
-        if (!url) return ""
-        if (url.includes("youtu.be/")) {
-            const videoId = url.split("youtu.be/")[1]
-            return `https://www.youtube.com/embed/${videoId}`
-        }
-        if (url.includes("watch?v=")) {
-            return url.replace("watch?v=", "embed/")
-        }
-        return url
-    }
-
-    const sortedDates = groupedShowtimes
-        ? Object.keys(groupedShowtimes).sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-        : []
-
-    const showtimesForSelectedDate = selectedDate && groupedShowtimes ? groupedShowtimes[selectedDate] : []
-
-    const groupedShowtimesByCinema: { [cinemaName: string]: ShowtimeDetail[] } = {}
-    showtimesForSelectedDate.forEach((st) => {
-        if (!groupedShowtimesByCinema[st.cinema]) {
-            groupedShowtimesByCinema[st.cinema] = []
-        }
-        groupedShowtimesByCinema[st.cinema].push(st)
-    })
-
-    const handleDateChange = (event: React.SyntheticEvent, newValue: string) => {
-        setSelectedDate(newValue)
-    }
-
-    const handleScrollToShowtime = () => {
-        if (showtimeSectionRef.current) {
-            showtimeSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
-        }
-    }
-
-    const handleScrollToReviews = () => {
-        if (reviewSectionRef.current) {
-            reviewSectionRef.current.scrollIntoView({ behavior: "smooth", block: "start" })
-        }
-    }
-
-    const handleChooseShowTime = async (id: number) => {
+    const fetchMovies = async () => {
         try {
-            const res = await axios.post(
-                API_URLS.BOOKING.CHOOSE_SHOWTIME,
-                { userId: Number.parseInt(userId || "0"), showtimeId: id },
-                { headers: { Authorization: `Bearer ${token}`, "Accept-Language": i18n.language } },
-            )
-            const bookingId = res.data.id
-            localStorage.setItem("bookingId", bookingId)
-            toast.success(t(res.data.message, { 0: bookingId }))
-            navigate(`/booking/${bookingId}/${movie.id}/${id}/choose-seat`)
+            const data = await apiRequest(API_URLS.ADMIN.movie.list_movie, { method: 'GET' }, logout, navigate);
+            setMovies(data);
         } catch (err: any) {
-            toast.error(t(err.response?.data?.error || "booking.create.failed"))
+            setError(err.message || 'Lỗi khi lấy danh sách phim');
         }
+    };
+
+    const handleEdit = async (movie: Movie) => {
+        try {
+            const data = await apiRequest(API_URLS.ADMIN.movie.detail(movie.id), { method: 'GET' }, logout, navigate);
+            setSelectedMovie(data);
+            setOpen(true);
+        } catch (err: any) {
+            setError(err.message || 'Lỗi khi lấy chi tiết phim');
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!window.confirm('Bạn có chắc muốn xóa phim này?')) return;
+        try {
+            await apiRequest(API_URLS.ADMIN.movie.delete(id), { method: 'DELETE' }, logout, navigate);
+            fetchMovies();
+        } catch (err: any) {
+            setError(err.message || 'Lỗi khi xóa phim');
+        }
+    };
+
+    const handleAdd = () => {
+        setSelectedMovie({
+            nameMovie: '',
+            releaseDate: '',
+            durationMovie: '',
+            actor: '',
+            director: '',
+            studio: '',
+            content: '',
+            trailer: '',
+            avatar: '',
+            statusFilmId: { id: 1, nameStatus: 'Đang chiếu' },
+        });
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedMovie(null);
+        setFormError(null);
+    };
+
+    const handleSave = async () => {
+        if (!selectedMovie) return;
+        setFormError(null);
+
+        // Kiểm tra dữ liệu
+        if (!selectedMovie.nameMovie || !selectedMovie.releaseDate || !selectedMovie.durationMovie || !selectedMovie.actor || !selectedMovie.director) {
+            setFormError('Vui lòng điền đầy đủ các trường bắt buộc');
+            return;
+        }
+
+        // Chuẩn bị dữ liệu gửi đi
+        const movieData = {
+            ...selectedMovie,
+            statusFilmId: selectedMovie.statusFilmId?.id, // Gửi id dưới dạng number
+        };
+
+        try {
+            await apiRequest(API_URLS.ADMIN.movie.add, {
+                method: 'POST',
+                body: JSON.stringify(movieData),
+            }, logout, navigate);
+            fetchMovies();
+            handleClose();
+        } catch (err: any) {
+            setFormError(err.message || 'Lỗi khi lưu phim');
+        }
+    };
+
+    const filteredMovies = movies.filter((m) =>
+        m.nameMovie.toLowerCase().includes(search.toLowerCase())
+    );
+
+    const getStatusText = (id: number) => {
+        switch (id) {
+            case 1: return 'Đang chiếu';
+            case 2: return 'Sắp chiếu';
+            default: return 'Ngừng chiếu';
+        }
+    };
+
+    const getStatusColor = (id: number) => {
+        switch (id) {
+            case 1: return '#4caf50'; // green
+            case 2: return '#2196f3'; // blue
+            default: return '#f44336'; // red
+        }
+    };
+
+    if (error) {
+        return <Typography color="error">{error}</Typography>;
     }
 
     return (
-        <Box>
-            <Header />
-            <Toolbar />
-            <Box sx={{ paddingLeft: { xs: 2, md: 20 }, paddingRight: { xs: 2, md: 20 }, paddingBottom: 10, paddingTop: 10 }}>
-                <Box sx={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "center" }}>
-                    <CardMedia
-                        component="img"
-                        image={movie.avatar}
-                        alt={movie.nameMovie}
-                        sx={{
-                            width: { xs: "100%", sm: 400, md: 450 },
-                            height: { xs: 400, sm: 450, md: 500 },
-                            objectFit: "cover",
-                            borderRadius: 2,
-                        }}
-                    />
-                    <Box sx={{ flex: 1, minWidth: { xs: "100%", sm: 300 } }}>
-                        <Typography
-                            variant="h3"
-                            fontWeight="bold"
-                            mb={2}
-                            sx={{ fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" } }}
-                        >
-                            {movie.nameMovie}
-                        </Typography>
-                        <Typography variant="h6" gutterBottom>
-                            {t("movie.description")}
-                        </Typography>
-                        <Typography paragraph sx={{ textAlign: "justify" }}>
-                            {movie.content}
-                        </Typography>
-                        <Typography variant="h6" sx={{ mt: 2 }}>
-                            {t("movie.actor")}
-                        </Typography>
-                        <Box sx={{ mb: 1, display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                            {castList.map((actor, idx) => (
-                                <Chip key={idx} label={actor.trim()} color="primary" sx={{ m: 0.5 }} />
-                            ))}
-                        </Box>
-                        <Typography variant="h6" sx={{ mt: 2 }}>
-                            {t("movie.director")}
-                        </Typography>
-                        <Typography>{movie.director}</Typography>
-                        <Typography variant="h6" sx={{ mt: 2 }}>
-                            {t("movie.duration")}
-                        </Typography>
-                        <Typography>{movie.durationMovie}</Typography>
-                        <Box sx={{ mt: 4, display: "flex", gap: 2, flexWrap: "wrap" }}>
-                            <Button variant="contained" color="error" size="large" onClick={handleScrollToShowtime}>
-                                {t("booking.create.success").split(" ")[0]}
-                            </Button>
-                            <Button variant="outlined" color="primary" size="large" onClick={handleScrollToReviews}>
-                                Xem đánh giá
-                            </Button>
-                        </Box>
-                    </Box>
-                </Box>
-
-                <Typography variant="h5" sx={{ mt: 6 }}>
-                    {t("movie.trailer")}
-                </Typography>
-                <Box sx={{ mt: 2, mb: 4 }}>
-                    <iframe
-                        width="100%"
-                        height="450"
-                        src={getEmbedUrl(movie.trailer)}
-                        title={t("movie.trailer")}
-                        allowFullScreen
-                        style={{ borderRadius: "12px" }}
-                    />
-                </Box>
-
-                {/* Reviews Section - Now as a separate component */}
-                <div ref={reviewSectionRef}>
-                    <ReviewSection movieId={movie.id} userId={userId} token={token} />
-                </div>
-
-                <Typography variant="h5" sx={{ mt: 6, mb: 3 }}>
-                    {t("showtime.schedule")}
-                </Typography>
-                <Box>
-                    {sortedDates.length === 0 ? (
-                        <Typography>{t("showtime.none")}</Typography>
-                    ) : (
-                        <Box
-                            ref={showtimeSectionRef}
-                            sx={{
-                                borderBottom: 1,
-                                borderColor: "divider",
-                                overflowX: "auto",
-                                "&::-webkit-scrollbar": { display: "none" },
-                            }}
-                        >
-                            <Tabs
-                                value={selectedDate}
-                                onChange={handleDateChange}
-                                variant="scrollable"
-                                scrollButtons="auto"
-                                aria-label={t("showtime.schedule")}
-                            >
-                                {sortedDates.map((date) => (
-                                    <Tab
-                                        key={date}
-                                        label={new Date(
-                                            Number.parseInt(date.substring(0, 4)),
-                                            Number.parseInt(date.substring(5, 7)) - 1,
-                                            Number.parseInt(date.substring(8, 10)),
-                                        ).toLocaleDateString("vi-VN", { weekday: "short", month: "2-digit", day: "2-digit" })}
-                                        value={date}
-                                        sx={{ minWidth: 120 }}
-                                    />
-                                ))}
-                            </Tabs>
-                        </Box>
-                    )}
-                    {selectedDate && groupedShowtimes && groupedShowtimes[selectedDate] && (
-                        <Box sx={{ mt: 3 }}>
-                            {Object.keys(groupedShowtimesByCinema).length === 0 ? (
-                                <Typography>{t("showtime.none")}</Typography>
-                            ) : (
-                                Object.keys(groupedShowtimesByCinema).map((cinemaName) => (
-                                    <Box key={cinemaName} sx={{ mb: 3, p: 2, border: "1px solid #e0e0e0", borderRadius: 2 }}>
-                                        <Typography variant="h6" color="secondary" sx={{ mb: 1 }}>
-                                            {cinemaName}
-                                        </Typography>
-                                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                                            {groupedShowtimesByCinema[cinemaName].map((st) => (
-                                                <Button
-                                                    key={st.id}
-                                                    variant="outlined"
-                                                    color="primary"
-                                                    sx={{
-                                                        minWidth: "unset",
-                                                        px: 1.5,
-                                                        py: 0.5,
-                                                        fontSize: "0.8rem",
-                                                        fontWeight: "bold",
-                                                        "&:hover": { backgroundColor: "primary.light" },
-                                                    }}
-                                                    onClick={() => handleChooseShowTime(st.id)}
-                                                >
-                                                    {st.startTime}
-                                                </Button>
-                                            ))}
-                                        </Box>
-                                    </Box>
-                                ))
-                            )}
-                        </Box>
-                    )}
-                </Box>
+        <Paper sx={{ padding: 2 }}>
+            <Typography variant="h4" gutterBottom>
+                Quản lý phim
+            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <TextField
+                    label="Tìm kiếm phim"
+                    variant="outlined"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+                <Button
+                    variant="contained"
+                    color="inherit"
+                    startIcon={<Iconify icon="mingcute:add-line" />}
+                    onClick={handleAdd}
+                >
+                    Thêm phim
+                </Button>
             </Box>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ maxWidth: '150px' }}>Tên phim</TableCell>
+                            <TableCell>Ngày chiếu</TableCell>
+                            <TableCell>Thời lượng</TableCell>
+                            <TableCell>Đạo diễn</TableCell>
+                            <TableCell sx={{ maxWidth: '200px' }}>Diễn viên</TableCell>
+                            <TableCell>Trạng thái</TableCell>
+                            <TableCell>Hành động</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {filteredMovies.map((movie) => (
+                            <TableRow key={movie.id}>
+                                <TableCell sx={{ maxWidth: '150px' }}>{movie.nameMovie}</TableCell>
+                                <TableCell>{movie.releaseDate}</TableCell>
+                                <TableCell>{movie.durationMovie} phút</TableCell>
+                                <TableCell>{movie.director}</TableCell>
+                                <TableCell sx={{ maxWidth: '200px' }}>{movie.actor}</TableCell>
+                                <TableCell
+                                    sx={{
+                                        color: getStatusColor(movie.statusFilmId.id),
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    {getStatusText(movie.statusFilmId.id)}
+                                </TableCell>
+                                <TableCell>
+                                    <IconButton onClick={() => handleEdit(movie)} color="primary" size="small">
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleDelete(movie.id)} color="error" size="small">
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
-            <Toolbar />
-            <Footer />
-        </Box>
-    )
+            <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+                <DialogTitle>{selectedMovie?.id ? 'Chỉnh sửa phim' : 'Thêm phim'}</DialogTitle>
+                <DialogContent>
+                    {formError && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {formError}
+                        </Alert>
+                    )}
+                    <TextField
+                        label="Tên phim"
+                        fullWidth
+                        margin="normal"
+                        value={selectedMovie?.nameMovie || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, nameMovie: e.target.value })}
+                        required
+                    />
+                    <TextField
+                        label="Ngày phát hành"
+                        fullWidth
+                        margin="normal"
+                        type="date"
+                        value={selectedMovie?.releaseDate || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, releaseDate: e.target.value })}
+                        InputLabelProps={{ shrink: true }}
+                        required
+                    />
+                    <TextField
+                        label="Thời lượng (phút)"
+                        fullWidth
+                        margin="normal"
+                        type="number"
+                        value={selectedMovie?.durationMovie || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, durationMovie: e.target.value })}
+                        required
+                    />
+                    <TextField
+                        label="Đạo diễn"
+                        fullWidth
+                        margin="normal"
+                        value={selectedMovie?.director || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, director: e.target.value })}
+                        required
+                    />
+                    <TextField
+                        label="Diễn viên"
+                        fullWidth
+                        margin="normal"
+                        value={selectedMovie?.actor || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, actor: e.target.value })}
+                        required
+                    />
+                    <TextField
+                        label="Hãng phim"
+                        fullWidth
+                        margin="normal"
+                        value={selectedMovie?.studio || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, studio: e.target.value })}
+                    />
+                    <TextField
+                        label="Nội dung"
+                        fullWidth
+                        margin="normal"
+                        multiline
+                        rows={4}
+                        value={selectedMovie?.content || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, content: e.target.value })}
+                    />
+                    <TextField
+                        label="Trailer (URL)"
+                        fullWidth
+                        margin="normal"
+                        value={selectedMovie?.trailer || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, trailer: e.target.value })}
+                    />
+                    <TextField
+                        label="Avatar (URL)"
+                        fullWidth
+                        margin="normal"
+                        value={selectedMovie?.avatar || ''}
+                        onChange={(e) => setSelectedMovie({ ...selectedMovie!, avatar: e.target.value })}
+                    />
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Trạng thái</InputLabel>
+                        <Select
+                            value={selectedMovie?.statusFilmId?.id || 1}
+                            onChange={(e) =>
+                                setSelectedMovie({
+                                    ...selectedMovie!,
+                                    statusFilmId: { id: Number(e.target.value), nameStatus: getStatusText(Number(e.target.value)) },
+                                })
+                            }
+                        >
+                            <MenuItem value={1}>Đang chiếu</MenuItem>
+                            <MenuItem value={2}>Sắp chiếu</MenuItem>
+                            <MenuItem value={3}>Ngừng chiếu</MenuItem>
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Hủy</Button>
+                    <Button onClick={handleSave} variant="contained" disabled={!selectedMovie?.nameMovie}>
+                        Lưu
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </Paper>
+    );
 }
-
-export default MovieDetail
