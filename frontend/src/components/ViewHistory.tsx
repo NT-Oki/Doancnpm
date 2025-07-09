@@ -8,11 +8,12 @@ import {
   Stack,
   CircularProgress,
   Alert,
+  Avatar,
 } from "@mui/material";
-import Grid from "@mui/material/Grid";
+// import Grid from "@mui/material/Grid"; // Loại bỏ Grid
 import {
-  CalendarToday,
-  AccessTime,
+  // CalendarToday, // Đã bỏ import
+  // AccessTime, // Đã bỏ import
   Place,
   ConfirmationNumber,
   AttachMoney,
@@ -40,11 +41,12 @@ interface UserHistoryBooking {
 
 const statusColor: Record<
   UserHistoryBooking["status"],
-  "success" | "warning" | "error"
+  "success" | "warning" | "error" | "info" | "default" // Thêm 'info' và 'default'
 > = {
   Completed: "success",
   Pending: "warning",
   Cancelled: "error",
+  Confirmed: "info", // Thêm trạng thái Confirmed nếu có
 };
 
 const ViewHistory: React.FC = () => {
@@ -74,12 +76,17 @@ const ViewHistory: React.FC = () => {
         navigate
       );
 
+      // Lọc các booking có trạng thái "Confirmed" hoặc "Completed" nếu cần
       setBookings(
-        data.filter((booking: any) => booking.status === "Confirmed")
+        data.filter(
+          (booking) =>
+            booking.status?.toLowerCase() === "seen" &&
+            (booking.totalAmount ?? 0) > 0
+        )
       );
       setLoading(false);
     } catch (err: any) {
-      setError(err.message || "Đã xảy ra lỗi.");
+      setError(err.message || "Đã xảy ra lỗi khi tải lịch sử đặt vé.");
       setLoading(false);
     }
   };
@@ -89,11 +96,11 @@ const ViewHistory: React.FC = () => {
   }, []);
 
   return (
-    <Box p={8}>
-      <Typography variant="h2" fontWeight="bold" mt={3} gutterBottom>
+    <Box p={{ xs: 2, md: 8 }}>
+      <Typography variant="h4" fontWeight="bold" mt={3} gutterBottom>
         {t("history.title")}
       </Typography>
-      <Typography color="text.secondary" mb={3}>
+      <Typography color="text.secondary" mb={4}>
         {t("history.subtitle")}
       </Typography>
       {loading ? (
@@ -103,96 +110,143 @@ const ViewHistory: React.FC = () => {
       ) : error ? (
         <Alert severity="error">{error}</Alert>
       ) : bookings.length === 0 ? (
-        <Typography>{t("history.empty")}</Typography>
+        <Typography variant="h6" color="text.secondary" mt={4}>
+          {t("history.empty")}
+        </Typography>
       ) : (
-        <Grid container spacing={3} alignItems="stretch">
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          gap={3} // Khoảng cách giữa các item (tương tự spacing của Grid)
+          justifyContent={{ xs: "center", sm: "flex-start" }} // Căn giữa trên màn hình nhỏ, căn trái trên màn hình lớn
+        >
           {bookings.map((booking) => (
-            <Grid item xs={12} sm={6} md={4} key={booking.codeBooking}>
-              <Card
-                variant="outlined"
+            <Card
+              key={booking.codeBooking}
+              variant="outlined"
+              sx={{
+                // ĐÂY LÀ PHẦN THAY ĐỔI ĐỂ ĐẢM BẢO 1 DÒNG 1 PHIM
+                width: "100%", // Mỗi Card sẽ chiếm 100% chiều rộng của container
+                // Các thuộc tính khác không thay đổi để giữ nguyên nội dung
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                minHeight: { xs: 130, sm: 150, md: 170 }, // Giữ nguyên minHeight của bạn
+                maxHeight: { xs: "auto", sm: "auto", md: "auto" }, // Giữ nguyên maxHeight của bạn
+                flexGrow: 1,
+                borderRadius: 2,
+                overflow: "hidden",
+                cursor: "pointer",
+                "&:hover": {
+                  boxShadow: 8,
+                  transform: "translateY(-5px)",
+                  transition: "0.3s ease-in-out",
+                },
+              }}
+              onClick={() => setSelectedBooking(booking)}
+            >
+              <Avatar
                 sx={{
-                  p: 2,
-                  width: "100%",
-                  height: "100%",
+                  width: 56,
+                  height: 56,
+                  bgcolor: "primary.main",
+                  fontWeight: "bold",
+                  mr: 2,
+                }}
+              >
+                {booking.movieTitle
+                  ? booking.movieTitle.charAt(0).toUpperCase()
+                  : "?"}
+              </Avatar>
+              <CardContent
+                sx={{
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "space-between",
-                  cursor: "pointer", // thêm để hover thấy rõ
-                  "&:hover": {
-                    boxShadow: 3,
-                    transform: "scale(1.01)",
-                    transition: "0.2s",
-                  },
+                  flexGrow: 1, // Đảm bảo CardContent chiếm đủ không gian còn lại
+                  p: 2,
+                  "&:last-child": { pb: 2 },
                 }}
-                onClick={() => setSelectedBooking(booking)}
               >
-                <CardContent>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="start"
-                    mb={1}
-                  >
-                    <Typography
-                      fontWeight="bold"
-                      sx={{
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {booking.movieTitle}
+                {/* TIÊU ĐỀ PHIM */}
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  sx={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    mb: 1,
+                    minHeight: "1.4em", // Đảm bảo chiếm đủ 2 dòng
+                    lineHeight: "1.4em",
+                  }}
+                >
+                  {booking.movieTitle}
+                </Typography>
+
+                {/* THÔNG TIN CHI TIẾT */}
+                {/* Giữ nguyên flexGrow và justifyContent để đẩy nội dung ra xa nhau nếu muốn, hoặc điều chỉnh nếu thấy khoảng trắng */}
+                <Stack
+                  spacing={1}
+                  mt={1}
+                  flexGrow={1}
+                  justifyContent="space-between"
+                >
+                  {/* Mã đặt vé */}
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <ConfirmationNumber fontSize="small" />
+                    <Typography variant="body2" fontWeight="bold">
+                      {booking.codeBooking}
                     </Typography>
                   </Stack>
-                  <Stack spacing={1} mt={1}>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <ConfirmationNumber fontSize="small" />
-                      <Typography variant="body2" fontWeight="bold">
-                        {booking.codeBooking}
-                      </Typography>
-                    </Stack>
 
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                      <Place fontSize="small" />
-                      <Typography variant="body2" fontWeight="bold">
-                        {booking.seatNames && booking.seatNames.length > 0
-                          ? booking.seatNames.join(", ")
-                          : "Chưa chọn ghế"}
-                      </Typography>
-                    </Stack>
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={1}
-                      mt={1}
-                    >
-                      <Typography
-                        variant="body1"
-                        fontWeight="bold"
-                        color="success.main"
-                      >
-                        {booking.totalAmount != null
-                          ? booking.totalAmount.toLocaleString()
-                          : "0"}{" "}
-                        đ
-                      </Typography>
-                    </Stack>
-                    <Chip
-                      label={t(
-                        `booking.status.${booking.status.toLowerCase()}`,
-                        booking.status
-                      )}
-                      size="small"
-                      color={statusColor[booking.status]}
-                    />
+                  {/* Ghế ngồi */}
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Place fontSize="small" />
+                    <Typography variant="body2" fontWeight="bold">
+                      {booking.seatNames && booking.seatNames.length > 0
+                        ? booking.seatNames.join(", ")
+                        : "Chưa chọn ghế"}
+                    </Typography>
                   </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
+                </Stack>
+
+                {/* GIÁ VÀ TRẠNG THÁI */}
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  mt={2}
+                >
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <AttachMoney fontSize="small" />
+                    <Typography
+                      variant="body1"
+                      fontWeight="bold"
+                      color="success.main"
+                    >
+                      {booking.totalAmount != null
+                        ? booking.totalAmount.toLocaleString("vi-VN")
+                        : "0"}{" "}
+                      VNĐ
+                    </Typography>
+                  </Stack>
+                  <Chip
+                    label={t(
+                      `booking.status.${booking.status.toLowerCase()}`,
+                      booking.status
+                    )}
+                    size="small"
+                    color={statusColor[booking.status] || "default"}
+                  />
+                </Stack>
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
+        </Box>
       )}
+      {/* Dialog vẫn giữ nguyên như code trước đó */}
       <Dialog
         open={!!selectedBooking}
         onClose={() => setSelectedBooking(null)}
@@ -212,12 +266,14 @@ const ViewHistory: React.FC = () => {
                   {selectedBooking.codeBooking}
                 </Typography>
               </Stack>
+              {/* Ngày đặt trong Dialog */}
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Typography> {t("dialog.date_booking")}:</Typography>
                 <Typography variant="body2" fontWeight="bold">
                   {selectedBooking.dateBooking}
                 </Typography>
               </Stack>
+              {/* Giờ chiếu trong Dialog */}
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Typography> {t("dialog.start_time")}:</Typography>
                 <Typography variant="body2" fontWeight="bold">
@@ -240,9 +296,9 @@ const ViewHistory: React.FC = () => {
               >
                 {t("dialog.price")}:{" "}
                 {selectedBooking.totalAmount != null
-                  ? selectedBooking.totalAmount.toLocaleString()
+                  ? selectedBooking.totalAmount.toLocaleString("vi-VN")
                   : "0"}{" "}
-                đ
+                VNĐ
               </Typography>
               <Chip
                 label={t(
@@ -250,7 +306,7 @@ const ViewHistory: React.FC = () => {
                   selectedBooking.status
                 )}
                 size="small"
-                color={statusColor[selectedBooking.status]}
+                color={statusColor[selectedBooking.status] || "default"}
               />
             </Stack>
           )}
