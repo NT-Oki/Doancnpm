@@ -26,7 +26,7 @@ public class BookingCheckoutDto {
     private int totalPriceNormalSeat;
     private int quantityCoupleSeat;
     private int totalPriceCoupleSeat;
-    private int totalPrice;
+    private Integer totalPrice;
     private String movieName;
     private String startTime;
     private String roomName;
@@ -34,6 +34,7 @@ public class BookingCheckoutDto {
     private String userName;
     private String userEmail;
     private String userCode;
+    private long bookingStatus;
 
     // Promotion related fields
     private String promotionCode;
@@ -72,6 +73,7 @@ public class BookingCheckoutDto {
         this.userName = booking.getUser().getName();
         this.userEmail = booking.getUser().getEmail();
         this.userCode = booking.getUser().getCode();
+        this.bookingStatus=booking.getBookingStatus().getId();
 
         // Set promotion fields if available
         if (booking.getPromotion() != null) {

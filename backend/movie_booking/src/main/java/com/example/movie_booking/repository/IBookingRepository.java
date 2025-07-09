@@ -19,13 +19,31 @@ public interface IBookingRepository extends JpaRepository<Booking,Long> {
     boolean existsByUserIdAndBookingStatus_Id(Long userId, Long bookingStatusId);
     List<Booking> findByBookingStatusIdNot( long bookingStatusId);
     @Query("SELECT b FROM Booking b " +
-            "JOIN b.showTime st " +       // Tên thuộc tính trong Booking Entity trỏ đến Showtime
-            "JOIN st.movie m " +         // Tên thuộc tính trong Showtime Entity trỏ đến Movie
-            "JOIN st.room r " +          // Tên thuộc tính trong Showtime Entity trỏ đến Room
-            "JOIN b.user u " +           // Tên thuộc tính trong Booking Entity trỏ đến User
-            "WHERE LOWER(m.nameMovie) LIKE :searchTerm OR " +      // Tên thuộc tính trong Movie Entity
-            "LOWER(r.roomName) LIKE :searchTerm OR " +       // Tên thuộc tính trong Room Entity
-            "LOWER(u.name) LIKE :searchTerm OR " +           // Tên thuộc tính trong User Entity
-            "LOWER(b.codeBooking) LIKE :searchTerm")         // Tên thuộc tính trong Booking Entity
+            "JOIN b.showTime st " +
+            "JOIN st.movie m " +
+            "JOIN st.room r " +
+            "JOIN b.user u " +
+            "WHERE (LOWER(m.nameMovie) LIKE :searchTerm OR " +
+            "LOWER(r.roomName) LIKE :searchTerm OR " +
+            "LOWER(u.name) LIKE :searchTerm OR " +
+            "LOWER(u.email) LIKE :searchTerm OR " +
+            "LOWER(b.codeBooking) LIKE :searchTerm) " +
+            "AND b.codeBooking IS NOT NULL")
     Page<Booking> searchBookings(@Param("searchTerm") String searchTerm, Pageable pageable);
+    // Thêm điều kiện status vào query hiện có
+    @Query("SELECT b FROM Booking b " +
+            "JOIN b.showTime st " +
+            "JOIN st.movie m " +
+            "JOIN st.room r " +
+            "JOIN b.user u " +
+            "WHERE (LOWER(m.nameMovie) LIKE :searchTerm OR " +
+            "LOWER(r.roomName) LIKE :searchTerm OR " +
+            "LOWER(u.name) LIKE :searchTerm OR " +
+            "LOWER(u.email) LIKE :searchTerm OR " +
+            "LOWER(b.codeBooking) LIKE :searchTerm) " +
+            "AND b.codeBooking IS NOT NULL " +
+            "AND (:status IS NULL OR b.bookingStatus = :status)")
+    Page<Booking> searchBookingsByTermAndStatus(@Param("searchTerm") String searchTerm, @Param("status") Long status, Pageable pageable);
+    // 3. Tìm kiếm chỉ theo status
+    Page<Booking> findByBookingStatusIdAndCodeBookingIsNotNull(@Param("status") Long status, Pageable pageable);
 }
