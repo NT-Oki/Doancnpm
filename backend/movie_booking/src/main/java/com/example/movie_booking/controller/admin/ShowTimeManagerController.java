@@ -40,7 +40,7 @@ public class ShowTimeManagerController {
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateShowTime(@PathVariable long id, ShowTimeUpdateDTO dto, Locale locale){
+    public ResponseEntity<?> updateShowTime(@PathVariable long id, @RequestBody ShowTimeUpdateDTO dto, Locale locale){
         try{
             Showtime showtime = showTimeService.update(id,dto);
             return ResponseEntity.ok(Map.of("message",

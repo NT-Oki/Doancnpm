@@ -55,6 +55,7 @@ const API_URLS = {
       delete: (id: number) => `${ADMIN_ROOMS_URL}/soft-delete/${id}`,
       update: (id: number) => `${ADMIN_ROOMS_URL}/${id}`,
       save: `${ADMIN_ROOMS_URL}/add`,
+      list_room_active: `${ADMIN_ROOMS_URL}/list-room-active`,
     },
     showtime: {
       list_showtime: `${ADMIN_SHOWTIMES_URL}/`,
@@ -66,6 +67,7 @@ const API_URLS = {
       list_movie: `${ADMIN_MOVIES_URL}/list`,
       add: `${ADMIN_MOVIES_URL}/add`,
       NOW_SHOWING_COUNT: `${ADMIN_MOVIES_URL}/now-showing/count`,
+      list_active:`${ADMIN_MOVIES_URL}/list-active`,
 
       detail: (id: number) => `${ADMIN_MOVIES_URL}/detail/${id}`,
       delete: (id: number) => `${ADMIN_MOVIES_URL}/delete/${id}`,

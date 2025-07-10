@@ -31,6 +31,11 @@ public class MovieManagerController {
     public ResponseEntity<List<Movie>> list() {
         return ResponseEntity.ok(movieService.findAll());
     }
+    // Lấy danh sách phim đang chiếu hoặc sắp chiếu
+    @GetMapping("/list-active")
+    public ResponseEntity<List<Movie>> listActive() {
+        return ResponseEntity.ok(movieService.findAllActive());
+    }
 
     // Thêm / Cập nhật phim
     @PostMapping("/add")

@@ -8,6 +8,7 @@ import com.example.movie_booking.repository.IStatusFilmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,4 +70,8 @@ public class MovieService {
     public Long getCurrentlyShowingMovies() {
         return movieRepository.countByStatusFilmId_Name("active");
     }
+    public List<Movie> findAllActive() {
+        return movieRepository.findByStatusFilmIds(Arrays.asList(1L, 2L));
+    }
+
 }

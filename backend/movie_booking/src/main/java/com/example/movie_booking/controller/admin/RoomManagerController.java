@@ -25,9 +25,14 @@ public class RoomManagerController {
     @Autowired
     MessageSource messageSource;
 
-    @GetMapping("list-room")
+    @GetMapping("/list-room")
     public ResponseEntity<List<Room>> listRooms() {
         List<Room> roomList=roomService.getAllRooms();
+        return ResponseEntity.ok(roomList);
+    }
+    @GetMapping("/list-room-active")
+    public ResponseEntity<List<Room>> listRoomsActive() {
+        List<Room> roomList=roomService.getAllRoomsActive();
         return ResponseEntity.ok(roomList);
     }
 

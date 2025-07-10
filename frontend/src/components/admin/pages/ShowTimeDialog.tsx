@@ -107,7 +107,7 @@ function ShowtimeDialog({ open, onClose, initialData, onSubmit }: ShowtimeDialog
   const fetchMovies = async () => {
     setLoadingMovies(true);
     try {
-      const response = await axios.get(API_URLS.ADMIN.movie.list_movie, { // Thay đổi API_URLS nếu cần
+      const response = await axios.get(API_URLS.ADMIN.movie.list_active, { // Thay đổi API_URLS nếu cần
         headers: { Authorization: `Bearer ${token}` }
       });
       setMovies(response.data);
@@ -122,7 +122,7 @@ function ShowtimeDialog({ open, onClose, initialData, onSubmit }: ShowtimeDialog
   const fetchRooms = async () => {
     setLoadingRooms(true);
     try {
-      const response = await axios.get(API_URLS.ADMIN.room.list_room, { // Thay đổi API_URLS nếu cần
+      const response = await axios.get(API_URLS.ADMIN.room.list_room_active, { // Thay đổi API_URLS nếu cần
         headers: { Authorization: `Bearer ${token}` }
       });
       setRooms(response.data);
@@ -184,6 +184,7 @@ const formattedStartTimeForBackend = `${showDate}T${startTime}`; // <-- ĐÂY L�
 
       // Xây dựng đối tượng DTO để gửi lên backend
     const showtimeData: ShowtimeRequestDTO = { // Sử dụng interface ShowtimeRequestDTO đã cập nhật
+      
       movieId: movieId as number,
       roomId: roomId as number,
       showDate: formattedShowDateForBackend, // Gán chuỗi đã định dạng
