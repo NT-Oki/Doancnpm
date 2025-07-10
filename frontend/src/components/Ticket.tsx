@@ -155,7 +155,7 @@ export default function Ticket() {
           </Paper>
         </Box>
       </Box>
-      <Footer />
+      {/* <Footer /> */}
     </Box>
   );
 }

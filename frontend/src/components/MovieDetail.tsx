@@ -690,7 +690,6 @@ const MovieDetail = () => {
             </Dialog>
 
             <Toolbar />
-            <Footer />
         </Box>
     )
 }
