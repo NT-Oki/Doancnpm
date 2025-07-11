@@ -257,13 +257,13 @@ function ShowTimeAdmin() {
                     <IconButton onClick={() => handleOpenDialog(sc)} color="primary" size="small">
                       <EditIcon />
                     </IconButton>
-                    <IconButton
+                    {/* <IconButton
                       onClick={() => handleOpenConfirmDelete(sc.id)}
                       color="error"
                       size="small"
                     >
                       <DeleteIcon />
-                    </IconButton>
+                    </IconButton> */}
                   </TableCell>
                 </TableRow>
               ))

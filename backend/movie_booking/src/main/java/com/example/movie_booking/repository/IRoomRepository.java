@@ -8,11 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface IRoomRepository extends JpaRepository<Room, Long> {
 //    @Modifying
 //    @Transactional
 //    @Query("UPDATE Room r SET r.status = '3' WHERE r.id = :id")
 //    void updateStatusById(@Param("id") Long id);
+List<Room> findByStatusIn(List<Long> statusList);
 
 }

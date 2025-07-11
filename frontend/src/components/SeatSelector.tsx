@@ -499,7 +499,7 @@ export default function SeatSelector() {
                     </Paper>
                 </Container>
             </Box>
-            <Footer />
+            {/* <Footer /> */}
             <Dialog
                 open={openTimeoutDialog}
                 onClose={handleCloseTimeoutDialog}

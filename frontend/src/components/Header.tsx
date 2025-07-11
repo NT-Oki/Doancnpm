@@ -240,7 +240,7 @@ export default function Header() {
 
         {/* Dialogs */}
         <ProfileEdit
-          open={openProfileEdit}
+          open={openProfileEdit}  
           onClose={() => setOpenProfileEdit(false)}
         />
 

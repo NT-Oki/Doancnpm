@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next"
 import { toast } from "react-toastify"
 import API_URLS from "../config/api"
 import Header from "./Header"
-import Footer from "./Footer"
 import Banner from "./Banner"
 import { Search, Calendar, Clock, User, Video } from "lucide-react"
 
@@ -55,7 +54,7 @@ export default function Home() {
         })
   }, [t, i18n.language])
 
-  return (
+  return (  
       <div className="flex flex-col min-h-screen bg-gray-50">
         <Header />
 
@@ -181,7 +180,6 @@ export default function Home() {
           </div>
         </main>
 
-        <Footer />
       </div>
   )
 }

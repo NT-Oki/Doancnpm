@@ -9,6 +9,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -134,8 +137,31 @@ public List<Showtime> getShowTimeByMovieId(long movieId) {
 
         return saved;
     }
-    public Showtime update(long id, ShowTimeUpdateDTO dto){
-        return null;
+    public Showtime update(Long id, ShowTimeUpdateDTO dto) {
+        Showtime existing = showTimeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy suất chiếu có id = " + id));
+
+        Movie movie = movieRepository.findById(dto.getMovieId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phim có id = " + dto.getMovieId()));
+
+        Room room = roomRepository.findById(dto.getRoomId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phòng có id = " + dto.getRoomId()));
+
+        // Parse ngày chiếu
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate showDate = LocalDate.parse(dto.getShowDate(), dateFormatter);
+
+        // Parse thời gian bắt đầu
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime startTime = LocalDateTime.parse(dto.getStartTime(), dateTimeFormatter);
+
+        // Cập nhật thông tin
+        existing.setMovie(movie);
+        existing.setRoom(room);
+        existing.setShowDate(showDate);
+        existing.setStartTime(startTime);
+
+        return showTimeRepository.save(existing);
     }
     public Showtime updateStatusShowTime(long id){
         Showtime showtime = showTimeRepository.findById(id).orElse(null);

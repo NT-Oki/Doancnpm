@@ -302,7 +302,7 @@ const CheckoutPage = () => {
             </Box>
           </Box>
         </Box>
-        <Footer />
+        {/* <Footer /> */}
         { message && <Alert severity="info" sx={{ mt: 2 }}>{message}</Alert> }
     { error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert> }
       </Box>

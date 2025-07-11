@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,6 +144,8 @@ public class RoomService {
 
         return saved;
     }
-
+    public List<Room> getAllRoomsActive() {
+        return roomRepository.findByStatusIn(Arrays.asList(1L, 2L));
+    }
 
 }
